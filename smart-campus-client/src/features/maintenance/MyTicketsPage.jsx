@@ -1,48 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { TicketContext } from './TicketContext';
+import { Link } from 'react-router-dom';
 
 const MyTicketsPage = () => {
-    const tickets = [
-        {
-            id: 'TKT-2401',
-            resource: 'Library - 3rd Floor',
-            category: 'Electrical',
-            priority: 'High',
-            status: 'In Progress',
-            created: 'Apr 14, 2026',
-        },
-        {
-            id: 'TKT-2398',
-            resource: 'Building A - Room 205',
-            category: 'HVAC',
-            priority: 'Medium',
-            status: 'Open',
-            created: 'Apr 12, 2026',
-        },
-        {
-            id: 'TKT-2385',
-            resource: 'Cafeteria - Main Hall',
-            category: 'Plumbing',
-            priority: 'Low',
-            status: 'Resolved',
-            created: 'Apr 8, 2026',
-        },
-        {
-            id: 'TKT-2372',
-            resource: 'Computer Lab 3',
-            category: 'IT Equipment',
-            priority: 'High',
-            status: 'Assigned',
-            created: 'Apr 5, 2026',
-        },
-        {
-            id: 'TKT-2365',
-            resource: 'Sports Complex',
-            category: 'Safety',
-            priority: 'Medium',
-            status: 'Resolved',
-            created: 'Apr 3, 2026',
-        },
-    ];
+    const { state } = useContext(TicketContext);
+    const { tickets, loading, error } = state;
 
     const getPriorityColor = (priority) => {
         if (priority === 'High') return 'bg-red-100 text-red-700';
@@ -55,6 +17,12 @@ const MyTicketsPage = () => {
         if (status === 'Open') return 'bg-blue-100 text-blue-700';
         if (status === 'Resolved') return 'bg-green-100 text-green-700';
         return 'bg-purple-100 text-purple-700';
+    };
+
+    const formatDate = (dateString) => {
+        if (!dateString) return 'N/A';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     };
 
     return (
@@ -81,10 +49,15 @@ const MyTicketsPage = () => {
                             </tr>
                         </thead>
                         <tbody className="divide-y">
-                            {tickets.map((ticket) => (
+                            {loading && <tr><td colSpan="7" className="text-center py-5">Loading tickets...</td></tr>}
+                            {error && <tr><td colSpan="7" className="text-center py-5 text-red-500">Error: {error}</td></tr>}
+                            {!loading && !error && tickets.length === 0 && (
+                                <tr><td colSpan="7" className="text-center py-5 text-gray-500">No tickets found.</td></tr>
+                            )}
+                            {!loading && !error && tickets.map((ticket) => (
                                 <tr key={ticket.id} className="hover:bg-gray-50 transition">
-                                    <td className="px-6 py-5 font-medium text-gray-900">{ticket.id}</td>
-                                    <td className="px-6 py-5 text-gray-700">{ticket.resource}</td>
+                                    <td className="px-6 py-5 font-medium text-gray-900">{ticket.id || 'N/A'}</td>
+                                    <td className="px-6 py-5 text-gray-700">{ticket.resourceLocation}</td>
                                     <td className="px-6 py-5 text-gray-700">{ticket.category}</td>
                                     <td className="px-6 py-5">
                                         <span className={`inline-flex px-3 py-1 rounded-full text-xs font-medium ${getPriorityColor(ticket.priority)}`}>
@@ -96,14 +69,14 @@ const MyTicketsPage = () => {
                                             {ticket.status}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-5 text-gray-600">{ticket.created}</td>
+                                    <td className="px-6 py-5 text-gray-600">{formatDate(ticket.createdDate)}</td>
                                     <td className="px-6 py-5 text-center">
-                                        <button
-                                            onClick={() => alert(`Opening details for ${ticket.id} (Ticket Detail Page will be added next)`)}
+                                        <Link
+                                            to={`/maintenance/ticket/${ticket.id}`}
                                             className="inline-flex items-center gap-2 px-5 py-2 bg-[#053769] text-white text-sm font-medium rounded-xl hover:bg-[#042d55] transition"
                                         >
                                             👁️ View
-                                        </button>
+                                        </Link>
                                     </td>
                                 </tr>
                             ))}

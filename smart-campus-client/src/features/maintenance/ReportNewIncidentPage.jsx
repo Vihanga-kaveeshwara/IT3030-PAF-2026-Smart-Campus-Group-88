@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { TicketContext } from './TicketContext';
 
 const ReportNewIncidentPage = () => {
   const [formData, setFormData] = useState({
@@ -8,7 +9,7 @@ const ReportNewIncidentPage = () => {
     priority: '',
     contactDetails: '',
   });
-  //helloff
+  const { addTicket } = useContext(TicketContext);
   const [images, setImages] = useState([]);
 
   const handleChange = (e) => {
@@ -32,11 +33,22 @@ const ReportNewIncidentPage = () => {
     setImages(newImages);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Ticket Submitted:', formData);
-    console.log('Attached Images:', images);
-    alert('✅ Ticket submitted successfully! (This will connect to API later)');
+    try {
+      const newTicket = await addTicket(formData);
+      alert(`✅ Ticket submitted successfully! Ticket ID: ${newTicket.id}`);
+      setFormData({
+        resourceLocation: '',
+        category: '',
+        description: '',
+        priority: '',
+        contactDetails: '',
+      });
+      setImages([]);
+    } catch (err) {
+      alert('Failed to submit ticket');
+    }
   };
 
   return (
