@@ -46,8 +46,8 @@ const AdminAllTicketsPage = () => {
         <p className="text-gray-500 mb-8">Manage all maintenance tickets and assign technicians</p>
 
         {/* Filters */}
-        <div className="bg-white p-5 rounded-2xl shadow-sm mb-6 flex flex-wrap gap-4 items-end">
-          <div className="flex-1 min-w-[200px]">
+        <div className="bg-white p-5 rounded-2xl shadow-sm mb-6 grid grid-cols-1 lg:grid-cols-4 gap-4 items-end">
+          <div className="w-full">
             <label className="block text-xs font-medium text-gray-500 mb-1">Status</label>
             <select className="w-full bg-gray-50 border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#053769]" value={statusFilter} onChange={e => setStatusFilter(e.target.value)}>
               <option value="All">All Status</option>
@@ -56,7 +56,7 @@ const AdminAllTicketsPage = () => {
               <option value="Resolved">Resolved</option>
             </select>
           </div>
-          <div className="flex-1 min-w-[200px]">
+          <div className="w-full">
             <label className="block text-xs font-medium text-gray-500 mb-1">Priority</label>
             <select className="w-full bg-gray-50 border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#053769]" value={priorityFilter} onChange={e => setPriorityFilter(e.target.value)}>
               <option value="All">All Priorities</option>
@@ -65,7 +65,7 @@ const AdminAllTicketsPage = () => {
               <option value="Low">Low</option>
             </select>
           </div>
-          <div className="flex-1 min-w-[200px]">
+          <div className="w-full">
             <label className="block text-xs font-medium text-gray-500 mb-1">Category</label>
             <select className="w-full bg-gray-50 border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#053769]" value={categoryFilter} onChange={e => setCategoryFilter(e.target.value)}>
               <option value="All">All Categories</option>
@@ -76,7 +76,7 @@ const AdminAllTicketsPage = () => {
               <option value="HVAC">HVAC</option>
             </select>
           </div>
-          <div className="flex-1 min-w-[200px]">
+          <div className="w-full">
             <label className="block text-xs font-medium text-gray-500 mb-1">Date Range</label>
             <select className="w-full bg-gray-50 border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#053769]">
               <option>All Time</option>
@@ -132,7 +132,7 @@ const AdminAllTicketsPage = () => {
       </div>
 
       {/* Right Sidebar Stats */}
-      <div className="w-full xl:w-80 flex flex-col gap-6">
+      <div className="w-full xl:w-64 flex flex-col gap-6">
         <div className="bg-white rounded-2xl shadow-sm p-6 border-l-4 border-teal-400">
           <div className="flex gap-3 text-gray-500 text-sm font-medium items-center mb-4">
             <div className="w-8 h-8 rounded-full bg-teal-50 flex items-center justify-center text-teal-500">
