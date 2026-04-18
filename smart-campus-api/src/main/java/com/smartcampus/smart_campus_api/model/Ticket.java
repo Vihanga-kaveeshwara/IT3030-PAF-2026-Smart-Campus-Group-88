@@ -1,3 +1,4 @@
+// Backend: src/main/java/com/smartcampus/smart_campus_api/model/Ticket.java
 package com.smartcampus.smart_campus_api.model;
 
 import org.springframework.data.annotation.Id;
@@ -16,6 +17,8 @@ public class Ticket {
     private String status;
     private LocalDateTime createdDate;
     private String userId;
+    private String assignee;
+    private String rejectionReason;
 
     public Ticket() {}
 
@@ -45,4 +48,10 @@ public class Ticket {
 
     public String getUserId() { return userId; }
     public void setUserId(String userId) { this.userId = userId; }
+
+    public String getAssignee() { return assignee; }
+    public void setAssignee(String assignee) { this.assignee = assignee; }
+
+    public String getRejectionReason() { return rejectionReason; }
+    public void setRejectionReason(String rejectionReason) { this.rejectionReason = rejectionReason; }
 }

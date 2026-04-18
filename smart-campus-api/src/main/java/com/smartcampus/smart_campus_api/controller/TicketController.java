@@ -1,3 +1,4 @@
+// Backend: src/main/java/com/smartcampus/smart_campus_api/controller/TicketController.java
 package com.smartcampus.smart_campus_api.controller;
 
 import com.smartcampus.smart_campus_api.dto.TicketCreateDto;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/tickets")
@@ -37,5 +39,26 @@ public class TicketController {
     public ResponseEntity<Ticket> getTicket(@PathVariable String id) {
         Ticket ticket = ticketService.getTicketById(id);
         return ResponseEntity.ok(ticket);
+    }
+
+    // Admin Endpoints
+    @GetMapping
+    public ResponseEntity<List<Ticket>> getAllTickets() {
+        return ResponseEntity.ok(ticketService.getAllTickets());
+    }
+
+    @PatchMapping("/{id}/assign")
+    public ResponseEntity<Ticket> assignTicket(@PathVariable String id, @RequestBody Map<String, String> payload) {
+        return ResponseEntity.ok(ticketService.assignTicket(id, payload.get("assignee")));
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<Ticket> updateTicketStatus(@PathVariable String id, @RequestBody Map<String, String> payload) {
+        return ResponseEntity.ok(ticketService.updateStatus(id, payload.get("status")));
+    }
+
+    @PatchMapping("/{id}/reject")
+    public ResponseEntity<Ticket> rejectTicket(@PathVariable String id, @RequestBody Map<String, String> payload) {
+        return ResponseEntity.ok(ticketService.rejectTicket(id, payload.get("reason")));
     }
 }

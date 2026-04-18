@@ -1,3 +1,4 @@
+// Backend: src/main/java/com/smartcampus/smart_campus_api/service/TicketService.java
 package com.smartcampus.smart_campus_api.service;
 
 import com.smartcampus.smart_campus_api.dto.TicketCreateDto;
@@ -34,5 +35,29 @@ public class TicketService {
 
     public Ticket getTicketById(String id) {
         return ticketRepository.findById(id).orElseThrow(() -> new RuntimeException("Ticket not found"));
+    }
+
+    public List<Ticket> getAllTickets() {
+        return ticketRepository.findAll();
+    }
+
+    public Ticket assignTicket(String id, String assignee) {
+        Ticket ticket = getTicketById(id);
+        ticket.setAssignee(assignee);
+        ticket.setStatus("Assigned");
+        return ticketRepository.save(ticket);
+    }
+
+    public Ticket updateStatus(String id, String status) {
+        Ticket ticket = getTicketById(id);
+        ticket.setStatus(status);
+        return ticketRepository.save(ticket);
+    }
+
+    public Ticket rejectTicket(String id, String reason) {
+        Ticket ticket = getTicketById(id);
+        ticket.setStatus("Rejected");
+        ticket.setRejectionReason(reason);
+        return ticketRepository.save(ticket);
     }
 }
