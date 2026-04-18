@@ -19,6 +19,7 @@ public class Ticket {
     private String userId;
     private String assignee;
     private String rejectionReason;
+    private String resolutionNotes;
 
     public Ticket() {}
 
@@ -54,4 +55,7 @@ public class Ticket {
 
     public String getRejectionReason() { return rejectionReason; }
     public void setRejectionReason(String rejectionReason) { this.rejectionReason = rejectionReason; }
+
+    public String getResolutionNotes() { return resolutionNotes; }
+    public void setResolutionNotes(String resolutionNotes) { this.resolutionNotes = resolutionNotes; }
 }

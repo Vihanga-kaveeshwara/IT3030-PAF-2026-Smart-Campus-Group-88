@@ -60,4 +60,21 @@ public class TicketService {
         ticket.setRejectionReason(reason);
         return ticketRepository.save(ticket);
     }
+
+    public List<Ticket> getAssignedTickets(String assignee) {
+        return ticketRepository.findByAssignee(assignee);
+    }
+
+    public Ticket startWork(String id) {
+        Ticket ticket = getTicketById(id);
+        ticket.setStatus("In Progress");
+        return ticketRepository.save(ticket);
+    }
+
+    public Ticket resolveTicket(String id, String resolutionNotes) {
+        Ticket ticket = getTicketById(id);
+        ticket.setStatus("Resolved");
+        ticket.setResolutionNotes(resolutionNotes);
+        return ticketRepository.save(ticket);
+    }
 }

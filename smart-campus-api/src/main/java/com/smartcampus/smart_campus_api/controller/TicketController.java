@@ -61,4 +61,21 @@ public class TicketController {
     public ResponseEntity<Ticket> rejectTicket(@PathVariable String id, @RequestBody Map<String, String> payload) {
         return ResponseEntity.ok(ticketService.rejectTicket(id, payload.get("reason")));
     }
+
+    // Technician Endpoints
+    @GetMapping("/assigned")
+    public ResponseEntity<List<Ticket>> getAssignedTickets(Principal principal) {
+        String assigneeUsername = principal != null ? principal.getName() : "Mike Johnson (Technician)"; // fallback for testing
+        return ResponseEntity.ok(ticketService.getAssignedTickets(assigneeUsername));
+    }
+
+    @PatchMapping("/{id}/start-work")
+    public ResponseEntity<Ticket> startWork(@PathVariable String id) {
+        return ResponseEntity.ok(ticketService.startWork(id));
+    }
+
+    @PatchMapping("/{id}/resolve")
+    public ResponseEntity<Ticket> resolveTicket(@PathVariable String id, @RequestBody Map<String, String> payload) {
+        return ResponseEntity.ok(ticketService.resolveTicket(id, payload.get("resolutionNotes")));
+    }
 }

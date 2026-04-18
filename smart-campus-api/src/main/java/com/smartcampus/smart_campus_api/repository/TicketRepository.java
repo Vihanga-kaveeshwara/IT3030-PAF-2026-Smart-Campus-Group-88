@@ -1,3 +1,4 @@
+// Backend: src/main/java/com/smartcampus/smart_campus_api/repository/TicketRepository.java
 package com.smartcampus.smart_campus_api.repository;
 
 import com.smartcampus.smart_campus_api.model.Ticket;
@@ -9,4 +10,5 @@ import java.util.List;
 @Repository
 public interface TicketRepository extends MongoRepository<Ticket, String> {
     List<Ticket> findByUserIdOrderByCreatedDateDesc(String userId);
+    List<Ticket> findByAssignee(String assignee);
 }
