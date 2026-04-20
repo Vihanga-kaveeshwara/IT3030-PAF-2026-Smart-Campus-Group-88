@@ -71,10 +71,15 @@ export const TicketProvider = ({ children }) => {
     }
   }, []);
 
-  const addTicket = async (ticketData) => {
+
+  const addTicket = async (formData) => {
     try {
-      console.log("Sending data to backend:", ticketData);
-      const response = await axios.post(API_BASE_URL, ticketData);
+      // Images තියෙනවා නම් headers වලට multipart/form-data තිබිය යුතුයි
+      const response = await axios.post(API_BASE_URL, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       dispatch({ type: 'ADD_TICKET', payload: response.data });
       return response.data;
     } catch (err) {
