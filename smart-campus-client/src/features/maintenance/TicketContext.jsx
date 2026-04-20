@@ -73,6 +73,7 @@ export const TicketProvider = ({ children }) => {
 
   const addTicket = async (ticketData) => {
     try {
+      console.log("Sending data to backend:", ticketData);
       const response = await axios.post(API_BASE_URL, ticketData);
       dispatch({ type: 'ADD_TICKET', payload: response.data });
       return response.data;
