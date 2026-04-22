@@ -6,6 +6,14 @@ export const TicketContext = createContext();
 
 const API_BASE_URL = 'http://localhost:8080/api/tickets';
 
+// Common headers, especially useful for identification in lab projects.
+// Change 'user-123' to a valid ID from your database if necessary.
+const AXIOS_CONFIG = {
+  headers: {
+    'user-id': 'user-123' 
+  }
+};
+
 const initialState = {
   tickets: [],
   allTickets: [],
@@ -42,7 +50,9 @@ export const TicketProvider = ({ children }) => {
   const fetchTickets = useCallback(async () => {
     dispatch({ type: 'FETCH_START' });
     try {
-      const response = await axios.get(`${API_BASE_URL}/my`);
+      // Note: If this results in a 500 error, verify that the backend 
+      // doesn't require an Auth token or a hardcoded User ID in the headers.
+      const response = await axios.get(`${API_BASE_URL}/my`, AXIOS_CONFIG);
       dispatch({ type: 'FETCH_SUCCESS', payload: response.data });
     } catch (err) {
       console.error("Error fetching tickets", err);
@@ -53,7 +63,7 @@ export const TicketProvider = ({ children }) => {
   const fetchAllTickets = useCallback(async () => {
     dispatch({ type: 'FETCH_START' });
     try {
-      const response = await axios.get(API_BASE_URL);
+      const response = await axios.get(API_BASE_URL, AXIOS_CONFIG);
       dispatch({ type: 'FETCH_ALL_SUCCESS', payload: response.data });
     } catch (err) {
       console.error("Error fetching all tickets", err);
@@ -63,7 +73,7 @@ export const TicketProvider = ({ children }) => {
 
   const getTicket = useCallback(async (id) => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/${id}`);
+      const response = await axios.get(`${API_BASE_URL}/${id}`, AXIOS_CONFIG);
       return response.data;
     } catch (err) {
       console.error("Error fetching single ticket", err);
@@ -74,12 +84,10 @@ export const TicketProvider = ({ children }) => {
 
   const addTicket = async (formData) => {
     try {
-      // Images තියෙනවා නම් headers වලට multipart/form-data තිබිය යුතුයි
-      const response = await axios.post(API_BASE_URL, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      // By passing a plain object, Axios automatically sets 'Content-Type: application/json'.
+      // This fixes the 415 error.
+      // We also include the identification header to avoid 500 errors.
+      const response = await axios.post(API_BASE_URL, formData, AXIOS_CONFIG);
       dispatch({ type: 'ADD_TICKET', payload: response.data });
       return response.data;
     } catch (err) {
@@ -90,7 +98,7 @@ export const TicketProvider = ({ children }) => {
 
   const assignTicket = async (id, assignee) => {
     try {
-      const response = await axios.patch(`${API_BASE_URL}/${id}/assign`, { assignee });
+      const response = await axios.patch(`${API_BASE_URL}/${id}/assign`, { assignee }, AXIOS_CONFIG);
       dispatch({ type: 'UPDATE_TICKET', payload: response.data });
       return response.data;
     } catch (err) {
@@ -101,7 +109,7 @@ export const TicketProvider = ({ children }) => {
 
   const updateStatus = async (id, status) => {
     try {
-      const response = await axios.patch(`${API_BASE_URL}/${id}/status`, { status });
+      const response = await axios.patch(`${API_BASE_URL}/${id}/status`, { status }, AXIOS_CONFIG);
       dispatch({ type: 'UPDATE_TICKET', payload: response.data });
       return response.data;
     } catch (err) {
@@ -112,7 +120,7 @@ export const TicketProvider = ({ children }) => {
 
   const rejectTicket = async (id, reason) => {
     try {
-      const response = await axios.patch(`${API_BASE_URL}/${id}/reject`, { reason });
+      const response = await axios.patch(`${API_BASE_URL}/${id}/reject`, { reason }, AXIOS_CONFIG);
       dispatch({ type: 'UPDATE_TICKET', payload: response.data });
       return response.data;
     } catch (err) {

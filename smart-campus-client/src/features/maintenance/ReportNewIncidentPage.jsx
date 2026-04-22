@@ -35,8 +35,28 @@ const ReportNewIncidentPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Convert images to Base64 strings to include them in a JSON payload.
+    // This resolves the 415 error by ensuring the request is sent as application/json.
+    const base64Images = await Promise.all(
+      images.map((file) => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = (error) => reject(error);
+        });
+      })
+    );
+
+    // Combine form data and base64 images into a plain object
+    const submissionData = {
+      ...formData,
+      images: base64Images,
+    };
+
     try {
-      const newTicket = await addTicket(formData);
+      const newTicket = await addTicket(submissionData);
       alert(`✅ Ticket submitted successfully! Ticket ID: ${newTicket.id}`);
       setFormData({
         resourceLocation: '',
