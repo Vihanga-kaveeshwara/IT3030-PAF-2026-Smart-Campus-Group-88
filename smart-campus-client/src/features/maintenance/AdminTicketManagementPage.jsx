@@ -15,6 +15,7 @@ const AdminTicketManagementPage = () => {
   const [assignee, setAssignee] = useState('');
   const [status, setStatus] = useState('');
   const [priority, setPriority] = useState('');
+  const [selectedImage, setSelectedImage] = useState(null);
   const [fetchingError, setFetchingError] = useState('');
 
   useEffect(() => {
@@ -161,7 +162,8 @@ const AdminTicketManagementPage = () => {
                     key={`${ticket.id}-admin-image-${index}`}
                     src={image}
                     alt={`Ticket attachment ${index + 1}`}
-                    className="w-full h-40 rounded-xl object-cover border border-gray-200"
+                    onClick={() => setSelectedImage(image)}
+                    className="w-full h-40 rounded-xl object-cover border border-gray-200 cursor-pointer hover:opacity-90 transition"
                   />
                 ))}
               </div>
@@ -251,14 +253,23 @@ const AdminTicketManagementPage = () => {
             <h2 className="text-lg font-bold mb-4">Ticket Timeline</h2>
             <div className="text-sm">
               <p className="text-gray-400 text-xs mb-1">Created</p>
-              <p className="font-semibold text-gray-700 mb-4">{new Date(ticket.createdDate || Date.now()).toLocaleString()}</p>
-              
-              <p className="text-gray-400 text-xs mb-1">Last Updated</p>
-              <p className="font-semibold text-gray-700">Apr 14, 2026, 2:30 PM</p>
+              <p className="font-semibold text-gray-700 mb-4">
+                {new Date(ticket.createdDate || Date.now()).toLocaleString()}
+              </p>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Image Enlargement Modal */}
+      {selectedImage && (
+        <div 
+          className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 cursor-zoom-out"
+          onClick={() => setSelectedImage(null)}
+        >
+          <img src={selectedImage} alt="Enlarged view" className="max-w-full max-h-full rounded-lg shadow-2xl" />
+        </div>
+      )}
     </div>
   );
 };

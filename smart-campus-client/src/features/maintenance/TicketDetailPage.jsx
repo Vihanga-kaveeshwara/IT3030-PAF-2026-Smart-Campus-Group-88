@@ -7,6 +7,7 @@ const TicketDetailPage = () => {
     const { id } = useParams();
     const [ticket, setTicket] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [selectedImage, setSelectedImage] = useState(null);
 
     useEffect(() => {
         const fetchTicket = async () => {
@@ -88,7 +89,8 @@ const TicketDetailPage = () => {
                                         key={`${ticket.id}-image-${index}`}
                                         src={image}
                                         alt={`Ticket attachment ${index + 1}`}
-                                        className="w-full h-48 rounded-lg object-cover border border-gray-200"
+                                        onClick={() => setSelectedImage(image)}
+                                        className="w-full h-48 rounded-lg object-cover border border-gray-200 cursor-pointer hover:opacity-90 transition"
                                     />
                                 ))}
                             </div>
@@ -129,6 +131,16 @@ const TicketDetailPage = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Image Enlargement Modal */}
+            {selectedImage && (
+                <div 
+                    className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 cursor-zoom-out"
+                    onClick={() => setSelectedImage(null)}
+                >
+                    <img src={selectedImage} alt="Enlarged view" className="max-w-full max-h-full rounded-lg shadow-2xl transition-transform duration-300 ease-in-out" />
+                </div>
+            )}
         </div>
     );
 };

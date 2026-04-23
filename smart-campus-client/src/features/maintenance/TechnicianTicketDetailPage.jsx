@@ -33,6 +33,7 @@ const TechnicianTicketDetailPage = () => {
 
   const [resolutionNotes, setResolutionNotes] = useState("");
   const [showNotesField, setShowNotesField] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   // Time Color Logic
   const getTimeColor = (hours) => {
@@ -143,7 +144,13 @@ const TechnicianTicketDetailPage = () => {
             <h2 className="text-lg font-bold text-gray-800 mb-4">Attachments</h2>
             <div className="flex gap-4 overflow-x-auto pb-2">
               {ticket.attachments.map((url, idx) => (
-                <img key={idx} src={url} alt={`Attachment ${idx}`} className="h-40 w-auto rounded-xl object-cover border" />
+                <img 
+                  key={idx} 
+                  src={url} 
+                  alt={`Attachment ${idx}`} 
+                  onClick={() => setSelectedImage(url)}
+                  className="h-40 w-auto rounded-xl object-cover border cursor-pointer hover:opacity-90 transition" 
+                />
               ))}
             </div>
           </div>
@@ -248,6 +255,16 @@ const TechnicianTicketDetailPage = () => {
         </div>
 
       </div>
+
+      {/* Image Enlargement Modal */}
+      {selectedImage && (
+        <div 
+          className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 cursor-zoom-out"
+          onClick={() => setSelectedImage(null)}
+        >
+          <img src={selectedImage} alt="Enlarged view" className="max-w-full max-h-full rounded-lg shadow-2xl" />
+        </div>
+      )}
     </div>
   );
 };

@@ -21,10 +21,19 @@ const ReportNewIncidentPage = () => {
 
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+    
     if (images.length + files.length > 3) {
-      alert('You can upload maximum 3 images only!');
+      alert('You can upload a maximum of 3 images.');
       return;
     }
+
+    const invalidFiles = files.filter(file => !allowedTypes.includes(file.type));
+    if (invalidFiles.length > 0) {
+      alert('Invalid file format. Please upload only JPG, JPEG, or PNG images.');
+      return;
+    }
+
     setImages([...images, ...files]);
   };
 
@@ -35,6 +44,11 @@ const ReportNewIncidentPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (images.length < 3) {
+      alert('Please upload at least 3 images as evidence for the incident.');
+      return;
+    }
 
     // Convert images to Base64 strings to include them in a JSON payload.
     // This resolves the 415 error by ensuring the request is sent as application/json.
