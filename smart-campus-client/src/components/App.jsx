@@ -1,7 +1,8 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { PrivateRoute, AdminRoute } from './components/PrivateRoute';
-import AppLayout from './components/AppLayout';
+import AppLayout from './components/AppLayout'
+import AdminPage from './pages/admin/AdminPage';
 import { NotificationProvider } from './context/NotificationContext';
 import './App.css';
 
@@ -18,6 +19,18 @@ import DashboardPage      from './pages/DashboardPage';
 import NotificationsPage  from './pages/notifications/NotificationsPage';
 
 // Resource pages
+import ResourceDetail from './pages/resources/ResourceDetail';
+import ResourceForm from './pages/resources/ResourceForm';
+import ResourceList from './pages/resources/ResourceList';
+
+// Placeholder pages (implemented by other team members)
+// import BookingsPage    from './pages/bookings/BookingsPage';
+
+import TicketsPage       from './pages/tickets/TicketsPage';
+import CreateTicketPage  from './pages/tickets/CreateTicketPage';
+import TicketDetailPage  from './pages/tickets/TicketDetailPage';
+// import TicketsPage     from './pages/tickets/TicketsPage';
+
 function PlaceholderPage({ name }) {
   return (
     <div className="page-container">
@@ -52,6 +65,27 @@ export default function App() {
             <Route path="/dashboard"     element={<DashboardPage />} />
             <Route path="/notifications" element={<NotificationsPage />} />
             <Route path="/profile"       element={<ProfilePage />} />
+
+            {/* Resource routes */}
+            <Route path="/resources"       element={<ResourceList />} />
+            <Route path="/resources/:id"   element={<ResourceDetail />} />
+            <Route element={<AdminRoute />}>
+              <Route path="/resources/new"   element={<ResourceForm />} />
+              <Route path="/resources/:id/edit" element={<ResourceForm />} />
+            </Route>
+
+            {/* Other modules (replace placeholders with real pages) */}
+            <Route path="/bookings"   element={<PlaceholderPage name="Bookings" />} />
+
+            
+            <Route path="/tickets"          element={<TicketsPage />} />
+            <Route path="/tickets/new"      element={<CreateTicketPage />} />
+            <Route path="/tickets/:id"      element={<TicketDetailPage />} />
+
+            {/* Admin-only routes */}
+            <Route element={<AdminRoute />}>
+              <Route path="/admin" element={<AdminPage />} />
+            </Route>
           </Route>
         </Route>
 
