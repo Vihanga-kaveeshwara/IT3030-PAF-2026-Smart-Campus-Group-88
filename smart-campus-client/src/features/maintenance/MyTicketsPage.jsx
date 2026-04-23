@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { TicketContext } from './TicketContext';
 import { Link } from 'react-router-dom';
+import { formatTicketIdForUser } from './ticketIdFormatter';
 
 const MyTicketsPage = () => {
     const { state } = useContext(TicketContext);
@@ -56,7 +57,7 @@ const MyTicketsPage = () => {
                             )}
                             {!loading && !error && tickets.map((ticket) => (
                                 <tr key={ticket.id} className="hover:bg-gray-50 transition">
-                                    <td className="px-6 py-5 font-medium text-gray-900">{ticket.id || 'N/A'}</td>
+                                    <td className="px-6 py-5 font-medium text-gray-900">{formatTicketIdForUser(ticket.id)}</td>
                                     <td className="px-6 py-5 text-gray-700">{ticket.resourceLocation}</td>
                                     <td className="px-6 py-5 text-gray-700">{ticket.category}</td>
                                     <td className="px-6 py-5">

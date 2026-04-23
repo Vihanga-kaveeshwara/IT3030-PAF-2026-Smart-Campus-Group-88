@@ -2,6 +2,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { TicketContext } from './TicketContext';
+import { formatTicketId } from './ticketIdFormatter';
 
 const AdminTicketManagementPage = () => {
   const { id } = useParams();
@@ -85,8 +86,6 @@ const AdminTicketManagementPage = () => {
     { sender: "Mike Johnson", role: "Technician", text: "I've inspected the area. The issue is with the circuit breaker. Will need to replace it. ETA: 2 hours.", time: "Apr 14, 02:30 PM" },
   ];
 
-  const shortId = ticket.id ? `TKT-${ticket.id.substring(ticket.id.length - 4).toUpperCase()}` : 'TKT-NEW';
-
   return (
     <div className="p-8 max-w-7xl mx-auto text-gray-800">
       <div className="flex justify-between items-end mb-8">
@@ -95,7 +94,7 @@ const AdminTicketManagementPage = () => {
             &larr; Back to Dashboard
           </button>
           <h1 className="text-3xl font-bold">Manage Ticket</h1>
-          <p className="text-gray-500">Ticket ID: <span className="font-semibold text-[#053769]">{shortId}</span></p>
+          <p className="text-gray-500">Ticket ID: <span className="font-semibold text-[#053769]">{formatTicketId(ticket.id)}</span></p>
         </div>
         
         {/* Time Elapsed Widget */}

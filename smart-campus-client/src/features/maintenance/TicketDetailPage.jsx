@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
+import { formatTicketId } from './ticketIdFormatter';
 
 const TicketDetailPage = () => {
     const { id } = useParams();
@@ -37,7 +38,7 @@ const TicketDetailPage = () => {
             <div className="flex justify-between items-center mb-6">
                 <div>
                     <h1 className="text-3xl font-bold text-gray-800">Ticket Details</h1>
-                    <p className="text-gray-500">Ticket ID: {ticket.id}</p>
+                    <p className="text-gray-500">Ticket ID: {formatTicketId(ticket.id)}</p>
                 </div>
                 <div className={`px-6 py-4 rounded-xl border ${timerColor} text-center`}>
                     <p className="text-xs font-bold uppercase tracking-wider">Time Elapsed</p>

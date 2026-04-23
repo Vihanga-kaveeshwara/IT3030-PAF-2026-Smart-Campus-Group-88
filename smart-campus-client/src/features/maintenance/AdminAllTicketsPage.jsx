@@ -2,6 +2,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { TicketContext } from './TicketContext';
+import { formatTicketId } from './ticketIdFormatter';
 
 const AdminAllTicketsPage = () => {
   const { state, fetchAllTickets } = useContext(TicketContext);
@@ -110,7 +111,7 @@ const AdminAllTicketsPage = () => {
               {filteredTickets.map(ticket => (
                 <tr key={ticket.id} className="hover:bg-gray-50/50 transition">
                   <td className="p-4 pl-6 font-semibold text-[#053769]">
-                    {ticket.id ? `TKT-${ticket.id.substring(ticket.id.length - 4).toUpperCase()}` : 'TKT-NEW'}
+                    {formatTicketId(ticket.id)}
                   </td>
                   <td className="p-4 text-gray-700">{ticket.resourceLocation}</td>
                   <td className="p-4 text-gray-600">{ticket.category}</td>
