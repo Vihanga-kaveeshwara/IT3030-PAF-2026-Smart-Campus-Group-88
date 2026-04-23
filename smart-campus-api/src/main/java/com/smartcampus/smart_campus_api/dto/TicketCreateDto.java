@@ -1,11 +1,14 @@
 package com.smartcampus.smart_campus_api.dto;
 
+import java.util.List;
+
 public class TicketCreateDto {
     private String resourceLocation;
     private String category;
     private String description;
     private String priority;
     private String contactDetails;
+    private List<String> images;
 
     public TicketCreateDto() {}
 
@@ -23,4 +26,7 @@ public class TicketCreateDto {
 
     public String getContactDetails() { return contactDetails; }
     public void setContactDetails(String contactDetails) { this.contactDetails = contactDetails; }
+
+    public List<String> getImages() { return images; }
+    public void setImages(List<String> images) { this.images = images; }
 }

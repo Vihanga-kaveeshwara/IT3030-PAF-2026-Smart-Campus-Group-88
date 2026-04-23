@@ -26,6 +26,7 @@ const TicketDetailPage = () => {
     if (!ticket) return <div className="p-8">Ticket not found.</div>;
 
     const createdDate = new Date(ticket.createdDate);
+    const attachments = Array.isArray(ticket.images) ? ticket.images : [];
     const now = new Date();
     const elapsedHours = Math.floor((now - createdDate) / (1000 * 60 * 60));
     
@@ -80,10 +81,22 @@ const TicketDetailPage = () => {
 
                     <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
                         <h2 className="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Attachments</h2>
-                        <div className="flex gap-4">
-                            <div className="w-1/2 h-32 bg-gray-200 rounded-lg animate-pulse flex items-center justify-center text-gray-400">Image 1 Placeholder</div>
-                            <div className="w-1/2 h-32 bg-gray-200 rounded-lg animate-pulse flex items-center justify-center text-gray-400">Image 2 Placeholder</div>
-                        </div>
+                        {attachments.length > 0 ? (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {attachments.map((image, index) => (
+                                    <img
+                                        key={`${ticket.id}-image-${index}`}
+                                        src={image}
+                                        alt={`Ticket attachment ${index + 1}`}
+                                        className="w-full h-48 rounded-lg object-cover border border-gray-200"
+                                    />
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="h-32 bg-gray-50 rounded-lg border border-dashed border-gray-300 flex items-center justify-center text-gray-400">
+                                No attachments were submitted for this ticket.
+                            </div>
+                        )}
                     </div>
 
                     <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">

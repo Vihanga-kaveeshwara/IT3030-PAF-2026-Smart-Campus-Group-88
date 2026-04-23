@@ -65,6 +65,7 @@ const AdminTicketManagementPage = () => {
 
   if (loading) return <div className="p-8 text-center text-gray-500">Loading ticket...</div>;
   if (!ticket || fetchingError) return <div className="p-8 text-center text-red-500">{fetchingError || 'Ticket not found'}</div>;
+  const attachments = Array.isArray(ticket.images) ? ticket.images : [];
 
   const renderPriorityBadge = (p) => {
     const pLow = p?.toLowerCase() || '';
@@ -150,13 +151,25 @@ const AdminTicketManagementPage = () => {
             </div>
           </div>
 
-          {/* Attachments Placeholder */}
+          {/* Attachments */}
           <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
             <h2 className="text-lg font-bold mb-4">Attachments</h2>
-            <div className="flex gap-4">
-              <div className="w-1/2 h-40 bg-gray-200 rounded-xl bg-cover bg-center" style={{backgroundImage: "url('https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=800')"}}></div>
-              <div className="w-1/2 h-40 bg-gray-200 rounded-xl bg-cover bg-center" style={{backgroundImage: "url('https://images.unsplash.com/photo-1544724569-5f546fd6f2b6?auto=format&fit=crop&w=800')"}}></div>
-            </div>
+            {attachments.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {attachments.map((image, index) => (
+                  <img
+                    key={`${ticket.id}-admin-image-${index}`}
+                    src={image}
+                    alt={`Ticket attachment ${index + 1}`}
+                    className="w-full h-40 rounded-xl object-cover border border-gray-200"
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="h-40 rounded-xl border border-dashed border-gray-300 bg-gray-50 flex items-center justify-center text-sm text-gray-400">
+                No attachments were submitted for this ticket.
+              </div>
+            )}
           </div>
 
           {/* Comments Section */}

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,6 +27,7 @@ public class TicketService {
         ticket.setStatus("Open");
         ticket.setCreatedDate(LocalDateTime.now());
         ticket.setUserId(userId);
+        ticket.setImages(dto.getImages() != null ? new ArrayList<>(dto.getImages()) : new ArrayList<>());
         return ticketRepository.save(ticket);
     }
 

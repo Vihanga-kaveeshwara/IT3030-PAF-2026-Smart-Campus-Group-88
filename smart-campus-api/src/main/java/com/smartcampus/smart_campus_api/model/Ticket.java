@@ -4,6 +4,8 @@ package com.smartcampus.smart_campus_api.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Document(collection = "tickets")
 public class Ticket {
@@ -17,6 +19,7 @@ public class Ticket {
     private String status;
     private LocalDateTime createdDate;
     private String userId;
+    private List<String> images = new ArrayList<>();
     private String assignee;
     private String rejectionReason;
     private String resolutionNotes;
@@ -49,6 +52,9 @@ public class Ticket {
 
     public String getUserId() { return userId; }
     public void setUserId(String userId) { this.userId = userId; }
+
+    public List<String> getImages() { return images; }
+    public void setImages(List<String> images) { this.images = images; }
 
     public String getAssignee() { return assignee; }
     public void setAssignee(String assignee) { this.assignee = assignee; }
