@@ -27,11 +27,11 @@ const Layout = ({ children }) => {
         <nav className="flex flex-col gap-2">
           {isAdmin ? (
             <Link to="/maintenance/admin" className={`px-4 py-3 rounded-xl font-medium flex items-center gap-2 ${location.pathname === '/maintenance/admin' || location.pathname.includes('/admin/ticket/') ? 'bg-[#053769] text-white' : 'hover:bg-gray-100 text-gray-700 transition'}`}>
-               🔧 Maintenance
+                Maintenance
             </Link>
           ) : isTechnician ? (
             <Link to="/maintenance/technician" className={`px-4 py-3 rounded-xl font-medium flex items-center gap-2 ${location.pathname === '/maintenance/technician' || location.pathname.includes('/technician/ticket/') ? 'bg-[#053769] text-white' : 'hover:bg-gray-100 text-gray-700 transition'}`}>
-               💼 My Assigned Tickets
+                My Assigned Tickets
             </Link>
           ) : (
             <>
