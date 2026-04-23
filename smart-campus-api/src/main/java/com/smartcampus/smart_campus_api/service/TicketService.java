@@ -2,7 +2,9 @@
 package com.smartcampus.smart_campus_api.service;
 
 import com.smartcampus.smart_campus_api.dto.TicketCreateDto;
+import com.smartcampus.smart_campus_api.dto.TicketCommentCreateDto;
 import com.smartcampus.smart_campus_api.model.Ticket;
+import com.smartcampus.smart_campus_api.model.TicketComment;
 import com.smartcampus.smart_campus_api.repository.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,6 +33,7 @@ public class TicketService {
         ticket.setCreatedDate(LocalDateTime.now());
         ticket.setUserId(userId);
         ticket.setImages(dto.getImages() != null ? new ArrayList<>(dto.getImages()) : new ArrayList<>());
+        ticket.setComments(new ArrayList<>());
         return ticketRepository.save(ticket);
     }
 
@@ -80,6 +83,23 @@ public class TicketService {
         Ticket ticket = getTicketById(id);
         ticket.setStatus("Resolved");
         ticket.setResolutionNotes(resolutionNotes);
+        return ticketRepository.save(ticket);
+    }
+
+    public Ticket addComment(String id, TicketCommentCreateDto dto) {
+        if (dto.getContent() == null || dto.getContent().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Comment content is required");
+        }
+
+        Ticket ticket = getTicketById(id);
+        List<TicketComment> comments = ticket.getComments() != null ? ticket.getComments() : new ArrayList<>();
+        comments.add(new TicketComment(
+                dto.getAuthorName() != null && !dto.getAuthorName().isBlank() ? dto.getAuthorName() : "System",
+                dto.getAuthorRole() != null && !dto.getAuthorRole().isBlank() ? dto.getAuthorRole() : "Support Team",
+                dto.getContent().trim(),
+                LocalDateTime.now()
+        ));
+        ticket.setComments(comments);
         return ticketRepository.save(ticket);
     }
 

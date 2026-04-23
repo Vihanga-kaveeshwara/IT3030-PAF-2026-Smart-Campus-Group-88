@@ -71,6 +71,7 @@ const TicketDetailPage = () => {
     const now = new Date();
     const elapsedHours = Math.floor((now - createdDate) / (1000 * 60 * 60));
     const canManageTicket = ticket.status?.toLowerCase() === 'open';
+    const comments = Array.isArray(ticket.comments) ? ticket.comments : [];
 
     let timerColor = 'bg-green-100 text-green-700 border-green-200';
     if (elapsedHours >= 24 && elapsedHours <= 48) timerColor = 'bg-yellow-100 text-yellow-700 border-yellow-200';
@@ -367,13 +368,19 @@ const TicketDetailPage = () => {
                     <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
                         <h2 className="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Comments & Updates</h2>
                         <div className="space-y-4">
-                            <div className="border-l-2 border-blue-500 pl-4 py-1">
-                                <p className="text-sm text-gray-500 flex justify-between">
-                                    <span className="font-bold text-gray-800">Admin <span className="font-normal text-gray-400">(System Administrator)</span></span>
-                                    <span>{new Date(ticket.createdDate).toLocaleDateString()}</span>
-                                </p>
-                                <p className="text-gray-700 mt-1">Ticket received and assigned to local technicians.</p>
-                            </div>
+                            {comments.length > 0 ? comments.map((comment, index) => (
+                                <div key={`${comment.timestamp || index}-${index}`} className="border-l-2 border-blue-500 pl-4 py-1">
+                                    <p className="text-sm text-gray-500 flex justify-between gap-4">
+                                        <span className="font-bold text-gray-800">
+                                            {comment.authorName} <span className="font-normal text-gray-400">({comment.authorRole})</span>
+                                        </span>
+                                        <span>{comment.timestamp ? new Date(comment.timestamp).toLocaleString() : 'Just now'}</span>
+                                    </p>
+                                    <p className="text-gray-700 mt-1">{comment.content}</p>
+                                </div>
+                            )) : (
+                                <div className="text-sm text-gray-400">No comments have been posted yet.</div>
+                            )}
                         </div>
                     </div>
                 </div>

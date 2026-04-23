@@ -2,6 +2,7 @@
 package com.smartcampus.smart_campus_api.controller;
 
 import com.smartcampus.smart_campus_api.dto.TicketCreateDto;
+import com.smartcampus.smart_campus_api.dto.TicketCommentCreateDto;
 import com.smartcampus.smart_campus_api.model.Ticket;
 import com.smartcampus.smart_campus_api.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +69,11 @@ public class TicketController {
         String userId = resolveUserId(userIdHeader, principal);
         ticketService.deleteUserTicket(id, userId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/comments")
+    public ResponseEntity<Ticket> addComment(@PathVariable String id, @RequestBody TicketCommentCreateDto dto) {
+        return ResponseEntity.ok(ticketService.addComment(id, dto));
     }
 
     // Admin Endpoints

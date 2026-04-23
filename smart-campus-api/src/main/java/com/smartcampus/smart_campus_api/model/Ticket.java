@@ -20,6 +20,7 @@ public class Ticket {
     private LocalDateTime createdDate;
     private String userId;
     private List<String> images = new ArrayList<>();
+    private List<TicketComment> comments = new ArrayList<>();
     private String assignee;
     private String rejectionReason;
     private String resolutionNotes;
@@ -55,6 +56,9 @@ public class Ticket {
 
     public List<String> getImages() { return images; }
     public void setImages(List<String> images) { this.images = images; }
+
+    public List<TicketComment> getComments() { return comments; }
+    public void setComments(List<TicketComment> comments) { this.comments = comments; }
 
     public String getAssignee() { return assignee; }
     public void setAssignee(String assignee) { this.assignee = assignee; }

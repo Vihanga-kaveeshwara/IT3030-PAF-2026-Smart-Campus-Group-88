@@ -135,6 +135,39 @@ export const TicketProvider = ({ children }) => {
     }
   };
 
+  const addTicketComment = async (id, commentData) => {
+    try {
+      const response = await axios.post(`${API_BASE_URL}/${id}/comments`, commentData, AXIOS_CONFIG);
+      dispatch({ type: 'UPDATE_TICKET', payload: response.data });
+      return response.data;
+    } catch (err) {
+      console.error("Error posting comment", err);
+      throw err;
+    }
+  };
+
+  const startWork = async (id) => {
+    try {
+      const response = await axios.patch(`${API_BASE_URL}/${id}/start-work`, {}, AXIOS_CONFIG);
+      dispatch({ type: 'UPDATE_TICKET', payload: response.data });
+      return response.data;
+    } catch (err) {
+      console.error("Error starting work", err);
+      throw err;
+    }
+  };
+
+  const resolveTicket = async (id, resolutionNotes) => {
+    try {
+      const response = await axios.patch(`${API_BASE_URL}/${id}/resolve`, { resolutionNotes }, AXIOS_CONFIG);
+      dispatch({ type: 'UPDATE_TICKET', payload: response.data });
+      return response.data;
+    } catch (err) {
+      console.error("Error resolving ticket", err);
+      throw err;
+    }
+  };
+
   const updateUserTicket = async (id, ticketData) => {
     try {
       const response = await axios.put(`${API_BASE_URL}/${id}`, ticketData, AXIOS_CONFIG);
@@ -167,9 +200,12 @@ export const TicketProvider = ({ children }) => {
       fetchAllTickets,
       getTicket,
       addTicket,
+      addTicketComment,
       updateUserTicket,
       deleteUserTicket,
       assignTicket,
+      startWork,
+      resolveTicket,
       updateStatus,
       rejectTicket
     }}>
