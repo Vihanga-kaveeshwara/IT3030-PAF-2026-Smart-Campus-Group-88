@@ -39,6 +39,12 @@ const ticketReducer = (state, action) => {
         allTickets: state.allTickets.map(t => t.id === action.payload.id ? action.payload : t),
         tickets: state.tickets.map(t => t.id === action.payload.id ? action.payload : t)
       };
+    case 'DELETE_TICKET':
+      return {
+        ...state,
+        allTickets: state.allTickets.filter(t => t.id !== action.payload),
+        tickets: state.tickets.filter(t => t.id !== action.payload)
+      };
     default:
       return state;
   }
@@ -129,6 +135,27 @@ export const TicketProvider = ({ children }) => {
     }
   };
 
+  const updateUserTicket = async (id, ticketData) => {
+    try {
+      const response = await axios.put(`${API_BASE_URL}/${id}`, ticketData, AXIOS_CONFIG);
+      dispatch({ type: 'UPDATE_TICKET', payload: response.data });
+      return response.data;
+    } catch (err) {
+      console.error("Error updating ticket", err);
+      throw err;
+    }
+  };
+
+  const deleteUserTicket = async (id) => {
+    try {
+      await axios.delete(`${API_BASE_URL}/${id}`, AXIOS_CONFIG);
+      dispatch({ type: 'DELETE_TICKET', payload: id });
+    } catch (err) {
+      console.error("Error deleting ticket", err);
+      throw err;
+    }
+  };
+
   useEffect(() => {
     fetchTickets();
   }, [fetchTickets]);
@@ -140,6 +167,8 @@ export const TicketProvider = ({ children }) => {
       fetchAllTickets,
       getTicket,
       addTicket,
+      updateUserTicket,
+      deleteUserTicket,
       assignTicket,
       updateStatus,
       rejectTicket

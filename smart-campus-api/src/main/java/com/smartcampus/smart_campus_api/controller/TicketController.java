@@ -22,15 +22,22 @@ public class TicketController {
     private TicketService ticketService;
 
     @PostMapping
-    public ResponseEntity<Ticket> createTicket(@RequestBody TicketCreateDto dto, Principal principal) {
-        String userId = principal != null ? principal.getName() : "anonymous_user";
+    public ResponseEntity<Ticket> createTicket(
+            @RequestBody TicketCreateDto dto,
+            @RequestHeader(value = "user-id", required = false) String userIdHeader,
+            Principal principal
+    ) {
+        String userId = resolveUserId(userIdHeader, principal);
         Ticket ticket = ticketService.createTicket(dto, userId);
         return new ResponseEntity<>(ticket, HttpStatus.CREATED);
     }
 
     @GetMapping("/my")
-    public ResponseEntity<List<Ticket>> getMyTickets(Principal principal) {
-        String userId = principal != null ? principal.getName() : "anonymous_user";
+    public ResponseEntity<List<Ticket>> getMyTickets(
+            @RequestHeader(value = "user-id", required = false) String userIdHeader,
+            Principal principal
+    ) {
+        String userId = resolveUserId(userIdHeader, principal);
         List<Ticket> tickets = ticketService.getUserTickets(userId);
         return ResponseEntity.ok(tickets);
     }
@@ -39,6 +46,28 @@ public class TicketController {
     public ResponseEntity<Ticket> getTicket(@PathVariable String id) {
         Ticket ticket = ticketService.getTicketById(id);
         return ResponseEntity.ok(ticket);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Ticket> updateUserTicket(
+            @PathVariable String id,
+            @RequestBody TicketCreateDto dto,
+            @RequestHeader(value = "user-id", required = false) String userIdHeader,
+            Principal principal
+    ) {
+        String userId = resolveUserId(userIdHeader, principal);
+        return ResponseEntity.ok(ticketService.updateUserTicket(id, dto, userId));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUserTicket(
+            @PathVariable String id,
+            @RequestHeader(value = "user-id", required = false) String userIdHeader,
+            Principal principal
+    ) {
+        String userId = resolveUserId(userIdHeader, principal);
+        ticketService.deleteUserTicket(id, userId);
+        return ResponseEntity.noContent().build();
     }
 
     // Admin Endpoints
@@ -77,5 +106,12 @@ public class TicketController {
     @PatchMapping("/{id}/resolve")
     public ResponseEntity<Ticket> resolveTicket(@PathVariable String id, @RequestBody Map<String, String> payload) {
         return ResponseEntity.ok(ticketService.resolveTicket(id, payload.get("resolutionNotes")));
+    }
+
+    private String resolveUserId(String userIdHeader, Principal principal) {
+        if (userIdHeader != null && !userIdHeader.isBlank()) {
+            return userIdHeader;
+        }
+        return principal != null ? principal.getName() : "anonymous_user";
     }
 }
