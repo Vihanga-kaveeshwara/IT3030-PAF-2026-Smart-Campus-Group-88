@@ -7,7 +7,9 @@ function App() {
   // Modal eka on/off karana state eka
   const [isModalOpen, setIsModalOpen] = useState(false);
   
-  // Aluth resource eke data thiyaganna state eka
+  // Api danata edit karana item eke ID eka thiyaganna state eka (aluth ekak nam null)
+  const [editingId, setEditingId] = useState(null);
+  
   const [formData, setFormData] = useState({
     name: '',
     type: 'Lecture Hall',
@@ -16,7 +18,6 @@ function App() {
     status: 'ACTIVE'
   });
 
-  // Page load weddi data genna ganeema (Read)
   useEffect(() => {
     fetchFacilities();
   }, []);
@@ -29,29 +30,62 @@ function App() {
       .catch(error => console.error("Error fetching data:", error));
   };
 
-  // Form eke type karaddi state eka update kirima
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // Save button eka ebuwama backend ekata data yaweema (Create)
+  // Modal eka close karaddi okkoma data clear karana function eka
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setEditingId(null);
+    setFormData({ name: '', type: 'Lecture Hall', capacity: '', location: '', status: 'ACTIVE' });
+  };
+
+  // ----- Edit Function eka -----
+  const handleEdit = (facility) => {
+    // Edit karanna click karapu eke data tika form ekata fill karanawa
+    setFormData({
+      name: facility.name,
+      type: facility.type,
+      capacity: facility.capacity,
+      location: facility.location,
+      status: facility.status
+    });
+    setEditingId(facility.id); // ID eka mathaka thiyagannawa
+    setIsModalOpen(true); // Modal eka on karanawa
+  };
+
+  // ----- Save / Update Function eka -----
   const handleSubmit = (e) => {
     e.preventDefault(); 
     
-    axios.post('http://localhost:8080/api/facilities', formData)
-      .then(response => {
-        setFacilities([...facilities, response.data]);
-        setIsModalOpen(false);
-        setFormData({ name: '', type: 'Lecture Hall', capacity: '', location: '', status: 'ACTIVE' });
-      })
-      .catch(error => {
-        console.error("Error saving data:", error);
-        alert("Facility eka save karanna bari wuna!");
-      });
+    if (editingId) {
+      // Editing Id ekak thiyenawa nam meka Update ekak (PUT request)
+      axios.put(`http://localhost:8080/api/facilities/${editingId}`, formData)
+        .then(response => {
+          // Table eke thiyena parana row eka wenuwata aluth eka replace karanawa
+          setFacilities(facilities.map(fac => fac.id === editingId ? response.data : fac));
+          closeModal();
+        })
+        .catch(error => {
+          console.error("Error updating data:", error);
+          alert("Facility eka update karanna bari wuna!");
+        });
+    } else {
+      // Editing Id ekak nattam meka Aluth ekak save kirimak (POST request)
+      axios.post('http://localhost:8080/api/facilities', formData)
+        .then(response => {
+          setFacilities([...facilities, response.data]);
+          closeModal();
+        })
+        .catch(error => {
+          console.error("Error saving data:", error);
+          alert("Facility eka save karanna bari wuna!");
+        });
+    }
   };
 
-  // ----- Delete function eka lassanata methanata damma -----
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this facility?")) {
       axios.delete(`http://localhost:8080/api/facilities/${id}`)
@@ -64,11 +98,9 @@ function App() {
         });
     }
   };
-  // ---------------------------------------------------------
 
   return (
     <div className="min-h-screen bg-gray-100 relative">
-      {/* Navbar */}
       <nav className="bg-blue-800 text-white p-4 shadow-md">
         <div className="container mx-auto flex justify-between items-center">
           <h1 className="text-2xl font-bold">Smart Campus Hub</h1>
@@ -81,14 +113,13 @@ function App() {
         </div>
       </nav>
 
-      {/* Main Content */}
       <main className="container mx-auto mt-8 p-4">
         <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
           
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold text-gray-800">Facilities & Assets Catalogue</h2>
             <button 
-              onClick={() => setIsModalOpen(true)} 
+              onClick={() => { closeModal(); setIsModalOpen(true); }} 
               className="bg-blue-600 text-white px-5 py-2 rounded-lg font-medium hover:bg-blue-700 transition shadow"
             >
               + Add New Resource
@@ -134,17 +165,20 @@ function App() {
                         </span>
                       </td>
                       <td className="py-3 px-5 text-center">
-                        <button className="text-blue-600 hover:text-blue-800 font-medium text-sm mr-3">Edit</button>
-                        
-                        {/* ----- Delete Button eka methana update kala ----- */}
+                        {/* ----- Edit Button eka methana update kala ----- */}
+                        <button 
+                          onClick={() => handleEdit(facility)}
+                          className="text-blue-600 hover:text-blue-800 font-medium text-sm mr-3"
+                        >
+                          Edit
+                        </button>
+                        {/* ----------------------------------------------- */}
                         <button 
                           onClick={() => handleDelete(facility.id)} 
                           className="text-red-600 hover:text-red-800 font-medium text-sm"
                         >
                           Delete
                         </button>
-                        {/* ----------------------------------------------- */}
-
                       </td>
                     </tr>
                   ))
@@ -167,8 +201,11 @@ function App() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-2xl w-full max-w-md p-6">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-bold text-gray-800">Add New Resource</h3>
-              <button onClick={() => setIsModalOpen(false)} className="text-gray-500 hover:text-red-600 font-bold text-xl">&times;</button>
+              {/* Modal eke title eka auto wenas wenawa */}
+              <h3 className="text-xl font-bold text-gray-800">
+                {editingId ? 'Edit Resource' : 'Add New Resource'}
+              </h3>
+              <button onClick={closeModal} className="text-gray-500 hover:text-red-600 font-bold text-xl">&times;</button>
             </div>
             
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -208,8 +245,11 @@ function App() {
               </div>
 
               <div className="flex justify-end space-x-3 mt-6">
-                <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition">Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium shadow-sm">Save Resource</button>
+                <button type="button" onClick={closeModal} className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition">Cancel</button>
+                {/* Submit button eke text eka auto wenas wenawa */}
+                <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium shadow-sm">
+                  {editingId ? 'Update Resource' : 'Save Resource'}
+                </button>
               </div>
             </form>
           </div>
