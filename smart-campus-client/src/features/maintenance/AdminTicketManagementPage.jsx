@@ -97,6 +97,7 @@ const AdminTicketManagementPage = () => {
 
   const attachments = Array.isArray(ticket.images) ? ticket.images : [];
   const comments = Array.isArray(ticket.comments) ? ticket.comments : [];
+  const workProgress = ticket.status?.toLowerCase() === 'resolved' ? 100 : (ticket.workProgress ?? 0);
 
   const renderPriorityBadge = (p) => {
     const pLow = p?.toLowerCase() || '';
@@ -278,7 +279,27 @@ const AdminTicketManagementPage = () => {
               <p className="font-semibold text-gray-700 mb-4">
                 {new Date(ticket.createdDate || Date.now()).toLocaleString()}
               </p>
+              <p className="text-gray-400 text-xs mb-1">Assigned Technician</p>
+              <p className="font-semibold text-gray-700">
+                {ticket.assignee || 'Not assigned yet'}
+              </p>
             </div>
+          </div>
+
+          <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 flex flex-col">
+            <h2 className="text-lg font-bold mb-4">Work Progress</h2>
+            <div className="flex justify-between items-end mb-2">
+              <span className="text-xs text-gray-500">Completion</span>
+              <span className="text-sm font-bold text-orange-500">{workProgress}%</span>
+            </div>
+            <div className="w-full bg-gray-100 rounded-full h-2.5 mb-4">
+              <div className="bg-orange-500 h-2.5 rounded-full transition-all duration-300" style={{ width: `${workProgress}%` }} />
+            </div>
+            <p className="text-xs text-gray-400">
+              {ticket.assignee
+                ? `Current completion reported by ${ticket.assignee}.`
+                : 'This ticket has not been assigned to a technician yet.'}
+            </p>
           </div>
         </div>
       </div>

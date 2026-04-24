@@ -38,7 +38,8 @@ const TechnicianTicketDetailPage = () => {
     ? Math.floor((Date.now() - new Date(ticket.createdDate).getTime()) / (1000 * 60 * 60))
     : 0;
 
-  const progress = ticket?.workProgress ?? progressValue ?? 0;
+  const isResolutionPreview = showNotesField && ticket?.status !== 'Resolved';
+  const progress = isResolutionPreview ? 100 : (ticket?.workProgress ?? progressValue ?? 0);
   const attachments = Array.isArray(ticket?.images) ? ticket.images : [];
   const comments = Array.isArray(ticket?.comments) ? ticket.comments : [];
 
@@ -88,6 +89,7 @@ const TechnicianTicketDetailPage = () => {
   };
 
   const handleShowResolve = () => {
+    setProgressValue(100);
     setShowNotesField(true);
   };
 
@@ -320,8 +322,8 @@ const TechnicianTicketDetailPage = () => {
                 type="number"
                 min="0"
                 max="100"
-                value={progressValue}
-                disabled={ticket.status === 'Resolved' || isSavingProgress}
+                value={isResolutionPreview ? 100 : progressValue}
+                disabled={ticket.status === 'Resolved' || isSavingProgress || isResolutionPreview}
                 onChange={(e) => setProgressValue(clampProgress(e.target.value))}
                 onBlur={() => commitProgress(progressValue)}
                 onKeyDown={(e) => {
@@ -341,8 +343,8 @@ const TechnicianTicketDetailPage = () => {
               min="0"
               max="100"
               step="1"
-              value={progressValue}
-              disabled={ticket.status === 'Resolved' || isSavingProgress}
+              value={isResolutionPreview ? 100 : progressValue}
+              disabled={ticket.status === 'Resolved' || isSavingProgress || isResolutionPreview}
               onChange={(e) => setProgressValue(clampProgress(e.target.value))}
               onMouseUp={() => commitProgress(progressValue)}
               onTouchEnd={() => commitProgress(progressValue)}
@@ -351,7 +353,7 @@ const TechnicianTicketDetailPage = () => {
             <div className="mt-4 flex items-center gap-3">
               <button
                 type="button"
-                disabled={ticket.status === 'Resolved' || isSavingProgress}
+                disabled={ticket.status === 'Resolved' || isSavingProgress || isResolutionPreview}
                 onClick={() => commitProgress((ticket.workProgress ?? progressValue) - 5)}
                 className="rounded-lg border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 disabled:opacity-60"
               >
@@ -359,7 +361,7 @@ const TechnicianTicketDetailPage = () => {
               </button>
               <button
                 type="button"
-                disabled={ticket.status === 'Resolved' || isSavingProgress}
+                disabled={ticket.status === 'Resolved' || isSavingProgress || isResolutionPreview}
                 onClick={() => commitProgress((ticket.workProgress ?? progressValue) + 5)}
                 className="rounded-lg border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 disabled:opacity-60"
               >
@@ -367,7 +369,9 @@ const TechnicianTicketDetailPage = () => {
               </button>
             </div>
             <p className="mt-4 text-xs text-gray-400">
-              Drag the slider, type a value, or use the buttons. Marking the ticket as resolved sets progress to 100%.
+              {isResolutionPreview
+                ? 'Progress is locked at 100% while you complete the resolution notes.'
+                : 'Drag the slider, type a value, or use the buttons. Marking the ticket as resolved sets progress to 100%.'}
             </p>
           </div>
         </div>

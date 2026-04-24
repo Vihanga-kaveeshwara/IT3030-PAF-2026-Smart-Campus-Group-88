@@ -74,6 +74,17 @@ public class TicketService {
     public Ticket updateStatus(String id, String status) {
         Ticket ticket = getTicketById(id);
         ticket.setStatus(status);
+
+        if ("Resolved".equalsIgnoreCase(status)) {
+            ticket.setWorkProgress(100);
+        } else if ("Open".equalsIgnoreCase(status)) {
+            ticket.setWorkProgress(0);
+            ticket.setAssignee(null);
+        } else if (("Assigned".equalsIgnoreCase(status) || "In Progress".equalsIgnoreCase(status))
+                && ticket.getWorkProgress() == null) {
+            ticket.setWorkProgress(0);
+        }
+
         return ticketRepository.save(ticket);
     }
 
