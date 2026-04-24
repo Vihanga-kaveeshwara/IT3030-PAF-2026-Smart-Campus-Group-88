@@ -188,6 +188,12 @@ const TicketDetailPage = () => {
                 <div>
                     <h1 className="text-3xl font-bold text-gray-800">Ticket Details</h1>
                     <p className="text-gray-500">Ticket ID: {formatTicketId(ticket.id)}</p>
+                    <button
+                        onClick={() => navigate('/maintenance/my-tickets')}
+                        className="mt-2 text-[#053769] font-medium hover:underline flex items-center gap-1 text-sm transition"
+                    >
+                        ← Back to My Tickets
+                    </button>
                 </div>
                 <div className="flex flex-wrap items-center gap-3">
                     {canManageTicket && !isEditing && (
