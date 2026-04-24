@@ -23,7 +23,7 @@ const TechnicianMyAssignedTicketsPage = () => {
   return (
     <div className="max-w-6xl mx-auto">
       <div className="mb-8">
-        <p className="text-gray-500 text-sm uppercase tracking-wide mb-1 font-semibold">FRAME 6: TECHNICIAN DASHBOARD - MY ASSIGNED TICKETS</p>
+        <p className="text-gray-500 text-sm uppercase tracking-wide mb-1 font-semibold"> TECHNICIAN DASHBOARD - MY ASSIGNED TICKETS</p>
         <h1 className="text-3xl font-bold text-[#053769] mb-2">My Assigned Tickets</h1>
         <p className="text-gray-500">View and manage tickets assigned to you</p>
       </div>
@@ -35,7 +35,7 @@ const TechnicianMyAssignedTicketsPage = () => {
             <p className="text-3xl font-bold text-[#053769]">{tickets.length}</p>
           </div>
           <div className="w-12 h-12 rounded-xl bg-blue-100 text-blue-500 flex items-center justify-center text-xl">
-            #
+          📌
           </div>
         </div>
 
@@ -45,7 +45,7 @@ const TechnicianMyAssignedTicketsPage = () => {
             <p className="text-3xl font-bold text-orange-500">{inProgressCount}</p>
           </div>
           <div className="w-12 h-12 rounded-xl bg-orange-50 text-orange-500 flex items-center justify-center text-xl">
-            H
+            ⏳
           </div>
         </div>
 
@@ -55,7 +55,7 @@ const TechnicianMyAssignedTicketsPage = () => {
             <p className="text-3xl font-bold text-red-500">{highPriorityCount}</p>
           </div>
           <div className="w-12 h-12 rounded-xl bg-red-50 text-red-500 flex items-center justify-center text-xl">
-            !
+          ‼️
           </div>
         </div>
       </div>
@@ -125,7 +125,7 @@ const TechnicianMyAssignedTicketsPage = () => {
             <div className="flex flex-col justify-between items-end md:w-48 mt-6 md:mt-0 border-t md:border-t-0 md:border-l border-gray-100 pt-6 md:pt-0 md:pl-6 relative z-10">
               <div className="text-right mb-4 md:mb-0">
                 <div className="flex items-center justify-end gap-1 text-gray-800 font-bold text-xl">
-                  H {getElapsedHours(ticket.createdDate)}
+                   {getElapsedHours(ticket.createdDate)}
                 </div>
                 <span className="text-xs text-gray-400 uppercase tracking-wider font-semibold">Time Elapsed</span>
               </div>

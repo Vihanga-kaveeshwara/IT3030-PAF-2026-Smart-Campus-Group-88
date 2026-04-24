@@ -146,14 +146,14 @@ const TechnicianTicketDetailPage = () => {
         <div className={`px-6 py-3 rounded-xl border flex flex-col items-center justify-center ${getTimeColor(timeElapsedHours)}`}>
           <span className="text-[10px] uppercase font-bold tracking-wider mb-1">Time Elapsed</span>
           <div className="flex items-center gap-2">
-            <span>H</span>
+            <span></span>
             <span className="text-2xl font-bold">{timeElapsedHours}h</span>
           </div>
         </div>
       </div>
 
       <button onClick={() => navigate(-1)} className="mb-6 text-[#053769] font-medium hover:underline flex items-center gap-1">
-        {'<'} Back to Assigned Tickets
+        {'←'} Back to Assigned Tickets
       </button>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -163,15 +163,15 @@ const TechnicianTicketDetailPage = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12 mb-6">
               <div>
-                <p className="text-gray-500 text-sm mb-1 flex items-center gap-2"><span>L</span> Resource/Location</p>
+                <p className="text-gray-500 text-sm mb-1 flex items-center gap-2"> Resource/Location</p>
                 <p className="font-semibold text-gray-800">{ticket.resourceLocation}</p>
               </div>
               <div>
-                <p className="text-gray-500 text-sm mb-1 flex items-center gap-2"><span>C</span> Category</p>
+                <p className="text-gray-500 text-sm mb-1 flex items-center gap-2"> Category</p>
                 <p className="font-semibold text-gray-800">{ticket.category}</p>
               </div>
               <div>
-                <p className="text-gray-500 text-sm mb-1 flex items-center gap-2"><span>!</span> Priority</p>
+                <p className="text-gray-500 text-sm mb-1 flex items-center gap-2"> Priority</p>
                 <span className={`px-2 py-0.5 text-xs font-bold rounded-md ${
                   ticket.priority === 'High' ? 'bg-red-50 text-red-600' :
                   ticket.priority === 'Medium' ? 'bg-yellow-50 text-yellow-600' : 'bg-green-50 text-green-600'
@@ -181,7 +181,7 @@ const TechnicianTicketDetailPage = () => {
                 </span>
               </div>
               <div>
-                <p className="text-gray-500 text-sm mb-1 flex items-center gap-2"><span>S</span> Status</p>
+                <p className="text-gray-500 text-sm mb-1 flex items-center gap-2"> Status</p>
                 <span className={`px-2 py-0.5 text-xs font-semibold rounded-md ${
                   ticket.status === 'In Progress' ? 'bg-orange-100 text-orange-700' :
                   ticket.status === 'Resolved' ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700'
@@ -191,16 +191,16 @@ const TechnicianTicketDetailPage = () => {
                 </span>
               </div>
               <div>
-                <p className="text-gray-500 text-sm mb-1 flex items-center gap-2"><span>U</span> Reported By</p>
+                <p className="text-gray-500 text-sm mb-1 flex items-center gap-2"> Reported By</p>
                 <p className="font-semibold text-gray-800">{ticket.userId}</p>
               </div>
               <div>
-                <p className="text-gray-500 text-sm mb-1 flex items-center gap-2"><span>@</span> Contact</p>
+                <p className="text-gray-500 text-sm mb-1 flex items-center gap-2"> Contact</p>
                 <p className="font-semibold text-gray-800">{ticket.contactDetails}</p>
               </div>
             </div>
 
-            <div className="border-t pt-6">
+            <div className="border-t pt-6 border-gray-100">
               <p className="text-gray-500 text-sm mb-2">Description</p>
               <p className="text-gray-700 text-sm leading-relaxed">{ticket.description}</p>
             </div>
@@ -287,12 +287,12 @@ const TechnicianTicketDetailPage = () => {
               <h2 className="text-lg font-bold text-gray-800 mb-4">Actions</h2>
               {ticket.status === 'Assigned' && (
                 <button onClick={handleStartWork} className="w-full bg-green-600 hover:bg-green-700 text-white rounded-xl py-3 font-semibold transition flex items-center justify-center gap-2 shadow-sm">
-                  <span>{'>'}</span> Start Work
+                   Start Work
                 </button>
               )}
               {ticket.status === 'In Progress' && !showNotesField && (
                 <button onClick={handleShowResolve} className="w-full bg-[#053769] hover:bg-[#04284d] text-white rounded-xl py-3 font-semibold transition flex items-center justify-center gap-2 shadow-sm">
-                  <span>OK</span> Mark as Resolved
+                   Mark as Resolved
                 </button>
               )}
             </div>
