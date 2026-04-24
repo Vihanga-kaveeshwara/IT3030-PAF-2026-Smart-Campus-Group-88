@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/facilities") // Me API ekata yana pradhana URL eka
+@CrossOrigin(origins = "http://localhost:5173") 
+@RequestMapping("/api/facilities")
 public class FacilityController {
 
     @Autowired
