@@ -3,13 +3,14 @@ import axios from 'axios';
 
 function App() {
   const [facilities, setFacilities] = useState([]);
-  
-  // Modal eka on/off karana state eka
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
-  // Api danata edit karana item eke ID eka thiyaganna state eka (aluth ekak nam null)
   const [editingId, setEditingId] = useState(null);
   
+  // ----- Search & Filter states -----
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterType, setFilterType] = useState('All Types');
+  // ----------------------------------
+
   const [formData, setFormData] = useState({
     name: '',
     type: 'Lecture Hall',
@@ -35,16 +36,13 @@ function App() {
     setFormData({ ...formData, [name]: value });
   };
 
-  // Modal eka close karaddi okkoma data clear karana function eka
   const closeModal = () => {
     setIsModalOpen(false);
     setEditingId(null);
     setFormData({ name: '', type: 'Lecture Hall', capacity: '', location: '', status: 'ACTIVE' });
   };
 
-  // ----- Edit Function eka -----
   const handleEdit = (facility) => {
-    // Edit karanna click karapu eke data tika form ekata fill karanawa
     setFormData({
       name: facility.name,
       type: facility.type,
@@ -52,37 +50,26 @@ function App() {
       location: facility.location,
       status: facility.status
     });
-    setEditingId(facility.id); // ID eka mathaka thiyagannawa
-    setIsModalOpen(true); // Modal eka on karanawa
+    setEditingId(facility.id);
+    setIsModalOpen(true);
   };
 
-  // ----- Save / Update Function eka -----
   const handleSubmit = (e) => {
     e.preventDefault(); 
-    
     if (editingId) {
-      // Editing Id ekak thiyenawa nam meka Update ekak (PUT request)
       axios.put(`http://localhost:8080/api/facilities/${editingId}`, formData)
         .then(response => {
-          // Table eke thiyena parana row eka wenuwata aluth eka replace karanawa
           setFacilities(facilities.map(fac => fac.id === editingId ? response.data : fac));
           closeModal();
         })
-        .catch(error => {
-          console.error("Error updating data:", error);
-          alert("Facility eka update karanna bari wuna!");
-        });
+        .catch(error => console.error("Error updating data:", error));
     } else {
-      // Editing Id ekak nattam meka Aluth ekak save kirimak (POST request)
       axios.post('http://localhost:8080/api/facilities', formData)
         .then(response => {
           setFacilities([...facilities, response.data]);
           closeModal();
         })
-        .catch(error => {
-          console.error("Error saving data:", error);
-          alert("Facility eka save karanna bari wuna!");
-        });
+        .catch(error => console.error("Error saving data:", error));
     }
   };
 
@@ -92,12 +79,19 @@ function App() {
         .then(() => {
           setFacilities(facilities.filter(facility => facility.id !== id));
         })
-        .catch(error => {
-          console.error("Error deleting data:", error);
-          alert("Facility eka delete karanna bari wuna!");
-        });
+        .catch(error => console.error("Error deleting data:", error));
     }
   };
+
+  // ----- Filtered Data Logic -----
+  // Table eke pennanne `facilities` nemei, me filter wunu `filteredFacilities` ekai
+  const filteredFacilities = facilities.filter(facility => {
+    const matchesSearch = facility.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                          facility.location.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesType = filterType === 'All Types' || facility.type === filterType;
+    return matchesSearch && matchesType;
+  });
+  // -------------------------------
 
   return (
     <div className="min-h-screen bg-gray-100 relative">
@@ -127,13 +121,25 @@ function App() {
           </div>
 
           <div className="mb-6 flex gap-4 bg-gray-50 p-4 rounded-lg border border-gray-200">
-            <input type="text" placeholder="Search by name or location..." className="border border-gray-300 p-2 rounded-lg w-full max-w-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
-            <select className="border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
-              <option>All Types</option>
-              <option>Lecture Hall</option>
-              <option>Lab</option>
-              <option>Meeting Room</option>
-              <option>Equipment</option>
+            {/* Search Input Eka */}
+            <input 
+              type="text" 
+              placeholder="Search by name or location..." 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="border border-gray-300 p-2 rounded-lg w-full max-w-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+            />
+            {/* Dropdown Filter Eka */}
+            <select 
+              value={filterType}
+              onChange={(e) => setFilterType(e.target.value)}
+              className="border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+            >
+              <option value="All Types">All Types</option>
+              <option value="Lecture Hall">Lecture Hall</option>
+              <option value="Lab">Lab</option>
+              <option value="Meeting Room">Meeting Room</option>
+              <option value="Equipment">Equipment</option>
             </select>
           </div>
 
@@ -150,8 +156,9 @@ function App() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {facilities.length > 0 ? (
-                  facilities.map((facility) => (
+                {/* Methana `filteredFacilities` walin map karanne */}
+                {filteredFacilities.length > 0 ? (
+                  filteredFacilities.map((facility) => (
                     <tr key={facility.id} className="hover:bg-blue-50 transition duration-150">
                       <td className="py-3 px-5 font-medium text-gray-800">{facility.name}</td>
                       <td className="py-3 px-5 text-gray-600">{facility.type}</td>
@@ -165,14 +172,12 @@ function App() {
                         </span>
                       </td>
                       <td className="py-3 px-5 text-center">
-                        {/* ----- Edit Button eka methana update kala ----- */}
                         <button 
                           onClick={() => handleEdit(facility)}
                           className="text-blue-600 hover:text-blue-800 font-medium text-sm mr-3"
                         >
                           Edit
                         </button>
-                        {/* ----------------------------------------------- */}
                         <button 
                           onClick={() => handleDelete(facility.id)} 
                           className="text-red-600 hover:text-red-800 font-medium text-sm"
@@ -185,7 +190,7 @@ function App() {
                 ) : (
                   <tr>
                     <td colSpan="6" className="py-4 text-center text-gray-500">
-                      No facilities found. Database is empty or backend is not connected.
+                      No facilities match your search.
                     </td>
                   </tr>
                 )}
@@ -196,12 +201,10 @@ function App() {
         </div>
       </main>
 
-      {/* Tailwind Modal (Popup) */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-2xl w-full max-w-md p-6">
             <div className="flex justify-between items-center mb-4">
-              {/* Modal eke title eka auto wenas wenawa */}
               <h3 className="text-xl font-bold text-gray-800">
                 {editingId ? 'Edit Resource' : 'Add New Resource'}
               </h3>
@@ -246,7 +249,6 @@ function App() {
 
               <div className="flex justify-end space-x-3 mt-6">
                 <button type="button" onClick={closeModal} className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition">Cancel</button>
-                {/* Submit button eke text eka auto wenas wenawa */}
                 <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium shadow-sm">
                   {editingId ? 'Update Resource' : 'Save Resource'}
                 </button>
