@@ -24,6 +24,7 @@ public class Ticket {
     private String assignee;
     private String rejectionReason;
     private String resolutionNotes;
+    private Integer workProgress;
 
     public Ticket() {}
 
@@ -68,4 +69,7 @@ public class Ticket {
 
     public String getResolutionNotes() { return resolutionNotes; }
     public void setResolutionNotes(String resolutionNotes) { this.resolutionNotes = resolutionNotes; }
+
+    public Integer getWorkProgress() { return workProgress; }
+    public void setWorkProgress(Integer workProgress) { this.workProgress = workProgress; }
 }

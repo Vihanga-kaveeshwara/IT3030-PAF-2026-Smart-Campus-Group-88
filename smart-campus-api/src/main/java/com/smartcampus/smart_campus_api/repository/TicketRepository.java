@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface TicketRepository extends MongoRepository<Ticket, String> {
     List<Ticket> findByUserIdOrderByCreatedDateDesc(String userId);
-    List<Ticket> findByAssignee(String assignee);
+    List<Ticket> findByAssigneeIgnoreCaseOrderByCreatedDateDesc(String assignee);
 }

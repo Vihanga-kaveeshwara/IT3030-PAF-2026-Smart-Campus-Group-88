@@ -42,11 +42,15 @@ const AdminTicketManagementPage = () => {
       if (assignee !== ticket.assignee) {
         updatedTicket = await assignTicket(id, assignee);
       }
-      if (status !== updatedTicket.status) {
-        updatedTicket = await updateStatus(id, status);
+      const normalizedAssignee = assignee.trim();
+      const desiredStatus = normalizedAssignee && status === 'Open' ? 'Assigned' : status;
+
+      if (desiredStatus !== updatedTicket.status) {
+        updatedTicket = await updateStatus(id, desiredStatus);
       }
 
       setTicket(updatedTicket);
+      setStatus(updatedTicket.status || desiredStatus);
       alert('Ticket updated successfully!');
       navigate('/maintenance/admin');
     } catch (err) {
@@ -242,6 +246,7 @@ const AdminTicketManagementPage = () => {
               <label className="block text-xs font-bold text-gray-700 mb-2">Update Status</label>
               <select value={status} onChange={e => setStatus(e.target.value)} className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#053769]">
                 <option value="Open">Open</option>
+                <option value="Assigned">Assigned</option>
                 <option value="In Progress">In Progress</option>
                 <option value="Resolved">Resolved</option>
                 <option value="Rejected">Rejected</option>

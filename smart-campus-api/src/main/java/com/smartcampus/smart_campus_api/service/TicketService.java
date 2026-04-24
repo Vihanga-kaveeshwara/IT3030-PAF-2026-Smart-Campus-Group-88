@@ -34,6 +34,7 @@ public class TicketService {
         ticket.setUserId(userId);
         ticket.setImages(dto.getImages() != null ? new ArrayList<>(dto.getImages()) : new ArrayList<>());
         ticket.setComments(new ArrayList<>());
+        ticket.setWorkProgress(0);
         return ticketRepository.save(ticket);
     }
 
@@ -51,8 +52,22 @@ public class TicketService {
 
     public Ticket assignTicket(String id, String assignee) {
         Ticket ticket = getTicketById(id);
-        ticket.setAssignee(assignee);
-        ticket.setStatus("Assigned");
+        String normalizedAssignee = assignee != null ? assignee.trim() : "";
+
+        if (normalizedAssignee.isBlank()) {
+            ticket.setAssignee(null);
+            ticket.setStatus("Open");
+            ticket.setWorkProgress(0);
+        } else {
+            ticket.setAssignee(normalizedAssignee);
+            if (!"Resolved".equalsIgnoreCase(ticket.getStatus())) {
+                ticket.setStatus("Assigned");
+            }
+            if (ticket.getWorkProgress() == null) {
+                ticket.setWorkProgress(0);
+            }
+        }
+
         return ticketRepository.save(ticket);
     }
 
@@ -70,12 +85,15 @@ public class TicketService {
     }
 
     public List<Ticket> getAssignedTickets(String assignee) {
-        return ticketRepository.findByAssignee(assignee);
+        return ticketRepository.findByAssigneeIgnoreCaseOrderByCreatedDateDesc(assignee.trim());
     }
 
     public Ticket startWork(String id) {
         Ticket ticket = getTicketById(id);
         ticket.setStatus("In Progress");
+        if (ticket.getWorkProgress() == null) {
+            ticket.setWorkProgress(0);
+        }
         return ticketRepository.save(ticket);
     }
 
@@ -83,6 +101,25 @@ public class TicketService {
         Ticket ticket = getTicketById(id);
         ticket.setStatus("Resolved");
         ticket.setResolutionNotes(resolutionNotes);
+        ticket.setWorkProgress(100);
+        return ticketRepository.save(ticket);
+    }
+
+    public Ticket updateWorkProgress(String id, int progress) {
+        Ticket ticket = getTicketById(id);
+        int safeProgress = Math.max(0, Math.min(100, progress));
+        ticket.setWorkProgress(safeProgress);
+
+        if (safeProgress >= 100) {
+            ticket.setWorkProgress(100);
+        } else if ("Resolved".equalsIgnoreCase(ticket.getStatus())) {
+            ticket.setStatus("In Progress");
+        } else if (safeProgress > 0 && !"In Progress".equalsIgnoreCase(ticket.getStatus())) {
+            ticket.setStatus("In Progress");
+        } else if (safeProgress == 0 && "In Progress".equalsIgnoreCase(ticket.getStatus())) {
+            ticket.setStatus("Assigned");
+        }
+
         return ticketRepository.save(ticket);
     }
 

@@ -99,8 +99,11 @@ public class TicketController {
 
     // Technician Endpoints
     @GetMapping("/assigned")
-    public ResponseEntity<List<Ticket>> getAssignedTickets(Principal principal) {
-        String assigneeUsername = principal != null ? principal.getName() : "Mike Johnson (Technician)"; // fallback for testing
+    public ResponseEntity<List<Ticket>> getAssignedTickets(
+            @RequestHeader(value = "user-id", required = false) String userIdHeader,
+            Principal principal
+    ) {
+        String assigneeUsername = resolveUserId(userIdHeader, principal);
         return ResponseEntity.ok(ticketService.getAssignedTickets(assigneeUsername));
     }
 
@@ -112,6 +115,12 @@ public class TicketController {
     @PatchMapping("/{id}/resolve")
     public ResponseEntity<Ticket> resolveTicket(@PathVariable String id, @RequestBody Map<String, String> payload) {
         return ResponseEntity.ok(ticketService.resolveTicket(id, payload.get("resolutionNotes")));
+    }
+
+    @PatchMapping("/{id}/progress")
+    public ResponseEntity<Ticket> updateWorkProgress(@PathVariable String id, @RequestBody Map<String, Integer> payload) {
+        Integer progress = payload.get("progress");
+        return ResponseEntity.ok(ticketService.updateWorkProgress(id, progress != null ? progress : 0));
     }
 
     private String resolveUserId(String userIdHeader, Principal principal) {
