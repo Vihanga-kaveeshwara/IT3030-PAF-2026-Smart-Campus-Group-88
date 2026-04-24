@@ -37,13 +37,11 @@ function App() {
 
   // Save button eka ebuwama backend ekata data yaweema (Create)
   const handleSubmit = (e) => {
-    e.preventDefault(); // Page eka refresh wena eka nawaththanawa
+    e.preventDefault(); 
     
     axios.post('http://localhost:8080/api/facilities', formData)
       .then(response => {
-        // Aluthen dapu eka table ekata add karanawa
         setFacilities([...facilities, response.data]);
-        // Modal eka close karala form eka clear karanawa
         setIsModalOpen(false);
         setFormData({ name: '', type: 'Lecture Hall', capacity: '', location: '', status: 'ACTIVE' });
       })
@@ -52,6 +50,21 @@ function App() {
         alert("Facility eka save karanna bari wuna!");
       });
   };
+
+  // ----- Delete function eka lassanata methanata damma -----
+  const handleDelete = (id) => {
+    if (window.confirm("Are you sure you want to delete this facility?")) {
+      axios.delete(`http://localhost:8080/api/facilities/${id}`)
+        .then(() => {
+          setFacilities(facilities.filter(facility => facility.id !== id));
+        })
+        .catch(error => {
+          console.error("Error deleting data:", error);
+          alert("Facility eka delete karanna bari wuna!");
+        });
+    }
+  };
+  // ---------------------------------------------------------
 
   return (
     <div className="min-h-screen bg-gray-100 relative">
@@ -122,7 +135,16 @@ function App() {
                       </td>
                       <td className="py-3 px-5 text-center">
                         <button className="text-blue-600 hover:text-blue-800 font-medium text-sm mr-3">Edit</button>
-                        <button className="text-red-600 hover:text-red-800 font-medium text-sm">Delete</button>
+                        
+                        {/* ----- Delete Button eka methana update kala ----- */}
+                        <button 
+                          onClick={() => handleDelete(facility.id)} 
+                          className="text-red-600 hover:text-red-800 font-medium text-sm"
+                        >
+                          Delete
+                        </button>
+                        {/* ----------------------------------------------- */}
+
                       </td>
                     </tr>
                   ))
