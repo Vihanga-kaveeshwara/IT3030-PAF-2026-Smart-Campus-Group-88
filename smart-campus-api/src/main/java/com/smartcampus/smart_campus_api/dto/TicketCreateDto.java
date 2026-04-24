@@ -1,13 +1,30 @@
 package com.smartcampus.smart_campus_api.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 import java.util.List;
 
 public class TicketCreateDto {
+    @NotBlank(message = "Resource location is required")
+    @Size(min = 5, max = 120, message = "Resource location must be between 5 and 120 characters")
     private String resourceLocation;
+
+    @NotBlank(message = "Category is required")
     private String category;
+
+    @NotBlank(message = "Description is required")
+    @Size(min = 20, max = 1000, message = "Description must be between 20 and 1000 characters")
     private String description;
+
+    @NotBlank(message = "Priority is required")
     private String priority;
+
+    @NotBlank(message = "Contact details are required")
+    @Size(min = 6, max = 120, message = "Contact details must be between 6 and 120 characters")
     private String contactDetails;
+
+    @Size(max = 3, message = "A maximum of 3 images can be attached")
     private List<String> images;
 
     public TicketCreateDto() {}

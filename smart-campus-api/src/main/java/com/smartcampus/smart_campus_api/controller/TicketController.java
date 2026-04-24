@@ -5,6 +5,7 @@ import com.smartcampus.smart_campus_api.dto.TicketCreateDto;
 import com.smartcampus.smart_campus_api.dto.TicketCommentCreateDto;
 import com.smartcampus.smart_campus_api.model.Ticket;
 import com.smartcampus.smart_campus_api.service.TicketService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class TicketController {
 
     @PostMapping
     public ResponseEntity<Ticket> createTicket(
-            @RequestBody TicketCreateDto dto,
+            @Valid @RequestBody TicketCreateDto dto,
             @RequestHeader(value = "user-id", required = false) String userIdHeader,
             Principal principal
     ) {
@@ -52,7 +53,7 @@ public class TicketController {
     @PutMapping("/{id}")
     public ResponseEntity<Ticket> updateUserTicket(
             @PathVariable String id,
-            @RequestBody TicketCreateDto dto,
+            @Valid @RequestBody TicketCreateDto dto,
             @RequestHeader(value = "user-id", required = false) String userIdHeader,
             Principal principal
     ) {
