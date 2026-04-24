@@ -389,6 +389,16 @@ const TicketDetailPage = () => {
                             )}
                         </div>
                     </div>
+
+                    {ticket.resolutionNotes && (
+                        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                            <h2 className="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Resolution Notes</h2>
+                            <p className="text-sm text-gray-500 mb-3">Details shared by the assigned technician after resolving this ticket.</p>
+                            <div className="rounded-xl border border-green-100 bg-green-50 px-4 py-4">
+                                <p className="text-sm leading-relaxed text-gray-700">{ticket.resolutionNotes}</p>
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 <div className="space-y-6">

@@ -227,6 +227,16 @@ const AdminTicketManagementPage = () => {
             ></textarea>
             <button onClick={handlePostComment} className="bg-[#053769] text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-[#042d55] transition">Post Comment</button>
           </div>
+
+          {ticket.resolutionNotes && (
+            <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
+              <h2 className="text-lg font-bold mb-4">Resolution Notes</h2>
+              <p className="text-sm text-gray-500 mb-4">Information recorded by the technician when the work was completed.</p>
+              <div className="rounded-2xl border border-green-100 bg-green-50 p-5">
+                <p className="text-sm leading-relaxed text-gray-700">{ticket.resolutionNotes}</p>
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="w-full lg:w-80 flex flex-col gap-6">
