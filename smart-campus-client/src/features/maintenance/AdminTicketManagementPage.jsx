@@ -140,27 +140,27 @@ const AdminTicketManagementPage = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8 mb-8 border-b border-gray-100 pb-8">
               <div>
-                <p className="text-xs text-gray-500 mb-1 inline-flex items-center gap-1"><span className="text-gray-400">📍</span> Resource/Location</p>
+                <p className="text-xs text-gray-500 mb-1 inline-flex items-center gap-1"><span className="text-gray-400"></span> Resource/Location</p>
                 <p className="font-semibold">{ticket.resourceLocation}</p>
               </div>
               <div>
-                <p className="text-xs text-gray-500 mb-1 inline-flex items-center gap-1"><span className="text-gray-400">🏷️</span> Category</p>
+                <p className="text-xs text-gray-500 mb-1 inline-flex items-center gap-1"><span className="text-gray-400"></span> Category</p>
                 <p className="font-semibold">{ticket.category}</p>
               </div>
               <div>
-                <p className="text-xs text-gray-500 mb-1 inline-flex items-center gap-1"><span className="text-gray-400">❗</span> Priority</p>
+                <p className="text-xs text-gray-500 mb-1 inline-flex items-center gap-1"><span className="text-gray-400"></span> Priority</p>
                 <div className="mt-1">{renderPriorityBadge(ticket.priority)}</div>
               </div>
               <div>
-                <p className="text-xs text-gray-500 mb-1 inline-flex items-center gap-1"><span className="text-gray-400">🗂</span> Status</p>
+                <p className="text-xs text-gray-500 mb-1 inline-flex items-center gap-1"><span className="text-gray-400"></span> Status</p>
                 <div className="mt-1">{renderStatusBadge(ticket.status)}</div>
               </div>
               <div>
-                <p className="text-xs text-gray-500 mb-1 inline-flex items-center gap-1"><span className="text-gray-400">👤</span> Reported By</p>
+                <p className="text-xs text-gray-500 mb-1 inline-flex items-center gap-1"><span className="text-gray-400"></span> Reported By</p>
                 <p className="font-semibold">{ticket.userId || 'Student'}</p>
               </div>
               <div>
-                <p className="text-xs text-gray-500 mb-1 inline-flex items-center gap-1"><span className="text-gray-400">✉️</span> Contact</p>
+                <p className="text-xs text-gray-500 mb-1 inline-flex items-center gap-1"><span className="text-gray-400"></span> Contact</p>
                 <p className="font-semibold text-blue-600">{ticket.contactDetails}</p>
               </div>
             </div>
@@ -193,7 +193,7 @@ const AdminTicketManagementPage = () => {
           </div>
 
           <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
-            <h2 className="text-lg font-bold mb-6 inline-flex items-center gap-2"><span className="text-gray-400">💬</span> Comments & Updates</h2>
+            <h2 className="text-lg font-bold mb-6 inline-flex items-center gap-2"><span className="text-gray-400"></span> Comments & Updates</h2>
             
             <div className="space-y-4 mb-6 relative before:absolute before:inset-0 before:ml-2 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-gray-200 before:to-transparent">
               {comments.length > 0 ? comments.map((comment, index) => (
