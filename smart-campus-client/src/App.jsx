@@ -1,6 +1,21 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 function App() {
+  // Database eken ena data tika thiyaganna state eka
+  const [facilities, setFacilities] = useState([]);
+
+  // Page eka load weddi eka parak data tika backend eken ganna
+  useEffect(() => {
+    axios.get('http://localhost:8080/api/facilities')
+      .then(response => {
+        setFacilities(response.data);
+      })
+      .catch(error => {
+        console.error("Backend eken data ganna yaddi error ekak awa:", error);
+      });
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Navbar */}
@@ -20,7 +35,6 @@ function App() {
       <main className="container mx-auto mt-8 p-4">
         <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
           
-          {/* Header section */}
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold text-gray-800">Facilities & Assets Catalogue</h2>
             <button className="bg-blue-600 text-white px-5 py-2 rounded-lg font-medium hover:bg-blue-700 transition shadow">
@@ -28,7 +42,6 @@ function App() {
             </button>
           </div>
 
-          {/* Search & Filter Section */}
           <div className="mb-6 flex gap-4 bg-gray-50 p-4 rounded-lg border border-gray-200">
             <input 
               type="text" 
@@ -44,7 +57,6 @@ function App() {
             </select>
           </div>
 
-          {/* Data Table */}
           <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
             <table className="min-w-full bg-white text-left">
               <thead className="bg-gray-100 border-b border-gray-200">
@@ -58,20 +70,36 @@ function App() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {/* Dummy Data Row */}
-                <tr className="hover:bg-blue-50 transition duration-150">
-                  <td className="py-3 px-5 font-medium text-gray-800">Main Auditorium</td>
-                  <td className="py-3 px-5 text-gray-600">Lecture Hall</td>
-                  <td className="py-3 px-5 text-gray-600">500</td>
-                  <td className="py-3 px-5 text-gray-600">Block A</td>
-                  <td className="py-3 px-5">
-                    <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-bold tracking-wide">ACTIVE</span>
-                  </td>
-                  <td className="py-3 px-5 text-center">
-                    <button className="text-blue-600 hover:text-blue-800 font-medium text-sm mr-3">Edit</button>
-                    <button className="text-red-600 hover:text-red-800 font-medium text-sm">Delete</button>
-                  </td>
-                </tr>
+                
+                {/* Backend eken ena data list eka map karanawa */}
+                {facilities.length > 0 ? (
+                  facilities.map((facility) => (
+                    <tr key={facility.id} className="hover:bg-blue-50 transition duration-150">
+                      <td className="py-3 px-5 font-medium text-gray-800">{facility.name}</td>
+                      <td className="py-3 px-5 text-gray-600">{facility.type}</td>
+                      <td className="py-3 px-5 text-gray-600">{facility.capacity}</td>
+                      <td className="py-3 px-5 text-gray-600">{facility.location}</td>
+                      <td className="py-3 px-5">
+                        <span className={`px-3 py-1 rounded-full text-xs font-bold tracking-wide ${
+                          facility.status === 'ACTIVE' || facility.status === 'Available' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                        }`}>
+                          {facility.status ? facility.status.toUpperCase() : 'UNKNOWN'}
+                        </span>
+                      </td>
+                      <td className="py-3 px-5 text-center">
+                        <button className="text-blue-600 hover:text-blue-800 font-medium text-sm mr-3">Edit</button>
+                        <button className="text-red-600 hover:text-red-800 font-medium text-sm">Delete</button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="6" className="py-4 text-center text-gray-500">
+                      No facilities found. Database is empty or backend is not connected.
+                    </td>
+                  </tr>
+                )}
+                
               </tbody>
             </table>
           </div>
