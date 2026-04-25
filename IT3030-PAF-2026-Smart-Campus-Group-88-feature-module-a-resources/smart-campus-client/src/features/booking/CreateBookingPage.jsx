@@ -63,7 +63,7 @@ const CreateBookingPage = () => {
       };
 
       const newBooking = await createBooking(bookingData);
-      alert(`✅ Booking request submitted successfully! Booking ID: ${newBooking.id}`);
+      alert(`Booking request submitted successfully! Booking ID: ${newBooking.id}`);
       
       await fetchMyBookings(formData.requesterId);
       navigate(`/booking/my-bookings?requesterId=${encodeURIComponent(formData.requesterId)}`);
