@@ -1,7 +1,0 @@
-package com.smartcampus.smart_campus_api.exception;
-
-public class BookingConflictException extends RuntimeException {
-    public BookingConflictException(String message) {
-        super(message);
-    }
-}
