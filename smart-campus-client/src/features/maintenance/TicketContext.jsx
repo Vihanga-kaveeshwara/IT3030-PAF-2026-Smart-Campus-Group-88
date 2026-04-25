@@ -5,14 +5,6 @@ import axios from 'axios';
 export const TicketContext = createContext();
 
 const API_BASE_URL = 'http://localhost:8080/api/tickets';
-const DEFAULT_USER_ID = 'user-123';
-const DEFAULT_TECHNICIAN_ID = 'Mike Johnson';
-
-const getAxiosConfig = (userId = DEFAULT_USER_ID) => ({
-  headers: {
-    'user-id': userId,
-  },
-});
 
 const initialState = {
   tickets: [],
@@ -61,7 +53,7 @@ export const TicketProvider = ({ children }) => {
   const fetchTickets = useCallback(async () => {
     dispatch({ type: 'FETCH_START' });
     try {
-      const response = await api.get(`api/tickets/my`);
+      const response = await api.get('api/tickets/my');
       dispatch({ type: 'FETCH_SUCCESS', payload: response.data });
     } catch (err) {
       console.error('Error fetching tickets', err);
@@ -72,7 +64,7 @@ export const TicketProvider = ({ children }) => {
   const fetchAllTickets = useCallback(async () => {
     dispatch({ type: 'FETCH_START' });
     try {
-      const response = await api.get(`api/tickets`);
+      const response = await api.get('api/tickets');
       dispatch({ type: 'FETCH_ALL_SUCCESS', payload: response.data });
     } catch (err) {
       console.error('Error fetching all tickets', err);
@@ -83,7 +75,7 @@ export const TicketProvider = ({ children }) => {
   const fetchAssignedTickets = useCallback(async () => {
     dispatch({ type: 'FETCH_START' });
     try {
-      const response = await api.get(`api/tickets/assigned`);
+      const response = await api.get('api/tickets/assigned');
       dispatch({ type: 'FETCH_ASSIGNED_SUCCESS', payload: response.data });
     } catch (err) {
       console.error('Error fetching assigned tickets', err);
@@ -103,7 +95,7 @@ export const TicketProvider = ({ children }) => {
 
   const addTicket = async (formData) => {
     try {
-      const response = await api.post(`api/tickets`, formData);
+      const response = await api.post('api/tickets', formData);
       dispatch({ type: 'ADD_TICKET', payload: response.data });
       return response.data;
     } catch (err) {

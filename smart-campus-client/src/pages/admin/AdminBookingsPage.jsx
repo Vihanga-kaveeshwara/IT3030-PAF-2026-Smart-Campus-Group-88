@@ -181,7 +181,7 @@ const AdminBookingsPage = () => {
                   </td>
                   <td className="px-6 py-5 text-center">
                     <Link
-                      to={`/booking/admin/manage/${booking.id}`}
+                      to={`/admin/booking/manage/${booking.id}`}
                       className="inline-flex items-center gap-2 px-4 py-2 bg-[#053769] text-white text-xs font-medium rounded-lg hover:bg-[#042d55] transition"
                     >
                       ⚙️ Manage

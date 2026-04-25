@@ -36,7 +36,7 @@ import AdminBookingManagementPage from './pages/admin/AdminBookingManagementPage
 import { TicketProvider } from './features/maintenance/TicketContext';
 
 // Maintenance feature pages
-import AdminAllTicketsPage from './pages/admin/AdminAllTicketsPage';
+import AllTicketsPage from './pages/admin/AllTicketsPage';
 import AdminTicketManagementPage from './pages/admin/AdminTicketManagementPage';
 import MyTicketsPage from './features/maintenance/MyTicketsPage';
 import ReportNewIncidentPage from './features/maintenance/ReportNewIncidentPage';
@@ -101,8 +101,16 @@ export default function App() {
                 </Routes>
               </BookingProvider>
             } />
-            <Route path="/admin/maintenance" element={<AdminAllTicketsPage />} />
-            <Route path="/admin/maintenance/ticket/:id" element={<AdminTicketManagementPage />} />
+            <Route path="/admin/maintenance" element={
+              <TicketProvider>
+                <AllTicketsPage />
+              </TicketProvider>
+            } />
+            <Route path="/admin/maintenance/ticket/:id" element={
+              <TicketProvider>
+                <AdminTicketManagementPage />
+              </TicketProvider>
+            } />
             <Route path="/admin/resources" element={<AdminResourcesManagementPage />} />
           </Route>
         </Route>
@@ -130,9 +138,21 @@ export default function App() {
             } />
 
             {/* Maintenance module routes */}
-            <Route path="/maintenance/my-tickets" element={<MyTicketsPage />} />
-            <Route path="/maintenance/report" element={<ReportNewIncidentPage />} />
-            <Route path="/maintenance/ticket/:id" element={<TicketDetailPage />} />
+            <Route path="/maintenance/my-tickets" element={
+              <TicketProvider>
+                <MyTicketsPage />
+              </TicketProvider>
+            } />
+            <Route path="/maintenance/report" element={
+              <TicketProvider>
+                <ReportNewIncidentPage />
+              </TicketProvider>
+            } />
+            <Route path="/maintenance/ticket/:id" element={
+              <TicketProvider>
+                <TicketDetailPage />
+              </TicketProvider>
+            } />
             
             {/* Technician maintenance routes */}
             <Route element={<TechnicianRoute />}>

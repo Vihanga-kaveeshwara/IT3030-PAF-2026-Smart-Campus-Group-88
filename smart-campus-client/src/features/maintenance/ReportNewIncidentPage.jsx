@@ -1,5 +1,7 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { TicketContext } from './TicketContext';
+import { useNavigate } from 'react-router-dom';
+import api from '../../api/axiosInstance';
 
 const CATEGORY_OPTIONS = ['Electrical', 'Furniture', 'IT Equipment', 'HVAC', 'Plumbing', 'Others'];
 const PRIORITY_OPTIONS = ['Low', 'Medium', 'High'];
@@ -70,9 +72,7 @@ const getFieldError = (name, value) => {
 
   switch (name) {
     case 'resourceLocation':
-      if (!trimmedValue) return 'Resource or location is required.';
-      if (trimmedValue.length < 5) return 'Please enter at least 5 characters.';
-      if (trimmedValue.length > 120) return 'Location must be 120 characters or less.';
+      if (!trimmedValue) return 'Please select a resource or location.';
       return '';
     case 'category':
       if (!trimmedValue) return 'Please select a category.';
@@ -104,6 +104,7 @@ const validateForm = (formData) => ({
 
 const ReportNewIncidentPage = () => {
   const { addTicket } = useContext(TicketContext);
+  const navigate = useNavigate();
   const [formData, setFormData] = useState(initialFormState);
   const [images, setImages] = useState([]);
   const [fieldErrors, setFieldErrors] = useState({});
@@ -112,6 +113,9 @@ const ReportNewIncidentPage = () => {
   const [submitError, setSubmitError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successToast, setSuccessToast] = useState('');
+  const [facilities, setFacilities] = useState([]);
+  const [facilitiesLoading, setFacilitiesLoading] = useState(true);
+  const [facilitiesError, setFacilitiesError] = useState(null);
 
   const imagePreviews = useMemo(
     () => images.map((file) => ({ file, url: URL.createObjectURL(file) })),
@@ -133,6 +137,24 @@ const ReportNewIncidentPage = () => {
 
     return () => window.clearTimeout(timer);
   }, [successToast]);
+
+  useEffect(() => {
+    const fetchFacilities = async () => {
+      try {
+        setFacilitiesLoading(true);
+        const response = await api.get('/api/facilities');
+        setFacilities(response.data);
+        setFacilitiesError(null);
+      } catch (err) {
+        setFacilitiesError('Failed to load facilities. Please try again later.');
+        console.error('Error fetching facilities:', err);
+      } finally {
+        setFacilitiesLoading(false);
+      }
+    };
+
+    fetchFacilities();
+  }, []);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -254,6 +276,9 @@ const ReportNewIncidentPage = () => {
       setImageError('');
       setSubmitError('');
       setSuccessToast('Ticket Submitted Successfully');
+      
+      // Redirect to MyTicketsPage after successful submission
+      navigate('/maintenance/my-tickets');
     } catch (error) {
       const apiMessage = error?.response?.data?.message
         || error?.response?.data?.error
@@ -308,15 +333,37 @@ const ReportNewIncidentPage = () => {
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Resource/Location <span className="text-red-500">*</span>
           </label>
-          <input
-            type="text"
-            name="resourceLocation"
-            value={formData.resourceLocation}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            placeholder="e.g., Lab A-301, Lecture Hall 5, Building B Washroom"
-            className={getInputClassName('resourceLocation')}
-          />
+          {facilitiesLoading ? (
+            <div className="w-full px-4 py-3 rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-500">
+              Loading facilities...
+            </div>
+          ) : facilitiesError ? (
+            <div className="w-full px-4 py-3 rounded-lg border border-red-300 bg-red-50">
+              <p className="text-sm text-red-600">{facilitiesError}</p>
+              <button
+                type="button"
+                onClick={() => window.location.reload()}
+                className="mt-2 text-xs text-red-700 underline hover:no-underline"
+              >
+                Retry
+              </button>
+            </div>
+          ) : (
+            <select
+              name="resourceLocation"
+              value={formData.resourceLocation}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              className={getInputClassName('resourceLocation')}
+            >
+              <option value="">Select a resource or location</option>
+              {facilities.map((facility) => (
+                <option key={facility.id} value={`${facility.name} - ${facility.location || 'No location specified'}`}>
+                  {facility.name} - {facility.location || 'No location specified'}
+                </option>
+              ))}
+            </select>
+          )}
           {touched.resourceLocation && fieldErrors.resourceLocation && (
             <p className="mt-1 text-xs text-red-600">{fieldErrors.resourceLocation}</p>
           )}

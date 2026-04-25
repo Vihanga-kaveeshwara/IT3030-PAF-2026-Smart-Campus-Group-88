@@ -1,11 +1,15 @@
 package com.smartcampus.smart_campus_api.dto.request;
 
 public class TicketCommentCreateDto {
+    private String authorId;
     private String authorName;
     private String authorRole;
     private String content;
 
     public TicketCommentCreateDto() {}
+
+    public String getAuthorId() { return authorId; }
+    public void setAuthorId(String authorId) { this.authorId = authorId; }
 
     public String getAuthorName() { return authorName; }
     public void setAuthorName(String authorName) { this.authorName = authorName; }

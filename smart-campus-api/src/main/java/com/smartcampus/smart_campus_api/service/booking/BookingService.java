@@ -8,6 +8,7 @@ import com.smartcampus.smart_campus_api.model.booking.Booking;
 import com.smartcampus.smart_campus_api.model.booking.BookingStatus;
 import com.smartcampus.smart_campus_api.repository.booking.BookingRepository;
 import com.smartcampus.smart_campus_api.repository.resource.FacilityRepository;
+import com.smartcampus.smart_campus_api.service.notification.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,9 @@ public class BookingService {
 
     @Autowired
     private FacilityRepository facilityRepository;
+
+    @Autowired
+    private NotificationService notificationService;
 
     private static final List<BookingStatus> BLOCKING_STATUSES = List.of(BookingStatus.PENDING, BookingStatus.APPROVED);
 
@@ -67,7 +71,14 @@ public class BookingService {
         booking.setStatus(BookingStatus.APPROVED);
         booking.setRejectionReason(null);
         booking.setUpdatedAt(LocalDateTime.now());
-        return bookingRepository.save(booking);
+        Booking savedBooking = bookingRepository.save(booking);
+        
+        // Send notification to booking requester about approval
+        if (booking.getRequesterId() != null) {
+            notificationService.notifyBookingApproved(booking.getRequesterId(), booking.getId());
+        }
+        
+        return savedBooking;
     }
 
     public Booking rejectBooking(String bookingId, String reason) {
@@ -77,7 +88,14 @@ public class BookingService {
         booking.setStatus(BookingStatus.REJECTED);
         booking.setRejectionReason(reason);
         booking.setUpdatedAt(LocalDateTime.now());
-        return bookingRepository.save(booking);
+        Booking savedBooking = bookingRepository.save(booking);
+        
+        // Send notification to booking requester about rejection
+        if (booking.getRequesterId() != null) {
+            notificationService.notifyBookingRejected(booking.getRequesterId(), booking.getId(), reason != null ? reason : "No reason provided");
+        }
+        
+        return savedBooking;
     }
 
     public Booking cancelBooking(String bookingId) {
@@ -86,7 +104,14 @@ public class BookingService {
 
         booking.setStatus(BookingStatus.CANCELLED);
         booking.setUpdatedAt(LocalDateTime.now());
-        return bookingRepository.save(booking);
+        Booking savedBooking = bookingRepository.save(booking);
+        
+        // Send notification to booking requester about cancellation
+        if (booking.getRequesterId() != null) {
+            notificationService.notifyBookingCancelled(booking.getRequesterId(), booking.getId());
+        }
+        
+        return savedBooking;
     }
 
     public Booking getBookingById(String bookingId) {

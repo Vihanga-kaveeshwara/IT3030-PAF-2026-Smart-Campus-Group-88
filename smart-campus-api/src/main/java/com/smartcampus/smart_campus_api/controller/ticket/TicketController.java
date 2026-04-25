@@ -139,9 +139,14 @@ public class TicketController {
     }
 
     private String resolveUserId(String userIdHeader, Principal principal) {
+        // Prioritize authenticated user from JWT over header
+        if (principal != null && principal.getName() != null && !principal.getName().isBlank()) {
+            return principal.getName();
+        }
+        // Fallback to header for backwards compatibility
         if (userIdHeader != null && !userIdHeader.isBlank()) {
             return userIdHeader;
         }
-        return principal != null ? principal.getName() : "anonymous_user";
+        return "anonymous_user";
     }
 }

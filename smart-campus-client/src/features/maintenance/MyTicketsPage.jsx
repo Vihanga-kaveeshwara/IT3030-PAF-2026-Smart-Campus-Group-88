@@ -30,10 +30,20 @@ const MyTicketsPage = () => {
         <div className="p-8">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
-                <h1 className="text-3xl font-bold text-gray-800 mb-2">My Tickets</h1>
-                <p className="text-gray-600 mb-8">
-                    View and track all your submitted maintenance requests
-                </p>
+                <div className="flex justify-between items-center mb-8">
+                    <div>
+                        <h1 className="text-3xl font-bold text-gray-800 mb-2">My Tickets</h1>
+                        <p className="text-gray-600">
+                            View and track all your submitted maintenance requests
+                        </p>
+                    </div>
+                    <Link
+                        to="/maintenance/report"
+                        className="inline-flex items-center gap-2 px-5 py-2 bg-[#053769] text-white text-sm font-medium rounded-xl hover:bg-[#042d55] transition"
+                    >
+                        ➕ Add Ticket
+                    </Link>
+                </div>
 
                 {/* Table */}
                 <div className="bg-white rounded-2xl shadow-sm overflow-hidden">

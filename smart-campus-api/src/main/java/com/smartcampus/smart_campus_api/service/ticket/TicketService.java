@@ -6,6 +6,7 @@ import com.smartcampus.smart_campus_api.dto.request.TicketCommentCreateDto;
 import com.smartcampus.smart_campus_api.model.Ticket;
 import com.smartcampus.smart_campus_api.model.TicketComment;
 import com.smartcampus.smart_campus_api.repository.TicketRepository;
+import com.smartcampus.smart_campus_api.service.notification.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,9 @@ public class TicketService {
 
     @Autowired
     private TicketRepository ticketRepository;
+
+    @Autowired
+    private NotificationService notificationService;
 
     public Ticket createTicket(TicketCreateDto dto, String userId) {
         Ticket ticket = new Ticket();
@@ -73,6 +77,7 @@ public class TicketService {
 
     public Ticket updateStatus(String id, String status) {
         Ticket ticket = getTicketById(id);
+        String oldStatus = ticket.getStatus();
         ticket.setStatus(status);
 
         if ("Resolved".equalsIgnoreCase(status)) {
@@ -85,14 +90,31 @@ public class TicketService {
             ticket.setWorkProgress(0);
         }
 
-        return ticketRepository.save(ticket);
+        Ticket savedTicket = ticketRepository.save(ticket);
+        
+        // Send notification to ticket owner about status change
+        if (!Objects.equals(oldStatus, status) && ticket.getUserId() != null) {
+            System.out.println("Status changed from " + oldStatus + " to " + status + " for ticket " + ticket.getId() + ", notifying user: " + ticket.getUserId());
+            notificationService.notifyTicketStatusChanged(ticket.getUserId(), ticket.getId(), status);
+        } else {
+            System.out.println("No notification sent: oldStatus=" + oldStatus + ", newStatus=" + status + ", userId=" + ticket.getUserId());
+        }
+        
+        return savedTicket;
     }
 
     public Ticket rejectTicket(String id, String reason) {
         Ticket ticket = getTicketById(id);
         ticket.setStatus("Rejected");
         ticket.setRejectionReason(reason);
-        return ticketRepository.save(ticket);
+        Ticket savedTicket = ticketRepository.save(ticket);
+        
+        // Send notification to ticket owner about rejection
+        if (ticket.getUserId() != null) {
+            notificationService.notifyTicketStatusChanged(ticket.getUserId(), ticket.getId(), "Rejected");
+        }
+        
+        return savedTicket;
     }
 
     public List<Ticket> getAssignedTickets(String assignee) {
@@ -141,14 +163,22 @@ public class TicketService {
 
         Ticket ticket = getTicketById(id);
         List<TicketComment> comments = ticket.getComments() != null ? ticket.getComments() : new ArrayList<>();
+        String authorName = dto.getAuthorName() != null && !dto.getAuthorName().isBlank() ? dto.getAuthorName() : "System";
         comments.add(new TicketComment(
-                dto.getAuthorName() != null && !dto.getAuthorName().isBlank() ? dto.getAuthorName() : "System",
+                authorName,
                 dto.getAuthorRole() != null && !dto.getAuthorRole().isBlank() ? dto.getAuthorRole() : "Support Team",
                 dto.getContent().trim(),
                 LocalDateTime.now()
         ));
         ticket.setComments(comments);
-        return ticketRepository.save(ticket);
+        Ticket savedTicket = ticketRepository.save(ticket);
+        
+        // Send notification to ticket owner about new comment (only if commenter is not the ticket owner)
+        if (ticket.getUserId() != null && !Objects.equals(ticket.getUserId(), dto.getAuthorId())) {
+            notificationService.notifyNewTicketComment(ticket.getUserId(), ticket.getId(), authorName);
+        }
+        
+        return savedTicket;
     }
 
     public Ticket updateUserTicket(String id, TicketCreateDto dto, String userId) {

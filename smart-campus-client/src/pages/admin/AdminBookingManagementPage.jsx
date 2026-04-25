@@ -57,7 +57,7 @@ const AdminBookingManagementPage = () => {
       try {
         await approveBooking(id);
         alert('✅ Booking approved successfully');
-        navigate('/booking/admin');
+        navigate('/admin/booking/all');
       } catch (err) {
         alert(`❌ Error: ${err.response?.data?.error || err.message}`);
       } finally {
@@ -77,7 +77,7 @@ const AdminBookingManagementPage = () => {
       try {
         await rejectBooking(id, rejectionReason);
         alert('✅ Booking rejected successfully');
-        navigate('/booking/admin');
+        navigate('/admin/booking/all');
       } catch (err) {
         alert(`❌ Error: ${err.response?.data?.error || err.message}`);
       } finally {
@@ -102,7 +102,7 @@ const AdminBookingManagementPage = () => {
   return (
     <div className="p-8 max-w-4xl mx-auto">
       <button
-        onClick={() => navigate('/booking/admin')}
+        onClick={() => navigate('/admin/booking/all')}
         className="mb-6 text-[#053769] hover:underline font-medium"
       >
         ← Back to Admin Bookings

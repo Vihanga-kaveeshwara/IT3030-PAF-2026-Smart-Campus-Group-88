@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { formatTicketId } from './ticketIdFormatter';
 import { TicketContext } from './TicketContext';
+import { useAuth } from '../../context/AuthContext';
 
 const CATEGORIES = ['Electrical', 'Furniture', 'IT Equipment', 'HVAC', 'Plumbing', 'Others'];
 const PRIORITIES = ['Low', 'Medium', 'High'];
@@ -11,6 +12,7 @@ const TicketDetailPage = () => {
     const { getTicket, updateUserTicket, deleteUserTicket } = useContext(TicketContext);
     const { id } = useParams();
     const navigate = useNavigate();
+    const { isAdmin } = useAuth();
 
     const [ticket, setTicket] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -159,6 +161,11 @@ const TicketDetailPage = () => {
             setAttachments(Array.isArray(updatedTicket.images) ? updatedTicket.images : []);
             setIsEditing(false);
             alert('Ticket updated successfully.');
+            
+            // Redirect admin users to AllTicketsPage, regular users stay on the same page
+            if (isAdmin) {
+                navigate('/admin/maintenance');
+            }
         } catch (error) {
             alert(error?.response?.data?.message || error?.response?.data?.error || 'Failed to update ticket.');
         } finally {
