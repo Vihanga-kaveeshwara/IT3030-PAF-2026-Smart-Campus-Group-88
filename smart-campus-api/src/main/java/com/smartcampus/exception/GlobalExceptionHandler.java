@@ -14,7 +14,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
-@RestControllerAdvice
+@RestControllerAdvice("smartCampusGlobalExceptionHandler")
 @Slf4j
 public class GlobalExceptionHandler {
 

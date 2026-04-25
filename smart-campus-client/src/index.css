@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /* ── Reset & base ──────────────────────────────────────────────────────────── */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -913,11 +912,11 @@ textarea {
   height: 40vh;
   color: var(--color-text-muted);
 }
-=======
-@import "tailwindcss";
+
 
 body {
     background-color: #f9fafb;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
->>>>>>> 5131f4fa443806cea22cfc37774d85081fd5eef0
+@import "tailwindcss";
+
