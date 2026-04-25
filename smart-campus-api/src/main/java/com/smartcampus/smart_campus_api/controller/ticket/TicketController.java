@@ -1,8 +1,8 @@
 // Backend: src/main/java/com/smartcampus/smart_campus_api/controller/TicketController.java
 package com.smartcampus.smart_campus_api.controller;
 
-import com.smartcampus.smart_campus_api.dto.TicketCreateDto;
-import com.smartcampus.smart_campus_api.dto.TicketCommentCreateDto;
+import com.smartcampus.smart_campus_api.dto.request.TicketCreateDto;
+import com.smartcampus.smart_campus_api.dto.request.TicketCommentCreateDto;
 import com.smartcampus.smart_campus_api.model.Ticket;
 import com.smartcampus.smart_campus_api.service.TicketService;
 import jakarta.validation.Valid;

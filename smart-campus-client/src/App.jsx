@@ -3,6 +3,7 @@ import { AuthProvider } from './context/AuthContext';
 import { PrivateRoute, AdminRoute, TechnicianRoute } from './components/PrivateRoute';
 import AppLayout from './components/AppLayout'
 import { NotificationProvider } from './context/NotificationContext';
+import { BookingProvider } from './pages/booking/BookingContext';
 import './App.css';
 
 // Auth pages
@@ -16,6 +17,13 @@ import ResetPasswordPage  from './pages/auth/ResetPasswordPage';
 // App pages
 import DashboardPage      from './pages/DashboardPage';
 import NotificationsPage  from './pages/notifications/NotificationsPage';
+
+//Booking pages
+import BookingDetailPage from './pages/booking/BookingDetailPage';
+import CreateBookingPage from './pages/booking/CreateBookingPage';
+import MyBookingsPage from './pages/booking/MyBookingsPage';
+import AdminBookingsPage from './pages/booking/AdminBookingsPage';
+import AdminBookingManagementPage from './pages/booking/AdminBookingManagementPage';
 
 
 // Maintenance feature pages
@@ -64,7 +72,27 @@ export default function App() {
 
             
             {/* Other modules (replace placeholders with real pages) */}
-            <Route path="/bookings"   element={<PlaceholderPage name="Bookings" />} />
+            <Route path="/booking/*" element={
+              <BookingProvider>
+                <Routes>
+                  <Route path="detail/:id" element={<BookingDetailPage />} />
+                  <Route path="create" element={<CreateBookingPage />} />
+                  <Route path="my-bookings" element={<MyBookingsPage />} />
+                </Routes>
+              </BookingProvider>
+            } />
+            
+            {/* Admin booking routes */}
+            <Route element={<AdminRoute />}>
+              <Route path="/booking/admin/*" element={
+                <BookingProvider>
+                  <Routes>
+                    <Route path="all" element={<AdminBookingsPage />} />
+                    <Route path="manage/:id" element={<AdminBookingManagementPage />} />
+                  </Routes>
+                </BookingProvider>
+              } />
+            </Route>
 
             {/* Maintenance module routes */}
             <Route path="/maintenance/my-tickets" element={<MyTicketsPage />} />

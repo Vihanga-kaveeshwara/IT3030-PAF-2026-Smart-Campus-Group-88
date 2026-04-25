@@ -1,11 +1,12 @@
 import React, { createContext, useReducer, useEffect, useCallback } from 'react';
-import axios from 'axios';
+import api from '../../api/axiosInstance';
+import { useAuth } from '../../context/AuthContext';
 
 export const BookingContext = createContext();
 
 export const STATIC_USER_ID = 'user-123';
 
-const API_BASE_URL = 'http://localhost:8081/api/bookings';
+const API_BASE_URL = '/api/bookings';
 
 const AXIOS_CONFIG = {
   headers: {
@@ -51,20 +52,32 @@ const bookingReducer = (state, action) => {
 };
 
 export const BookingProvider = ({ children }) => {
+  const { user, isAuthenticated } = useAuth();
   const [state, dispatch] = useReducer(bookingReducer, initialState);
 
   const fetchMyBookings = useCallback(async (requesterId) => {
+    if (!isAuthenticated) {
+      dispatch({ type: 'FETCH_ERROR', payload: 'User not authenticated' });
+      return;
+    }
+    
     dispatch({ type: 'FETCH_START' });
     try {
-      const response = await axios.get(`${API_BASE_URL}/my?requesterId=${requesterId}`, AXIOS_CONFIG);
+      const userId = requesterId || user?.id || STATIC_USER_ID;
+      const response = await api.get(`${API_BASE_URL}/my?requesterId=${userId}`, AXIOS_CONFIG);
       dispatch({ type: 'FETCH_SUCCESS', payload: response.data });
     } catch (err) {
       console.error("Error fetching my bookings", err);
       dispatch({ type: 'FETCH_ERROR', payload: err.message || 'Error fetching bookings' });
     }
-  }, []);
+  }, [isAuthenticated, user]);
 
   const fetchAllBookings = useCallback(async (filters = {}) => {
+    if (!isAuthenticated) {
+      dispatch({ type: 'FETCH_ERROR', payload: 'User not authenticated' });
+      return;
+    }
+    
     dispatch({ type: 'FETCH_START' });
     try {
       const params = new URLSearchParams();
@@ -75,18 +88,23 @@ export const BookingProvider = ({ children }) => {
       if (filters.toDate) params.append('toDate', filters.toDate);
 
       const url = `${API_BASE_URL}/admin?${params.toString()}`;
-      const response = await axios.get(url, AXIOS_CONFIG);
+      const response = await api.get(url, AXIOS_CONFIG);
       dispatch({ type: 'FETCH_ALL_SUCCESS', payload: response.data });
     } catch (err) {
       console.error("Error fetching all bookings", err);
       dispatch({ type: 'FETCH_ERROR', payload: err.message || 'Error fetching bookings' });
     }
-  }, []);
+  }, [isAuthenticated]);
 
   const getBooking = useCallback(async (id) => {
+    if (!isAuthenticated) {
+      dispatch({ type: 'FETCH_ERROR', payload: 'User not authenticated' });
+      throw new Error('User not authenticated');
+    }
+    
     dispatch({ type: 'FETCH_START' });
     try {
-      const response = await axios.get(`${API_BASE_URL}/${id}`, AXIOS_CONFIG);
+      const response = await api.get(`${API_BASE_URL}/${id}`, AXIOS_CONFIG);
       dispatch({ type: 'FETCH_SINGLE_SUCCESS', payload: response.data });
       return response.data;
     } catch (err) {
@@ -94,11 +112,15 @@ export const BookingProvider = ({ children }) => {
       dispatch({ type: 'FETCH_ERROR', payload: err.message });
       throw err;
     }
-  }, []);
+  }, [isAuthenticated]);
 
   const createBooking = async (formData) => {
+    if (!isAuthenticated) {
+      throw new Error('User not authenticated');
+    }
+    
     try {
-      const response = await axios.post(API_BASE_URL, formData, AXIOS_CONFIG);
+      const response = await api.post(API_BASE_URL, formData, AXIOS_CONFIG);
       dispatch({ type: 'ADD_BOOKING', payload: response.data });
       return response.data;
     } catch (err) {
@@ -108,8 +130,12 @@ export const BookingProvider = ({ children }) => {
   };
 
   const approveBooking = async (id) => {
+    if (!isAuthenticated) {
+      throw new Error('User not authenticated');
+    }
+    
     try {
-      const response = await axios.put(`${API_BASE_URL}/${id}/approve`, {}, AXIOS_CONFIG);
+      const response = await api.put(`${API_BASE_URL}/${id}/approve`, {}, AXIOS_CONFIG);
       dispatch({ type: 'UPDATE_BOOKING', payload: response.data });
       return response.data;
     } catch (err) {
@@ -119,8 +145,12 @@ export const BookingProvider = ({ children }) => {
   };
 
   const rejectBooking = async (id, reason) => {
+    if (!isAuthenticated) {
+      throw new Error('User not authenticated');
+    }
+    
     try {
-      const response = await axios.put(`${API_BASE_URL}/${id}/reject`, { reason }, AXIOS_CONFIG);
+      const response = await api.put(`${API_BASE_URL}/${id}/reject`, { reason }, AXIOS_CONFIG);
       dispatch({ type: 'UPDATE_BOOKING', payload: response.data });
       return response.data;
     } catch (err) {
@@ -130,8 +160,12 @@ export const BookingProvider = ({ children }) => {
   };
 
   const cancelBooking = async (id) => {
+    if (!isAuthenticated) {
+      throw new Error('User not authenticated');
+    }
+    
     try {
-      const response = await axios.put(`${API_BASE_URL}/${id}/cancel`, {}, AXIOS_CONFIG);
+      const response = await api.put(`${API_BASE_URL}/${id}/cancel`, {}, AXIOS_CONFIG);
       dispatch({ type: 'UPDATE_BOOKING', payload: response.data });
       return response.data;
     } catch (err) {
@@ -142,7 +176,7 @@ export const BookingProvider = ({ children }) => {
 
   const fetchFacilities = useCallback(async () => {
     try {
-      const response = await axios.get('http://localhost:8081/api/facilities', AXIOS_CONFIG);
+      const response = await api.get('/api/facilities', AXIOS_CONFIG);
       dispatch({ type: 'SET_FACILITIES', payload: response.data });
     } catch (err) {
       console.error("Error fetching facilities", err);

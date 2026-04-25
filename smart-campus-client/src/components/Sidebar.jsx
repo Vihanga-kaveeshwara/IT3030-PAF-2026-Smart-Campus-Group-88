@@ -7,7 +7,7 @@ export default function Sidebar() {
   const links = [
     { to: '/dashboard', label: 'Dashboard', icon: '🏠' },
     { to: '/resources', label: 'Resources', icon: '🏛️' },
-    { to: '/bookings', label: 'Bookings', icon: '📅' },
+    { to: '/booking/my-bookings', label: 'Bookings', icon: '📅' },
     { to: '/tickets', label: isTechnician && !isAdmin ? 'My Tickets' : 'Tickets', icon: '🔧' },
     { to: '/notifications', label: 'Notifications', icon: '🔔' },
     { to: '/profile', label: 'Profile', icon: '👤' },

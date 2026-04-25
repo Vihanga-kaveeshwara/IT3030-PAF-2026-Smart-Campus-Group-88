@@ -1,4 +1,4 @@
-package com.smartcampus.smart_campus_api.dto;
+package com.smartcampus.smart_campus_api.dto.request;
 
 public class TicketCommentCreateDto {
     private String authorName;
