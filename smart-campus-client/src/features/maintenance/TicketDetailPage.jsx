@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { formatTicketId } from './ticketIdFormatter';
 import { TicketContext } from './TicketContext';
 import { useAuth } from '../../context/AuthContext';
+import { FiArrowLeft, FiMapPin, FiTool, FiFileText, FiAlertCircle, FiClock, FiUser, FiEdit, FiSave, FiX, FiTrash2, FiUpload, FiImage, FiCheckCircle, FiXCircle, FiLoader, FiGrid, FiMail } from 'react-icons/fi';
 
 const CATEGORIES = ['Electrical', 'Furniture', 'IT Equipment', 'HVAC', 'Plumbing', 'Others'];
 const PRIORITIES = ['Low', 'Medium', 'High'];
@@ -66,8 +67,68 @@ const TicketDetailPage = () => {
         };
     }, [attachments]);
 
-    if (loading) return <div className="p-8">Loading ticket details...</div>;
-    if (!ticket) return <div className="p-8">Ticket not found.</div>;
+    if (loading) return (
+        <div style={{
+            padding: '2rem',
+            minHeight: '100vh',
+            background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+        }}>
+            <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '1rem',
+                padding: '3rem',
+                background: 'rgba(255, 255, 255, 0.95)',
+                borderRadius: '1rem',
+                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+                backdropFilter: 'blur(10px)'
+            }}>
+                <FiGrid style={{
+                    fontSize: '2.5rem',
+                    color: '#3b82f6',
+                    animation: 'pulse 2s infinite'
+                }} />
+                <span style={{
+                    color: '#64748b',
+                    fontSize: '1rem',
+                    fontWeight: '500'
+                }}>Loading ticket details...</span>
+            </div>
+        </div>
+    );
+    if (!ticket) return (
+        <div style={{
+            padding: '2rem',
+            minHeight: '100vh',
+            background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+        }}>
+            <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '1rem',
+                padding: '3rem',
+                background: 'rgba(255, 255, 255, 0.95)',
+                borderRadius: '1rem',
+                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+                backdropFilter: 'blur(10px)'
+            }}>
+                <FiXCircle style={{ fontSize: '2.5rem', color: '#ef4444' }} />
+                <span style={{
+                    color: '#dc2626',
+                    fontSize: '1rem',
+                    fontWeight: '500'
+                }}>Ticket not found</span>
+            </div>
+        </div>
+    );
 
     const createdDate = new Date(ticket.createdDate);
     const now = new Date();
@@ -190,35 +251,177 @@ const TicketDetailPage = () => {
     };
 
     return (
-        <div className="p-8 max-w-5xl mx-auto">
-            <div className="flex flex-col gap-4 mb-6 lg:flex-row lg:justify-between lg:items-center">
-                <div>
-                    <h1 className="text-3xl font-bold text-gray-800">Ticket Details</h1>
-                    <p className="text-gray-500">Ticket ID: {formatTicketId(ticket.id)}</p>
-                    <button
-                        onClick={() => navigate('/maintenance/my-tickets')}
-                        className="mt-2 text-[#053769] font-medium hover:underline flex items-center gap-1 text-sm transition"
-                    >
-                        ← Back to My Tickets
-                    </button>
-                </div>
-                <div className="flex flex-wrap items-center gap-3">
-                    {canManageTicket && !isEditing && (
-                        <>
+        <div style={{
+            padding: '2rem',
+            minHeight: '100vh',
+            background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)'
+        }}>
+            <div style={{
+                maxWidth: '1400px',
+                margin: '0 auto'
+            }}>
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '1rem',
+                    marginBottom: '2rem',
+                    padding: '2rem',
+                    background: 'rgba(255, 255, 255, 0.95)',
+                    borderRadius: '1.5rem',
+                    boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+                    backdropFilter: 'blur(10px)'
+                }}>
+                    <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'flex-start',
+                        flexWrap: 'wrap',
+                        gap: '1rem'
+                    }}>
+                        <div>
+                            <h1 style={{
+                                fontSize: '2.5rem',
+                                fontWeight: '800',
+                                color: '#1e293b',
+                                marginBottom: '0.5rem',
+                                letterSpacing: '-0.02em',
+                                background: 'linear-gradient(135deg, #1e293b 0%, #475569 100%)',
+                                WebkitBackgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent',
+                                backgroundClip: 'text'
+                            }}>Ticket Details</h1>
+                            <p style={{
+                                color: '#64748b',
+                                fontSize: '1rem',
+                                fontWeight: '500',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.5rem'
+                            }}>
+                                <span style={{
+                                    fontFamily: 'monospace',
+                                    fontWeight: '600',
+                                    color: '#334155',
+                                    background: 'linear-gradient(135deg, #334155 0%, #475569 100%)',
+                                    WebkitBackgroundClip: 'text',
+                                    WebkitTextFillColor: 'transparent',
+                                    backgroundClip: 'text'
+                                }}>Ticket ID: {formatTicketId(ticket.id)}</span>
+                            </p>
                             <button
-                                type="button"
-                                onClick={handleEditStart}
-                                className="px-4 py-2 rounded-lg border border-[#053769] text-[#053769] font-medium hover:bg-blue-50 transition"
+                                onClick={() => navigate('/maintenance/my-tickets')}
+                                style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '0.5rem',
+                                    marginTop: '1rem',
+                                    padding: '0.75rem 1.5rem',
+                                    background: 'rgba(255, 255, 255, 0.9)',
+                                    color: '#053769',
+                                    fontWeight: '600',
+                                    borderRadius: '0.5rem',
+                                    border: '1px solid rgba(5, 55, 105, 0.1)',
+                                    textDecoration: 'none',
+                                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)',
+                                    transition: 'all 0.3s ease',
+                                    cursor: 'pointer',
+                                    fontSize: '0.875rem'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.target.style.background = 'rgba(5, 55, 105, 0.05)';
+                                    e.target.style.transform = 'translateX(-2px)';
+                                    e.target.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.target.style.background = 'rgba(255, 255, 255, 0.9)';
+                                    e.target.style.transform = 'translateX(0)';
+                                    e.target.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.05)';
+                                }}
                             >
-                                Edit Ticket
+                                <FiArrowLeft style={{ fontSize: '1rem' }} />
+                                Back to My Tickets
                             </button>
+                        </div>
+                <div style={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        alignItems: 'center',
+                        gap: '1rem'
+                    }}>
+                        {canManageTicket && !isEditing && (
+                            <>
+                                <button
+                                    type="button"
+                                    onClick={handleEditStart}
+                                    style={{
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '0.5rem',
+                                        padding: '0.75rem 1.5rem',
+                                        border: '2px solid #053769',
+                                        borderRadius: '0.5rem',
+                                        background: 'rgba(255, 255, 255, 0.9)',
+                                        color: '#053769',
+                                        fontWeight: '600',
+                                        transition: 'all 0.3s ease',
+                                        cursor: 'pointer'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        e.target.style.background = 'rgba(5, 55, 105, 0.05)';
+                                        e.target.style.transform = 'translateY(-1px)';
+                                        e.target.style.boxShadow = '0 4px 8px rgba(5, 55, 105, 0.1)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        e.target.style.background = 'rgba(255, 255, 255, 0.9)';
+                                        e.target.style.transform = 'translateY(0)';
+                                        e.target.style.boxShadow = 'none';
+                                    }}
+                                >
+                                    <FiEdit style={{ fontSize: '1rem' }} />
+                                    Edit Ticket
+                                </button>
                             <button
                                 type="button"
                                 onClick={handleDelete}
                                 disabled={isDeleting}
-                                className="px-4 py-2 rounded-lg bg-red-600 text-white font-medium hover:bg-red-700 transition disabled:opacity-60"
+                                style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '0.5rem',
+                                    padding: '0.75rem 1.5rem',
+                                    borderRadius: '0.5rem',
+                                    background: isDeleting ? 'linear-gradient(135deg, #9ca3af 0%, #6b7280 100%)' : 'linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)',
+                                    color: '#ffffff',
+                                    fontWeight: '600',
+                                    transition: 'all 0.3s ease',
+                                    cursor: isDeleting ? 'not-allowed' : 'pointer',
+                                    border: 'none',
+                                    opacity: isDeleting ? 0.6 : 1
+                                }}
+                                onMouseEnter={(e) => {
+                                    if (!isDeleting) {
+                                        e.target.style.transform = 'translateY(-1px)';
+                                        e.target.style.boxShadow = '0 4px 8px rgba(220, 38, 38, 0.3)';
+                                    }
+                                }}
+                                onMouseLeave={(e) => {
+                                    if (!isDeleting) {
+                                        e.target.style.transform = 'translateY(0)';
+                                        e.target.style.boxShadow = 'none';
+                                    }
+                                }}
                             >
-                                {isDeleting ? 'Deleting...' : 'Delete Ticket'}
+                                {isDeleting ? (
+                                    <>
+                                        <FiLoader style={{ fontSize: '1rem', animation: 'spin 1s linear infinite' }} />
+                                        Deleting...
+                                    </>
+                                ) : (
+                                    <>
+                                        <FiTrash2 style={{ fontSize: '1rem' }} />
+                                        Delete Ticket
+                                    </>
+                                )}
                             </button>
                         </>
                     )}
@@ -228,60 +431,246 @@ const TicketDetailPage = () => {
                                 type="button"
                                 onClick={handleCancelEdit}
                                 disabled={isSaving}
-                                className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition"
+                                style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '0.5rem',
+                                    padding: '0.75rem 1.5rem',
+                                    borderRadius: '0.5rem',
+                                    border: '2px solid #d1d5db',
+                                    background: 'rgba(255, 255, 255, 0.9)',
+                                    color: '#374151',
+                                    fontWeight: '600',
+                                    transition: 'all 0.3s ease',
+                                    cursor: isSaving ? 'not-allowed' : 'pointer'
+                                }}
+                                onMouseEnter={(e) => {
+                                    if (!isSaving) {
+                                        e.target.style.background = 'rgba(75, 85, 99, 0.05)';
+                                        e.target.style.transform = 'translateY(-1px)';
+                                        e.target.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+                                    }
+                                }}
+                                onMouseLeave={(e) => {
+                                    if (!isSaving) {
+                                        e.target.style.background = 'rgba(255, 255, 255, 0.9)';
+                                        e.target.style.transform = 'translateY(0)';
+                                        e.target.style.boxShadow = 'none';
+                                    }
+                                }}
                             >
+                                <FiX style={{ fontSize: '1rem' }} />
                                 Cancel
                             </button>
                             <button
                                 type="button"
                                 onClick={handleSave}
                                 disabled={isSaving}
-                                className="px-4 py-2 rounded-lg bg-[#053769] text-white font-medium hover:bg-[#042d55] transition disabled:opacity-60"
+                                style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '0.5rem',
+                                    padding: '0.75rem 1.5rem',
+                                    borderRadius: '0.5rem',
+                                    background: isSaving ? 'linear-gradient(135deg, #9ca3af 0%, #6b7280 100%)' : 'linear-gradient(135deg, #053769 0%, #0f172a 100%)',
+                                    color: '#ffffff',
+                                    fontWeight: '600',
+                                    transition: 'all 0.3s ease',
+                                    cursor: isSaving ? 'not-allowed' : 'pointer',
+                                    border: 'none',
+                                    opacity: isSaving ? 0.6 : 1
+                                }}
+                                onMouseEnter={(e) => {
+                                    if (!isSaving) {
+                                        e.target.style.transform = 'translateY(-1px)';
+                                        e.target.style.boxShadow = '0 4px 8px rgba(5, 55, 105, 0.3)';
+                                    }
+                                }}
+                                onMouseLeave={(e) => {
+                                    if (!isSaving) {
+                                        e.target.style.transform = 'translateY(0)';
+                                        e.target.style.boxShadow = 'none';
+                                    }
+                                }}
                             >
-                                {isSaving ? 'Saving...' : 'Save Changes'}
+                                {isSaving ? (
+                                    <>
+                                        <FiLoader style={{ fontSize: '1rem', animation: 'spin 1s linear infinite' }} />
+                                        Saving...
+                                    </>
+                                ) : (
+                                    <>
+                                        <FiSave style={{ fontSize: '1rem' }} />
+                                        Save Changes
+                                    </>
+                                )}
                             </button>
                         </>
                     )}
-                    <div className={`px-6 py-4 rounded-xl border ${timerColor} text-center`}>
-                        <p className="text-xs font-bold uppercase tracking-wider">Time Elapsed</p>
-                        <p className="text-2xl font-bold">⏱ {elapsedHours}h</p>
+                    <div style={{
+                        padding: '1rem 1.5rem',
+                        borderRadius: '0.75rem',
+                        border: '2px solid',
+                        textAlign: 'center',
+                        background: elapsedHours < 24 ? 'linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)' :
+                                   elapsedHours <= 48 ? 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)' :
+                                   'linear-gradient(135deg, #fee2e2 0%, #fecaca 100%)',
+                        borderColor: elapsedHours < 24 ? '#22c55e' :
+                                     elapsedHours <= 48 ? '#f59e0b' :
+                                     '#ef4444',
+                        color: elapsedHours < 24 ? '#166534' :
+                               elapsedHours <= 48 ? '#d97706' :
+                               '#dc2626'
+                    }}>
+                        <p style={{
+                            fontSize: '0.75rem',
+                            fontWeight: '700',
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.05em',
+                            marginBottom: '0.5rem'
+                        }}>Time Elapsed</p>
+                        <p style={{
+                            fontSize: '2rem',
+                            fontWeight: '700',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '0.5rem'
+                        }}>
+                            <FiClock style={{ fontSize: '1.5rem' }} />
+                            {elapsedHours}h
+                        </p>
                     </div>
                 </div>
             </div>
 
             {!canManageTicket && (
-                <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                <div style={{
+                    marginBottom: '1.5rem',
+                    borderRadius: '0.75rem',
+                    border: '2px solid #fbbf24',
+                    background: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)',
+                    padding: '0.75rem 1rem',
+                    fontSize: '0.875rem',
+                    color: '#d97706',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem'
+                }}>
+                    <FiAlertCircle style={{ fontSize: '1rem' }} />
                     This ticket can no longer be edited or deleted because it is already being processed.
                 </div>
             )}
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="md:col-span-2 space-y-6">
-                    <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                        <h2 className="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Ticket Information</h2>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-8">
-                            <div>
-                                <p className="text-sm text-gray-500 mb-1">Resource/Location</p>
+            <div style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr',
+                gap: '1.5rem'
+            }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                    <div style={{
+                        background: 'rgba(255, 255, 255, 0.95)',
+                        borderRadius: '1rem',
+                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                        padding: '1.5rem',
+                        border: '1px solid #e5e7eb'
+                    }}>
+                        <h2 style={{
+                            fontSize: '1.25rem',
+                            fontWeight: '700',
+                            color: '#1e293b',
+                            marginBottom: '1rem',
+                            paddingBottom: '0.5rem',
+                            borderBottom: '2px solid #f1f5f9'
+                        }}>Ticket Information</h2>
+                        <div style={{
+                            display: 'grid',
+                            gridTemplateColumns: '1fr',
+                            gap: '1rem'
+                        }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                <p style={{
+                                    fontSize: '0.875rem',
+                                    color: '#64748b',
+                                    fontWeight: '500',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.5rem'
+                                }}>
+                                    <FiMapPin style={{ fontSize: '1rem', color: '#3b82f6' }} />
+                                    Resource/Location
+                                </p>
                                 {isEditing ? (
                                     <input
                                         type="text"
                                         name="resourceLocation"
                                         value={formData.resourceLocation}
                                         onChange={handleFieldChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                                        style={{
+                                            width: '100%',
+                                            padding: '0.5rem 0.75rem',
+                                            border: '2px solid #e5e7eb',
+                                            borderRadius: '0.5rem',
+                                            fontSize: '0.875rem',
+                                            background: '#ffffff',
+                                            transition: 'all 0.2s ease',
+                                            outline: 'none'
+                                        }}
+                                        onFocus={(e) => {
+                                            e.target.style.borderColor = '#3b82f6';
+                                            e.target.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.1)';
+                                        }}
+                                        onBlur={(e) => {
+                                            e.target.style.borderColor = '#e5e7eb';
+                                            e.target.style.boxShadow = 'none';
+                                        }}
                                     />
                                 ) : (
-                                    <p className="font-medium">{ticket.resourceLocation}</p>
+                                    <p style={{
+                                        fontWeight: '500',
+                                        color: '#1f2937',
+                                        padding: '0.5rem 0.75rem',
+                                        background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
+                                        borderRadius: '0.5rem',
+                                        border: '1px solid #e5e7eb'
+                                    }}>{ticket.resourceLocation}</p>
                                 )}
                             </div>
-                            <div>
-                                <p className="text-sm text-gray-500 mb-1">Category</p>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                <p style={{
+                                    fontSize: '0.875rem',
+                                    color: '#64748b',
+                                    fontWeight: '500',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.5rem'
+                                }}>
+                                    <FiTool style={{ fontSize: '1rem', color: '#3b82f6' }} />
+                                    Category
+                                </p>
                                 {isEditing ? (
                                     <select
                                         name="category"
                                         value={formData.category}
                                         onChange={handleFieldChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                                        style={{
+                                            width: '100%',
+                                            padding: '0.5rem 0.75rem',
+                                            border: '2px solid #e5e7eb',
+                                            borderRadius: '0.5rem',
+                                            fontSize: '0.875rem',
+                                            background: '#ffffff',
+                                            transition: 'all 0.2s ease',
+                                            outline: 'none'
+                                        }}
+                                        onFocus={(e) => {
+                                            e.target.style.borderColor = '#3b82f6';
+                                            e.target.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.1)';
+                                        }}
+                                        onBlur={(e) => {
+                                            e.target.style.borderColor = '#e5e7eb';
+                                            e.target.style.boxShadow = 'none';
+                                        }}
                                     >
                                         <option value="">Select a category</option>
                                         {CATEGORIES.map((category) => (
@@ -289,17 +678,51 @@ const TicketDetailPage = () => {
                                         ))}
                                     </select>
                                 ) : (
-                                    <p className="font-medium">{ticket.category}</p>
+                                    <p style={{
+                                        fontWeight: '500',
+                                        color: '#1f2937',
+                                        padding: '0.5rem 0.75rem',
+                                        background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
+                                        borderRadius: '0.5rem',
+                                        border: '1px solid #e5e7eb'
+                                    }}>{ticket.category}</p>
                                 )}
                             </div>
-                            <div>
-                                <p className="text-sm text-gray-500 mb-1">Priority</p>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                <p style={{
+                                    fontSize: '0.875rem',
+                                    color: '#64748b',
+                                    fontWeight: '500',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.5rem'
+                                }}>
+                                    <FiAlertCircle style={{ fontSize: '1rem', color: '#3b82f6' }} />
+                                    Priority
+                                </p>
                                 {isEditing ? (
                                     <select
                                         name="priority"
                                         value={formData.priority}
                                         onChange={handleFieldChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                                        style={{
+                                            width: '100%',
+                                            padding: '0.5rem 0.75rem',
+                                            border: '2px solid #e5e7eb',
+                                            borderRadius: '0.5rem',
+                                            fontSize: '0.875rem',
+                                            background: '#ffffff',
+                                            transition: 'all 0.2s ease',
+                                            outline: 'none'
+                                        }}
+                                        onFocus={(e) => {
+                                            e.target.style.borderColor = '#3b82f6';
+                                            e.target.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.1)';
+                                        }}
+                                        onBlur={(e) => {
+                                            e.target.style.borderColor = '#e5e7eb';
+                                            e.target.style.boxShadow = 'none';
+                                        }}
                                     >
                                         <option value="">Select priority level</option>
                                         {PRIORITIES.map((priority) => (
@@ -307,64 +730,229 @@ const TicketDetailPage = () => {
                                         ))}
                                     </select>
                                 ) : (
-                                    <p className="font-medium">
-                                        <span className="px-2 py-1 bg-red-100 text-red-700 rounded-md text-sm">{ticket.priority}</span>
-                                    </p>
+                                    <p style={{
+                                        fontWeight: '500',
+                                        color: '#1f2937',
+                                        padding: '0.5rem 0.75rem',
+                                        background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
+                                        borderRadius: '0.5rem',
+                                        border: '1px solid #e5e7eb'
+                                    }}>{ticket.priority}</p>
                                 )}
                             </div>
-                            <div>
-                                <p className="text-sm text-gray-500 mb-1">Status</p>
-                                <p className="font-medium">
-                                    <span className="px-2 py-1 bg-orange-100 text-orange-700 rounded-md text-sm">{ticket.status}</span>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                <p style={{
+                                    fontSize: '0.875rem',
+                                    color: '#64748b',
+                                    fontWeight: '500',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.5rem'
+                                }}>
+                                    <FiCheckCircle style={{ fontSize: '1rem', color: '#3b82f6' }} />
+                                    Status
+                                </p>
+                                <p style={{
+                                    fontWeight: '500',
+                                    display: 'flex',
+                                    alignItems: 'center'
+                                }}>
+                                    <span style={{
+                                        padding: '0.25rem 0.5rem',
+                                        background: 'linear-gradient(135deg, #fed7aa 0%, #fdba74 100%)',
+                                        color: '#c2410c',
+                                        borderRadius: '0.375rem',
+                                        fontSize: '0.875rem',
+                                        fontWeight: '600'
+                                    }}>{ticket.status}</span>
                                 </p>
                             </div>
                         </div>
-                        <div className="mt-6 border-t pt-4">
-                            <p className="text-sm text-gray-500 mb-2">Description</p>
+                        <div style={{
+                            marginTop: '1.5rem',
+                            paddingTop: '1rem',
+                            borderTop: '2px solid #f1f5f9'
+                        }}>
+                            <p style={{
+                                fontSize: '0.875rem',
+                                color: '#64748b',
+                                fontWeight: '500',
+                                marginBottom: '0.5rem',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.5rem'
+                            }}>
+                                <FiFileText style={{ fontSize: '1rem', color: '#3b82f6' }} />
+                                Description
+                            </p>
                             {isEditing ? (
                                 <textarea
                                     name="description"
                                     value={formData.description}
                                     onChange={handleFieldChange}
                                     rows="4"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                                    style={{
+                                        width: '100%',
+                                        padding: '0.5rem 0.75rem',
+                                        border: '2px solid #e5e7eb',
+                                        borderRadius: '0.5rem',
+                                        fontSize: '0.875rem',
+                                        background: '#ffffff',
+                                        transition: 'all 0.2s ease',
+                                        outline: 'none',
+                                        resize: 'vertical',
+                                        fontFamily: 'inherit'
+                                    }}
+                                    onFocus={(e) => {
+                                        e.target.style.borderColor = '#3b82f6';
+                                        e.target.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.1)';
+                                    }}
+                                    onBlur={(e) => {
+                                        e.target.style.borderColor = '#e5e7eb';
+                                        e.target.style.boxShadow = 'none';
+                                    }}
                                 />
                             ) : (
-                                <p className="text-gray-700 leading-relaxed">{ticket.description}</p>
+                                <p style={{
+                                    color: '#374151',
+                                    lineHeight: '1.6',
+                                    padding: '0.75rem',
+                                    background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
+                                    borderRadius: '0.5rem',
+                                    border: '1px solid #e5e7eb'
+                                }}>{ticket.description}</p>
                             )}
                         </div>
                     </div>
 
-                    <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                        <h2 className="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Attachments</h2>
+                    <div style={{
+                        background: 'rgba(255, 255, 255, 0.95)',
+                        borderRadius: '1rem',
+                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                        padding: '1.5rem',
+                        border: '1px solid #e5e7eb'
+                    }}>
+                        <h2 style={{
+                            fontSize: '1.25rem',
+                            fontWeight: '700',
+                            color: '#1e293b',
+                            marginBottom: '1rem',
+                            paddingBottom: '0.5rem',
+                            borderBottom: '2px solid #f1f5f9',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem'
+                        }}>
+                            <FiImage style={{ fontSize: '1.25rem', color: '#3b82f6' }} />
+                            Attachments
+                        </h2>
                         {isEditing && (
-                            <div className="mb-4">
+                            <div style={{ marginBottom: '1rem' }}>
                                 <input
                                     type="file"
                                     accept="image/jpeg,image/png,image/jpg"
                                     multiple
                                     onChange={handleAttachmentUpload}
-                                    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-[#053769] file:text-white hover:file:bg-[#042d55]"
+                                    style={{
+                                        display: 'block',
+                                        width: '100%',
+                                        fontSize: '0.875rem',
+                                        color: '#64748b',
+                                        padding: '0.5rem',
+                                        border: '2px dashed #d1d5db',
+                                        borderRadius: '0.5rem',
+                                        background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.2s ease'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        e.target.style.borderColor = '#3b82f6';
+                                        e.target.style.background = 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        e.target.style.borderColor = '#d1d5db';
+                                        e.target.style.background = 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)';
+                                    }}
                                 />
-                                <p className="mt-2 text-xs text-gray-500">Maximum 3 images. You can remove existing attachments and add new ones.</p>
+                                <p style={{
+                                    marginTop: '0.5rem',
+                                    fontSize: '0.75rem',
+                                    color: '#64748b',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.25rem'
+                                }}>
+                                    <FiAlertCircle style={{ fontSize: '0.75rem' }} />
+                                    Maximum 3 images. You can remove existing attachments and add new ones.
+                                </p>
                             </div>
                         )}
                         {attachmentPreviews.length > 0 ? (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div style={{
+                                display: 'grid',
+                                gridTemplateColumns: '1fr',
+                                gap: '1rem'
+                            }}>
                                 {attachmentPreviews.map((preview, index) => (
-                                    <div key={`${ticket.id}-image-${index}`} className="relative">
+                                    <div key={`${ticket.id}-image-${index}`} style={{ position: 'relative' }}>
                                         <img
                                             src={preview}
                                             alt={`Ticket attachment ${index + 1}`}
                                             onClick={() => !isEditing && setSelectedImage(preview)}
-                                            className={`w-full h-48 rounded-lg object-cover border border-gray-200 ${isEditing ? '' : 'cursor-pointer hover:opacity-90'} transition`}
+                                            style={{
+                                                width: '100%',
+                                                height: '12rem',
+                                                borderRadius: '0.5rem',
+                                                objectFit: 'cover',
+                                                border: '2px solid #e5e7eb',
+                                                cursor: isEditing ? 'default' : 'pointer',
+                                                opacity: isEditing ? 1 : 0.9,
+                                                transition: 'all 0.2s ease'
+                                            }}
+                                            onMouseEnter={(e) => {
+                                                if (!isEditing) {
+                                                    e.target.style.opacity = '0.8';
+                                                    e.target.style.transform = 'scale(1.02)';
+                                                }
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                if (!isEditing) {
+                                                    e.target.style.opacity = '0.9';
+                                                    e.target.style.transform = 'scale(1)';
+                                                }
+                                            }}
                                         />
                                         {isEditing && (
                                             <button
                                                 type="button"
                                                 onClick={() => handleRemoveAttachment(index)}
-                                                className="absolute top-2 right-2 px-2 py-1 rounded-md bg-red-600 text-white text-xs font-medium hover:bg-red-700"
+                                                style={{
+                                                    position: 'absolute',
+                                                    top: '0.5rem',
+                                                    right: '0.5rem',
+                                                    padding: '0.25rem 0.5rem',
+                                                    borderRadius: '0.375rem',
+                                                    background: 'linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)',
+                                                    color: '#ffffff',
+                                                    fontSize: '0.75rem',
+                                                    fontWeight: '600',
+                                                    border: 'none',
+                                                    cursor: 'pointer',
+                                                    transition: 'all 0.2s ease',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: '0.25rem'
+                                                }}
+                                                onMouseEnter={(e) => {
+                                                    e.target.style.transform = 'scale(1.05)';
+                                                    e.target.style.boxShadow = '0 4px 6px rgba(220, 38, 38, 0.3)';
+                                                }}
+                                                onMouseLeave={(e) => {
+                                                    e.target.style.transform = 'scale(1)';
+                                                    e.target.style.boxShadow = 'none';
+                                                }}
                                             >
+                                                <FiX style={{ fontSize: '0.75rem' }} />
                                                 Remove
                                             </button>
                                         )}
@@ -372,77 +960,179 @@ const TicketDetailPage = () => {
                                 ))}
                             </div>
                         ) : (
-                            <div className="h-32 bg-gray-50 rounded-lg border border-dashed border-gray-300 flex items-center justify-center text-gray-400">
+                            <div style={{
+                                height: '8rem',
+                                background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
+                                borderRadius: '0.5rem',
+                                border: '2px dashed #d1d5db',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                color: '#9ca3af',
+                                fontSize: '0.875rem',
+                                fontWeight: '500'
+                            }}>
                                 No attachments were submitted for this ticket.
                             </div>
                         )}
                     </div>
 
-                    <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                        <h2 className="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Comments & Updates</h2>
-                        <div className="space-y-4">
+                    <div style={{
+                        background: 'rgba(255, 255, 255, 0.95)',
+                        borderRadius: '1rem',
+                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                        padding: '1.5rem',
+                        border: '1px solid #e5e7eb'
+                    }}>
+                        <h2 style={{
+                            fontSize: '1.25rem',
+                            fontWeight: '700',
+                            color: '#1e293b',
+                            marginBottom: '1rem',
+                            paddingBottom: '0.5rem',
+                            borderBottom: '2px solid #f1f5f9',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem'
+                        }}>
+                            <FiMail style={{ fontSize: '1.25rem', color: '#3b82f6' }} />
+                            Comments & Updates
+                        </h2>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                             {comments.length > 0 ? comments.map((comment, index) => (
-                                <div key={`${comment.timestamp || index}-${index}`} className="border-l-2 border-blue-500 pl-4 py-1">
-                                    <p className="text-sm text-gray-500 flex justify-between gap-4">
-                                        <span className="font-bold text-gray-800">
-                                            {comment.authorName} <span className="font-normal text-gray-400">({comment.authorRole})</span>
+                                <div key={`${comment.timestamp || index}-${index}`} style={{
+                                    borderLeft: '4px solid #3b82f6',
+                                    paddingLeft: '1rem',
+                                    paddingTop: '0.25rem',
+                                    paddingBottom: '0.25rem',
+                                    background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
+                                    borderRadius: '0.5rem',
+                                    padding: '1rem'
+                                }}>
+                                    <p style={{
+                                        fontSize: '0.875rem',
+                                        color: '#64748b',
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        gap: '1rem',
+                                        flexWrap: 'wrap'
+                                    }}>
+                                        <span style={{
+                                            fontWeight: '700',
+                                            color: '#1e293b',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '0.5rem'
+                                        }}>
+                                            <FiUser style={{ fontSize: '0.875rem', color: '#3b82f6' }} />
+                                            {comment.authorName} <span style={{ fontWeight: '400', color: '#9ca3af' }}>({comment.authorRole})</span>
                                         </span>
-                                        <span>{comment.timestamp ? new Date(comment.timestamp).toLocaleString() : 'Just now'}</span>
+                                        <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
+                                            {comment.timestamp ? new Date(comment.timestamp).toLocaleString() : 'Just now'}
+                                        </span>
                                     </p>
-                                    <p className="text-gray-700 mt-1">{comment.content}</p>
+                                    <p style={{
+                                        color: '#374151',
+                                        marginTop: '0.25rem',
+                                        lineHeight: '1.5'
+                                    }}>{comment.content}</p>
                                 </div>
                             )) : (
-                                <div className="text-sm text-gray-400">No comments have been posted yet.</div>
+                                <div style={{
+                                    fontSize: '0.875rem',
+                                    color: '#9ca3af',
+                                    textAlign: 'center',
+                                    padding: '2rem',
+                                    background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
+                                    borderRadius: '0.5rem',
+                                    border: '1px solid #e5e7eb'
+                                }}>
+                                    No comments have been posted yet.
+                                </div>
                             )}
                         </div>
                     </div>
 
                     {ticket.resolutionNotes && (
-                        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                            <h2 className="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Resolution Notes</h2>
-                            <p className="text-sm text-gray-500 mb-3">Details shared by the assigned technician after resolving this ticket.</p>
-                            <div className="rounded-xl border border-green-100 bg-green-50 px-4 py-4">
-                                <p className="text-sm leading-relaxed text-gray-700">{ticket.resolutionNotes}</p>
+                        <div style={{
+                            background: 'rgba(255, 255, 255, 0.95)',
+                            borderRadius: '1rem',
+                            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                            padding: '1.5rem',
+                            border: '1px solid #e5e7eb'
+                        }}>
+                            <h2 style={{
+                                fontSize: '1.25rem',
+                                fontWeight: '700',
+                                color: '#1e293b',
+                                marginBottom: '1rem',
+                                paddingBottom: '0.5rem',
+                                borderBottom: '2px solid #f1f5f9',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.5rem'
+                            }}>
+                                <FiCheckCircle style={{ fontSize: '1.25rem', color: '#22c55e' }} />
+                                Resolution Notes
+                            </h2>
+                            <p style={{
+                                fontSize: '0.875rem',
+                                color: '#64748b',
+                                marginBottom: '0.75rem',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.5rem'
+                            }}>
+                                <FiAlertCircle style={{ fontSize: '0.875rem', color: '#22c55e' }} />
+                                Details shared by the assigned technician after resolving this ticket.
+                            </p>
+                            <div style={{
+                                borderRadius: '0.75rem',
+                                border: '2px solid #bbf7d0',
+                                background: 'linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)',
+                                padding: '1rem'
+                            }}>
+                                <p style={{
+                                    fontSize: '0.875rem',
+                                    lineHeight: '1.6',
+                                    color: '#166534'
+                                }}>{ticket.resolutionNotes}</p>
                             </div>
                         </div>
                     )}
-                </div>
-
-                <div className="space-y-6">
-                    <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                        <h2 className="text-lg font-bold text-gray-800 mb-4">Quick Information</h2>
-                        <div className="space-y-4">
-                            <div>
-                                <p className="text-sm text-gray-500 mb-1">Created</p>
-                                <p className="font-medium">{new Date(ticket.createdDate).toLocaleString()}</p>
-                            </div>
-                            <div>
-                                <p className="text-sm text-gray-500 mb-1">Contact</p>
-                                {isEditing ? (
-                                    <input
-                                        type="text"
-                                        name="contactDetails"
-                                        value={formData.contactDetails}
-                                        onChange={handleFieldChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                                    />
-                                ) : (
-                                    <p className="font-medium">{ticket.contactDetails}</p>
-                                )}
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 
             {selectedImage && !isEditing && (
                 <div
-                    className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 cursor-zoom-out"
+                    style={{
+                        position: 'fixed',
+                        inset: 0,
+                        background: 'rgba(0, 0, 0, 0.8)',
+                        zIndex: 50,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: '1rem',
+                        cursor: 'zoom-out'
+                    }}
                     onClick={() => setSelectedImage(null)}
                 >
-                    <img src={selectedImage} alt="Enlarged view" className="max-w-full max-h-full rounded-lg shadow-2xl transition-transform duration-300 ease-in-out" />
+                    <img 
+                        src={selectedImage} 
+                        alt="Enlarged view" 
+                        style={{
+                            maxWidth: '100%',
+                            maxHeight: '100%',
+                            borderRadius: '0.5rem',
+                            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+                            transition: 'transform 0.3s ease-in-out'
+                        }}
+                    />
                 </div>
             )}
+        </div>
+        </div>
         </div>
     );
 };

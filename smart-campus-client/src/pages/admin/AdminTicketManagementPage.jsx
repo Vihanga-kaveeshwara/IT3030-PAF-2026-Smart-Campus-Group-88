@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { TicketContext } from '../../features/maintenance/TicketContext';
 import { formatTicketId } from '../../features/maintenance/ticketIdFormatter';
+import { FiArrowLeft, FiClock, FiAlertCircle, FiCheckCircle, FiXCircle, FiSettings, FiLoader, FiUser, FiMapPin, FiTag, FiTrendingUp, FiMessageSquare, FiPaperclip, FiX, FiSave, FiTool, FiCalendar } from 'react-icons/fi';
 
 const AdminTicketManagementPage = () => {
   const { id } = useParams();
@@ -92,8 +93,36 @@ const AdminTicketManagementPage = () => {
     }
   };
 
-  if (loading) return <div className="p-8 text-center text-gray-500">Loading ticket...</div>;
-  if (!ticket || fetchingError) return <div className="p-8 text-center text-red-500">{fetchingError || 'Ticket not found'}</div>;
+  if (loading) return (
+    <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      minHeight: '100vh',
+      flexDirection: 'column',
+      gap: '16px',
+      fontSize: '16px',
+      color: '#6b7280'
+    }}>
+      <FiLoader size={32} style={{ animation: 'spin 1s linear infinite' }} />
+      Loading ticket...
+    </div>
+  );
+  if (!ticket || fetchingError) return (
+    <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      minHeight: '100vh',
+      flexDirection: 'column',
+      gap: '16px',
+      fontSize: '16px',
+      color: '#ef4444'
+    }}>
+      <FiAlertCircle size={48} />
+      {fetchingError || 'Ticket not found'}
+    </div>
+  );
 
   const attachments = Array.isArray(ticket.images) ? ticket.images : [];
   const comments = Array.isArray(ticket.comments) ? ticket.comments : [];
@@ -101,120 +130,524 @@ const AdminTicketManagementPage = () => {
 
   const renderPriorityBadge = (p) => {
     const pLow = p?.toLowerCase() || '';
-    if (pLow === 'high') return <span className="px-2 py-1 rounded-md text-xs font-semibold bg-red-100 text-red-600">High</span>;
-    if (pLow === 'medium') return <span className="px-2 py-1 rounded-md text-xs font-semibold bg-yellow-100 text-yellow-600">Medium</span>;
-    return <span className="px-2 py-1 rounded-md text-xs font-semibold bg-green-100 text-green-600">Low</span>;
+    if (pLow === 'high') return (
+      <span style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '6px',
+        padding: '4px 8px',
+        borderRadius: '6px',
+        fontSize: '12px',
+        fontWeight: '600',
+        backgroundColor: '#fef2f2',
+        color: '#dc2626'
+      }}>
+        <FiAlertCircle size={12} />
+        High
+      </span>
+    );
+    if (pLow === 'medium') return (
+      <span style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '6px',
+        padding: '4px 8px',
+        borderRadius: '6px',
+        fontSize: '12px',
+        fontWeight: '600',
+        backgroundColor: '#fef3c7',
+        color: '#d97706'
+      }}>
+        <FiAlertCircle size={12} />
+        Medium
+      </span>
+    );
+    return (
+      <span style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '6px',
+        padding: '4px 8px',
+        borderRadius: '6px',
+        fontSize: '12px',
+        fontWeight: '600',
+        backgroundColor: '#f0fdf4',
+        color: '#16a34a'
+      }}>
+        <FiCheckCircle size={12} />
+        Low
+      </span>
+    );
   };
 
   const renderStatusBadge = (s) => {
     const sLow = s?.toLowerCase() || '';
-    if (sLow === 'in progress') return <span className="px-2 py-1 rounded-md text-xs font-semibold bg-orange-100 text-orange-600">In Progress</span>;
-    if (sLow === 'resolved') return <span className="px-2 py-1 rounded-md text-xs font-semibold bg-green-100 text-green-600">Resolved</span>;
-    return <span className="px-2 py-1 rounded-md text-xs font-semibold bg-blue-100 text-blue-600">{s || 'Open'}</span>;
+    if (sLow === 'in progress') return (
+      <span style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '6px',
+        padding: '4px 8px',
+        borderRadius: '6px',
+        fontSize: '12px',
+        fontWeight: '600',
+        backgroundColor: '#fed7aa',
+        color: '#ea580c'
+      }}>
+        <FiClock size={12} />
+        In Progress
+      </span>
+    );
+    if (sLow === 'resolved') return (
+      <span style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '6px',
+        padding: '4px 8px',
+        borderRadius: '6px',
+        fontSize: '12px',
+        fontWeight: '600',
+        backgroundColor: '#bbf7d0',
+        color: '#16a34a'
+      }}>
+        <FiCheckCircle size={12} />
+        Resolved
+      </span>
+    );
+    return (
+      <span style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '6px',
+        padding: '4px 8px',
+        borderRadius: '6px',
+        fontSize: '12px',
+        fontWeight: '600',
+        backgroundColor: '#dbeafe',
+        color: '#2563eb'
+      }}>
+        <FiClock size={12} />
+        {s || 'Open'}
+      </span>
+    );
   };
 
   return (
-    <div className="p-8 max-w-7xl mx-auto text-gray-800">
-      <div className="flex justify-between items-end mb-8">
-        <div>
-          <button onClick={() => navigate('/maintenance/admin')} className="text-sm font-medium text-blue-600 hover:text-blue-800 mb-2 inline-flex items-center gap-1">
-            &larr; Back to Dashboard
-          </button>
-          <h1 className="text-3xl font-bold">Manage Ticket</h1>
-          <p className="text-gray-500">Ticket ID: <span className="font-semibold text-[#053769]">{formatTicketId(ticket.id)}</span></p>
-        </div>
-        
-        <div className="bg-yellow-100/50 border border-yellow-200 px-6 py-3 rounded-xl flex items-center gap-3">
-          <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+    <div style={{
+      minHeight: '100vh',
+      backgroundColor: '#f8fafc',
+      padding: '32px 16px'
+    }}>
+      <div style={{
+        maxWidth: '1400px',
+        margin: '0 auto',
+        color: '#1f2937'
+      }}>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-end',
+          marginBottom: '32px'
+        }}>
           <div>
-            <div className="text-[10px] font-bold text-gray-500 uppercase tracking-widest leading-none">Time Elapsed</div>
-            <div className="text-xl font-bold text-yellow-700 leading-none mt-1">42h</div>
+            <button
+              onClick={() => navigate('/maintenance/admin')}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                marginBottom: '8px',
+                padding: '8px 16px',
+                backgroundColor: 'transparent',
+                border: 'none',
+                color: '#3b82f6',
+                fontSize: '14px',
+                fontWeight: '500',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                borderRadius: '6px'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = '#eff6ff';
+                e.target.style.color = '#1d4ed8';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = 'transparent';
+                e.target.style.color = '#3b82f6';
+              }}
+            >
+              <FiArrowLeft size={16} />
+              Back to Dashboard
+            </button>
+            <h1 style={{
+              fontSize: '32px',
+              fontWeight: '700',
+              color: '#1f2937',
+              marginBottom: '8px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px'
+            }}>
+              <FiSettings size={32} />
+              Manage Ticket
+            </h1>
+            <p style={{ color: '#6b7280', fontSize: '16px' }}>
+              Ticket ID: <span style={{
+                fontWeight: '600',
+                color: '#053769',
+                backgroundColor: '#f0f9ff',
+                padding: '4px 8px',
+                borderRadius: '4px',
+                fontFamily: 'monospace'
+              }}>{formatTicketId(ticket.id)}</span>
+            </p>
+          </div>
+          
+          <div style={{
+            backgroundColor: '#fef3c7',
+            border: '1px solid #fcd34d',
+            padding: '16px 24px',
+            borderRadius: '12px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px'
+          }}>
+            <FiClock size={24} style={{ color: '#d97706' }} />
+            <div>
+              <div style={{
+                fontSize: '10px',
+                fontWeight: '700',
+                color: '#6b7280',
+                textTransform: 'uppercase',
+                letterSpacing: '1px',
+                lineHeight: '1'
+              }}>Time Elapsed</div>
+              <div style={{
+                fontSize: '20px',
+                fontWeight: '700',
+                color: '#d97706',
+                lineHeight: '1',
+                marginTop: '4px'
+              }}>42h</div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="flex flex-col lg:flex-row gap-6">
-        <div className="flex-1 flex flex-col gap-6">
-          <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
-            <h2 className="text-lg font-bold mb-6">Ticket Information</h2>
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '24px'
+      }}>
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '24px'
+        }}>
+          <div style={{
+            backgroundColor: '#ffffff',
+            borderRadius: '16px',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+            padding: '32px',
+            border: '1px solid #e2e8f0'
+          }}>
+            <h2 style={{
+              fontSize: '20px',
+              fontWeight: '600',
+              color: '#1f2937',
+              marginBottom: '24px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}>
+              <FiTool size={20} />
+              Ticket Information
+            </h2>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8 mb-8 border-b border-gray-100 pb-8">
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: '32px',
+              marginBottom: '32px',
+              paddingBottom: '32px',
+              borderBottom: '1px solid #f3f4f6'
+            }}>
               <div>
-                <p className="text-xs text-gray-500 mb-1 inline-flex items-center gap-1"><span className="text-gray-400"></span> Resource/Location</p>
-                <p className="font-semibold">{ticket.resourceLocation}</p>
+                <p style={{
+                  fontSize: '12px',
+                  color: '#6b7280',
+                  marginBottom: '4px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px'
+                }}>
+                  <FiMapPin size={14} style={{ color: '#9ca3af' }} />
+                  Resource/Location
+                </p>
+                <p style={{
+                  fontWeight: '600',
+                  fontSize: '16px',
+                  color: '#1f2937'
+                }}>{ticket.resourceLocation}</p>
               </div>
               <div>
-                <p className="text-xs text-gray-500 mb-1 inline-flex items-center gap-1"><span className="text-gray-400"></span> Category</p>
-                <p className="font-semibold">{ticket.category}</p>
+                <p style={{
+                  fontSize: '12px',
+                  color: '#6b7280',
+                  marginBottom: '4px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px'
+                }}>
+                  <FiTag size={14} style={{ color: '#9ca3af' }} />
+                  Category
+                </p>
+                <p style={{
+                  fontWeight: '600',
+                  fontSize: '16px',
+                  color: '#1f2937'
+                }}>{ticket.category}</p>
               </div>
               <div>
-                <p className="text-xs text-gray-500 mb-1 inline-flex items-center gap-1"><span className="text-gray-400"></span> Priority</p>
-                <div className="mt-1">{renderPriorityBadge(ticket.priority)}</div>
+                <p style={{
+                  fontSize: '12px',
+                  color: '#6b7280',
+                  marginBottom: '4px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px'
+                }}>
+                  <FiTrendingUp size={14} style={{ color: '#9ca3af' }} />
+                  Priority
+                </p>
+                <div style={{ marginTop: '4px' }}>{renderPriorityBadge(ticket.priority)}</div>
               </div>
               <div>
-                <p className="text-xs text-gray-500 mb-1 inline-flex items-center gap-1"><span className="text-gray-400"></span> Status</p>
-                <div className="mt-1">{renderStatusBadge(ticket.status)}</div>
+                <p style={{
+                  fontSize: '12px',
+                  color: '#6b7280',
+                  marginBottom: '4px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px'
+                }}>
+                  <FiAlertCircle size={14} style={{ color: '#9ca3af' }} />
+                  Status
+                </p>
+                <div style={{ marginTop: '4px' }}>{renderStatusBadge(ticket.status)}</div>
               </div>
               <div>
-                <p className="text-xs text-gray-500 mb-1 inline-flex items-center gap-1"><span className="text-gray-400"></span> Reported By</p>
-                <p className="font-semibold">{ticket.userId || 'Student'}</p>
+                <p style={{
+                  fontSize: '12px',
+                  color: '#6b7280',
+                  marginBottom: '4px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px'
+                }}>
+                  <FiUser size={14} style={{ color: '#9ca3af' }} />
+                  Reported By
+                </p>
+                <p style={{
+                  fontWeight: '600',
+                  fontSize: '16px',
+                  color: '#1f2937'
+                }}>{ticket.userId || 'Student'}</p>
               </div>
               <div>
-                <p className="text-xs text-gray-500 mb-1 inline-flex items-center gap-1"><span className="text-gray-400"></span> Contact</p>
-                <p className="font-semibold text-blue-600">{ticket.contactDetails}</p>
+                <p style={{
+                  fontSize: '12px',
+                  color: '#6b7280',
+                  marginBottom: '4px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px'
+                }}>
+                  <FiUser size={14} style={{ color: '#9ca3af' }} />
+                  Contact
+                </p>
+                <p style={{
+                  fontWeight: '600',
+                  fontSize: '16px',
+                  color: '#2563eb'
+                }}>{ticket.contactDetails}</p>
               </div>
             </div>
             
             <div>
-              <p className="text-xs text-gray-500 mb-2">Description</p>
-              <p className="text-gray-700 leading-relaxed text-sm">{ticket.description}</p>
+              <p style={{
+                fontSize: '12px',
+                color: '#6b7280',
+                marginBottom: '8px'
+              }}>Description</p>
+              <p style={{
+                color: '#374151',
+                lineHeight: '1.6',
+                fontSize: '14px'
+              }}>{ticket.description}</p>
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
-            <h2 className="text-lg font-bold mb-4">Attachments</h2>
+          <div style={{
+            backgroundColor: '#ffffff',
+            borderRadius: '16px',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+            padding: '32px',
+            border: '1px solid #e2e8f0'
+          }}>
+            <h2 style={{
+              fontSize: '20px',
+              fontWeight: '600',
+              color: '#1f2937',
+              marginBottom: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}>
+              <FiPaperclip size={20} />
+              Attachments
+            </h2>
             {attachments.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: '16px'
+              }}>
                 {attachments.map((image, index) => (
                   <img
                     key={`${ticket.id}-admin-image-${index}`}
                     src={image}
                     alt={`Ticket attachment ${index + 1}`}
                     onClick={() => setSelectedImage(image)}
-                    className="w-full h-40 rounded-xl object-cover border border-gray-200 cursor-pointer hover:opacity-90 transition"
+                    style={{
+                      width: '100%',
+                      height: '160px',
+                      borderRadius: '12px',
+                      objectFit: 'cover',
+                      border: '1px solid #e5e7eb',
+                      cursor: 'pointer',
+                      transition: 'opacity 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => e.target.style.opacity = '0.9'}
+                    onMouseLeave={(e) => e.target.style.opacity = '1'}
                   />
                 ))}
               </div>
             ) : (
-              <div className="h-40 rounded-xl border border-dashed border-gray-300 bg-gray-50 flex items-center justify-center text-sm text-gray-400">
+              <div style={{
+                height: '160px',
+                borderRadius: '12px',
+                border: '2px dashed #d1d5db',
+                backgroundColor: '#f9fafb',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '14px',
+                color: '#9ca3af'
+              }}>
+                <FiPaperclip size={24} style={{ marginRight: '8px' }} />
                 No attachments were submitted for this ticket.
               </div>
             )}
           </div>
 
-          <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
-            <h2 className="text-lg font-bold mb-6 inline-flex items-center gap-2"><span className="text-gray-400"></span> Comments & Updates</h2>
+          <div style={{
+            backgroundColor: '#ffffff',
+            borderRadius: '16px',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+            padding: '32px',
+            border: '1px solid #e2e8f0'
+          }}>
+            <h2 style={{
+              fontSize: '20px',
+              fontWeight: '600',
+              color: '#1f2937',
+              marginBottom: '24px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}>
+              <FiMessageSquare size={20} />
+              Comments & Updates
+            </h2>
             
-            <div className="space-y-4 mb-6 relative before:absolute before:inset-0 before:ml-2 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-gray-200 before:to-transparent">
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '16px',
+              marginBottom: '24px',
+              position: 'relative'
+            }}>
               {comments.length > 0 ? comments.map((comment, index) => (
-                <div key={`${comment.timestamp || index}-${index}`} className="relative flex items-start gap-4">
-                  <div className="absolute left-0 h-full w-0.5 bg-gray-200"></div>
-                  <div className="z-10 w-1 h-1 mt-3 bg-[#053769] rounded-full ring-4 ring-white shadow"></div>
-                  <div className="bg-gray-50 p-4 rounded-xl flex-1 border border-gray-100">
-                    <div className="flex justify-between items-start mb-2">
+                <div key={`${comment.timestamp || index}-${index}`} style={{
+                  position: 'relative',
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: '16px'
+                }}>
+                  <div style={{
+                    position: 'absolute',
+                    left: '0',
+                    height: '100%',
+                    width: '2px',
+                    backgroundColor: '#e5e7eb'
+                  }}></div>
+                  <div style={{
+                    zIndex: '10',
+                    width: '4px',
+                    height: '4px',
+                    marginTop: '12px',
+                    backgroundColor: '#053769',
+                    borderRadius: '50%',
+                    boxShadow: '0 0 0 4px rgba(255, 255, 255, 0.8)'
+                  }}></div>
+                  <div style={{
+                    backgroundColor: '#f9fafb',
+                    padding: '16px',
+                    borderRadius: '12px',
+                    flex: '1',
+                    border: '1px solid #e5e7eb'
+                  }}>
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'flex-start',
+                      marginBottom: '8px'
+                    }}>
                       <div>
-                        <span className="font-bold text-gray-800">{comment.authorName}</span>
-                        <span className="text-xs text-gray-400 ml-2">({comment.authorRole})</span>
+                        <span style={{
+                          fontWeight: '700',
+                          color: '#1f2937'
+                        }}>{comment.authorName}</span>
+                        <span style={{
+                          fontSize: '12px',
+                          color: '#9ca3af',
+                          marginLeft: '8px'
+                        }}>({comment.authorRole})</span>
                       </div>
-                      <span className="text-xs text-gray-400">
+                      <span style={{
+                        fontSize: '12px',
+                        color: '#9ca3af'
+                      }}>
                         {comment.timestamp ? new Date(comment.timestamp).toLocaleString() : 'Just now'}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-600">{comment.content}</p>
+                    <p style={{
+                      fontSize: '14px',
+                      color: '#6b7280',
+                      lineHeight: '1.5'
+                    }}>{comment.content}</p>
                   </div>
                 </div>
               )) : (
-                <div className="text-sm text-gray-400">No comments have been posted yet.</div>
+                <div style={{
+                  fontSize: '14px',
+                  color: '#9ca3af',
+                  textAlign: 'center',
+                  padding: '32px'
+                }}>
+                  <FiMessageSquare size={32} style={{ marginBottom: '8px' }} />
+                  No comments have been posted yet.
+                </div>
               )}
             </div>
 
@@ -222,30 +655,138 @@ const AdminTicketManagementPage = () => {
               placeholder="Add a comment or update..." 
               value={commentText}
               onChange={(e) => setCommentText(e.target.value)}
-              className="w-full bg-gray-50 border border-gray-200 rounded-xl p-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#053769] mb-4"
+              style={{
+                width: '100%',
+                backgroundColor: '#f9fafb',
+                border: '1px solid #e5e7eb',
+                borderRadius: '12px',
+                padding: '16px',
+                fontSize: '14px',
+                outline: 'none',
+                marginBottom: '16px',
+                resize: 'vertical',
+                fontFamily: 'inherit'
+              }}
+              onFocus={(e) => e.target.style.boxShadow = '0 0 0 2px rgba(5, 55, 105, 0.2)'}
+              onBlur={(e) => e.target.style.boxShadow = 'none'}
               rows="3"
             ></textarea>
-            <button onClick={handlePostComment} className="bg-[#053769] text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-[#042d55] transition">Post Comment</button>
+            <button 
+              onClick={handlePostComment} 
+              style={{
+                backgroundColor: '#053769',
+                color: '#ffffff',
+                padding: '12px 20px',
+                borderRadius: '8px',
+                fontSize: '14px',
+                fontWeight: '500',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}
+              onMouseEnter={(e) => e.target.style.backgroundColor = '#042d55'}
+              onMouseLeave={(e) => e.target.style.backgroundColor = '#053769'}
+            >
+              <FiMessageSquare size={16} />
+              Post Comment
+            </button>
           </div>
 
           {ticket.resolutionNotes && (
-            <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
-              <h2 className="text-lg font-bold mb-4">Resolution Notes</h2>
-              <p className="text-sm text-gray-500 mb-4">Information recorded by the technician when the work was completed.</p>
-              <div className="rounded-2xl border border-green-100 bg-green-50 p-5">
-                <p className="text-sm leading-relaxed text-gray-700">{ticket.resolutionNotes}</p>
+            <div style={{
+              backgroundColor: '#ffffff',
+              borderRadius: '16px',
+              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+              padding: '32px',
+              border: '1px solid #e2e8f0'
+            }}>
+              <h2 style={{
+                fontSize: '20px',
+                fontWeight: '600',
+                color: '#1f2937',
+                marginBottom: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}>
+                <FiCheckCircle size={20} style={{ color: '#16a34a' }} />
+                Resolution Notes
+              </h2>
+              <p style={{
+                fontSize: '14px',
+                color: '#6b7280',
+                marginBottom: '16px'
+              }}>Information recorded by technician when work was completed.</p>
+              <div style={{
+                borderRadius: '16px',
+                border: '1px solid #bbf7d0',
+                backgroundColor: '#f0fdf4',
+                padding: '20px'
+              }}>
+                <p style={{
+                  fontSize: '14px',
+                  lineHeight: '1.6',
+                  color: '#374151'
+                }}>{ticket.resolutionNotes}</p>
               </div>
             </div>
           )}
         </div>
 
-        <div className="w-full lg:w-80 flex flex-col gap-6">
-          <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 flex flex-col">
-            <h2 className="text-lg font-bold mb-6">Actions Panel</h2>
+        <div style={{
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '24px'
+        }}>
+          <div style={{
+            backgroundColor: '#ffffff',
+            borderRadius: '16px',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+            padding: '24px',
+            border: '1px solid #e2e8f0',
+            display: 'flex',
+            flexDirection: 'column'
+          }}>
+            <h2 style={{
+              fontSize: '20px',
+              fontWeight: '600',
+              color: '#1f2937',
+              marginBottom: '24px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}>
+              <FiSettings size={20} />
+              Actions Panel
+            </h2>
             
-            <div className="mb-4">
-              <label className="block text-xs font-bold text-gray-700 mb-2">Assign to Technician</label>
-              <select value={assignee} onChange={e => setAssignee(e.target.value)} className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#053769]">
+            <div style={{ marginBottom: '16px' }}>
+              <label style={{
+                display: 'block',
+                fontSize: '12px',
+                fontWeight: '700',
+                color: '#374151',
+                marginBottom: '8px'
+              }}>Assign to Technician</label>
+              <select 
+                value={assignee} 
+                onChange={e => setAssignee(e.target.value)} 
+                style={{
+                  width: '100%',
+                  backgroundColor: '#f9fafb',
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '8px',
+                  padding: '12px',
+                  fontSize: '14px',
+                  outline: 'none'
+                }}
+                onFocus={(e) => e.target.style.boxShadow = '0 0 0 2px rgba(5, 55, 105, 0.2)'}
+                onBlur={(e) => e.target.style.boxShadow = 'none'}
+              >
                 <option value="">Unassigned</option>
                 <option value="Mike Johnson">Mike Johnson (Electrician)</option>
                 <option value="Sarah Williams">Sarah Williams (IT Support)</option>
@@ -253,9 +794,29 @@ const AdminTicketManagementPage = () => {
               </select>
             </div>
             
-            <div className="mb-4">
-              <label className="block text-xs font-bold text-gray-700 mb-2">Update Status</label>
-              <select value={status} onChange={e => setStatus(e.target.value)} className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#053769]">
+            <div style={{ marginBottom: '32px' }}>
+              <label style={{
+                display: 'block',
+                fontSize: '12px',
+                fontWeight: '700',
+                color: '#374151',
+                marginBottom: '8px'
+              }}>Update Status</label>
+              <select 
+                value={status} 
+                onChange={e => setStatus(e.target.value)} 
+                style={{
+                  width: '100%',
+                  backgroundColor: '#f9fafb',
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '8px',
+                  padding: '12px',
+                  fontSize: '14px',
+                  outline: 'none'
+                }}
+                onFocus={(e) => e.target.style.boxShadow = '0 0 0 2px rgba(5, 55, 105, 0.2)'}
+                onBlur={(e) => e.target.style.boxShadow = 'none'}
+              >
                 <option value="Open">Open</option>
                 <option value="Assigned">Assigned</option>
                 <option value="In Progress">In Progress</option>
@@ -264,62 +825,226 @@ const AdminTicketManagementPage = () => {
               </select>
             </div>
 
-            <div className="mb-8">
-              <label className="block text-xs font-bold text-gray-700 mb-2">Update Priority</label>
-              <select value={priority} onChange={e => setPriority(e.target.value)} className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#053769]">
+            <div style={{ marginBottom: '32px' }}>
+              <label style={{
+                display: 'block',
+                fontSize: '12px',
+                fontWeight: '700',
+                color: '#374151',
+                marginBottom: '8px'
+              }}>Update Priority</label>
+              <select 
+                value={priority} 
+                onChange={e => setPriority(e.target.value)} 
+                style={{
+                  width: '100%',
+                  backgroundColor: '#f9fafb',
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '8px',
+                  padding: '12px',
+                  fontSize: '14px',
+                  outline: 'none'
+                }}
+                onFocus={(e) => e.target.style.boxShadow = '0 0 0 2px rgba(5, 55, 105, 0.2)'}
+                onBlur={(e) => e.target.style.boxShadow = 'none'}
+              >
                 <option value="Low">Low</option>
                 <option value="Medium">Medium</option>
                 <option value="High">High</option>
               </select>
             </div>
 
-            <button onClick={handleSaveChanges} className="w-full bg-[#053769] text-white py-3 rounded-xl font-bold hover:bg-[#042d55] transition mb-3">
+            <button 
+              onClick={handleSaveChanges} 
+              style={{
+                width: '100%',
+                backgroundColor: '#053769',
+                color: '#ffffff',
+                padding: '12px',
+                borderRadius: '12px',
+                fontWeight: '700',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                marginBottom: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px'
+              }}
+              onMouseEnter={(e) => e.target.style.backgroundColor = '#042d55'}
+              onMouseLeave={(e) => e.target.style.backgroundColor = '#053769'}
+            >
+              <FiSave size={16} />
               Save Changes
             </button>
-            <button onClick={handleReject} className="w-full bg-red-600 text-white py-3 rounded-xl font-bold hover:bg-red-700 transition flex items-center justify-center gap-2">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <button 
+              onClick={handleReject} 
+              style={{
+                width: '100%',
+                backgroundColor: '#dc2626',
+                color: '#ffffff',
+                padding: '12px',
+                borderRadius: '12px',
+                fontWeight: '700',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px'
+              }}
+              onMouseEnter={(e) => e.target.style.backgroundColor = '#b91c1c'}
+              onMouseLeave={(e) => e.target.style.backgroundColor = '#dc2626'}
+            >
+              <FiXCircle size={16} />
               Reject Ticket
             </button>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 flex flex-col">
-            <h2 className="text-lg font-bold mb-4">Ticket Timeline</h2>
-            <div className="text-sm">
-              <p className="text-gray-400 text-xs mb-1">Created</p>
-              <p className="font-semibold text-gray-700 mb-4">
+          <div style={{
+            backgroundColor: '#ffffff',
+            borderRadius: '16px',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+            padding: '24px',
+            border: '1px solid #e2e8f0',
+            display: 'flex',
+            flexDirection: 'column'
+          }}>
+            <h2 style={{
+              fontSize: '20px',
+              fontWeight: '600',
+              color: '#1f2937',
+              marginBottom: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}>
+              <FiCalendar size={20} />
+              Ticket Timeline
+            </h2>
+            <div style={{ fontSize: '14px' }}>
+              <p style={{
+                color: '#9ca3af',
+                fontSize: '12px',
+                marginBottom: '4px'
+              }}>Created</p>
+              <p style={{
+                fontWeight: '600',
+                color: '#374151',
+                marginBottom: '16px'
+              }}>
                 {new Date(ticket.createdDate || Date.now()).toLocaleString()}
               </p>
-              <p className="text-gray-400 text-xs mb-1">Assigned Technician</p>
-              <p className="font-semibold text-gray-700">
+              <p style={{
+                color: '#9ca3af',
+                fontSize: '12px',
+                marginBottom: '4px'
+              }}>Assigned Technician</p>
+              <p style={{
+                fontWeight: '600',
+                color: '#374151'
+              }}>
                 {ticket.assignee || 'Not assigned yet'}
               </p>
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 flex flex-col">
-            <h2 className="text-lg font-bold mb-4">Work Progress</h2>
-            <div className="flex justify-between items-end mb-2">
-              <span className="text-xs text-gray-500">Completion</span>
-              <span className="text-sm font-bold text-orange-500">{workProgress}%</span>
+          <div style={{
+            backgroundColor: '#ffffff',
+            borderRadius: '16px',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+            padding: '24px',
+            border: '1px solid #e2e8f0',
+            display: 'flex',
+            flexDirection: 'column'
+          }}>
+            <h2 style={{
+              fontSize: '20px',
+              fontWeight: '600',
+              color: '#1f2937',
+              marginBottom: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}>
+              <FiTrendingUp size={20} />
+              Work Progress
+            </h2>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-end',
+              marginBottom: '8px'
+            }}>
+              <span style={{
+                fontSize: '12px',
+                color: '#6b7280'
+              }}>Completion</span>
+              <span style={{
+                fontSize: '14px',
+                fontWeight: '700',
+                color: '#f97316'
+              }}>{workProgress}%</span>
             </div>
-            <div className="w-full bg-gray-100 rounded-full h-2.5 mb-4">
-              <div className="bg-orange-500 h-2.5 rounded-full transition-all duration-300" style={{ width: `${workProgress}%` }} />
+            <div style={{
+              width: '100%',
+              backgroundColor: '#f3f4f6',
+              borderRadius: '999px',
+              height: '10px',
+              marginBottom: '16px'
+            }}>
+              <div style={{
+                backgroundColor: '#f97316',
+                height: '10px',
+                borderRadius: '999px',
+                transition: 'all 0.3s ease',
+                width: `${workProgress}%`
+              }} />
             </div>
-            <p className="text-xs text-gray-400">
+            <p style={{
+              fontSize: '12px',
+              color: '#9ca3af'
+            }}>
               {ticket.assignee
                 ? `Current completion reported by ${ticket.assignee}.`
-                : 'This ticket has not been assigned to a technician yet.'}
+                : 'This ticket has not been assigned to a technician yet.'
+              }
             </p>
           </div>
         </div>
       </div>
+      </div>
 
       {selectedImage && (
         <div 
-          className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 cursor-zoom-out"
+          style={{
+            position: 'fixed',
+            top: '0',
+            left: '0',
+            right: '0',
+            bottom: '0',
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            zIndex: '50',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '16px',
+            cursor: 'zoom-out'
+          }}
           onClick={() => setSelectedImage(null)}
         >
-          <img src={selectedImage} alt="Enlarged view" className="max-w-full max-h-full rounded-lg shadow-2xl" />
+          <img 
+            src={selectedImage} 
+            alt="Enlarged view" 
+            style={{
+              maxWidth: '100%',
+              maxHeight: '100%',
+              borderRadius: '8px',
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
+            }} 
+          />
         </div>
       )}
     </div>

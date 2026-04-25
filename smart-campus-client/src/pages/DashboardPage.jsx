@@ -18,7 +18,7 @@ export default function DashboardPage() {
       title: 'Bookings',
       description: 'Request and manage your resource bookings.',
       icon: '📅',
-      link: '/bookings',
+      link: '/booking/my-bookings',
       color: '#0ea5e9',
     },
     {

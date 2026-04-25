@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import api from '../../api/axiosInstance';
+import { FiArrowLeft, FiGrid, FiXCircle, FiRefreshCw, FiImage, FiMapPin, FiUsers, FiClock, FiPhone, FiTool, FiFileText, FiCheckCircle, FiCalendar, FiMail, FiCheck } from 'react-icons/fi';
 import './ResourceDetailPage.css';
 
 const ResourceDetailPage = () => {
@@ -39,7 +40,7 @@ const ResourceDetailPage = () => {
     return (
       <div className="resource-detail-page">
         <div className="loading-spinner">
-          <div className="spinner"></div>
+          <FiGrid className="loading-icon" />
           <p>Loading facility details...</p>
         </div>
       </div>
@@ -50,12 +51,15 @@ const ResourceDetailPage = () => {
     return (
       <div className="resource-detail-page">
         <div className="error-message">
+          <FiXCircle className="error-icon" />
           <p>{error || 'Facility not found'}</p>
           <div className="error-actions">
             <button onClick={fetchFacilityDetails} className="retry-button">
+              <FiRefreshCw className="retry-icon" />
               Retry
             </button>
             <Link to="/resources" className="back-button">
+              <FiArrowLeft className="back-icon" />
               Back to Resources
             </Link>
           </div>
@@ -68,7 +72,8 @@ const ResourceDetailPage = () => {
     <div className="resource-detail-page">
       <div className="detail-header">
         <Link to="/resources" className="back-link">
-          ← Back to Resources
+          <FiArrowLeft className="back-link-icon" />
+          Back to Resources
         </Link>
         <h1>{facility.name}</h1>
       </div>
@@ -79,6 +84,7 @@ const ResourceDetailPage = () => {
             <img src={facility.imageUrl} alt={facility.name} className="facility-main-image" />
           ) : (
             <div className="placeholder-main-image">
+              <FiImage className="placeholder-icon" />
               <span>No Image Available</span>
             </div>
           )}
@@ -89,7 +95,17 @@ const ResourceDetailPage = () => {
             <span className="facility-type">{facility.type || 'Facility'}</span>
             {facility.available !== undefined && (
               <span className={`availability-badge ${facility.available ? 'available' : 'unavailable'}`}>
-                {facility.available ? 'Available' : 'Unavailable'}
+                {facility.available ? (
+                  <>
+                    <FiCheckCircle className="status-icon" />
+                    Available
+                  </>
+                ) : (
+                  <>
+                    <FiXCircle className="status-icon" />
+                    Unavailable
+                  </>
+                )}
               </span>
             )}
           </div>
@@ -106,38 +122,56 @@ const ResourceDetailPage = () => {
             <div className="details-grid">
               {facility.location && (
                 <div className="detail-item">
-                  <strong>Location:</strong>
-                  <span>{facility.location}</span>
+                  <FiMapPin className="detail-icon" />
+                  <div>
+                    <strong>Location</strong>
+                    <span>{facility.location}</span>
+                  </div>
                 </div>
               )}
               {facility.capacity && (
                 <div className="detail-item">
-                  <strong>Capacity:</strong>
-                  <span>{facility.capacity} people</span>
+                  <FiUsers className="detail-icon" />
+                  <div>
+                    <strong>Capacity</strong>
+                    <span>{facility.capacity} people</span>
+                  </div>
                 </div>
               )}
               {facility.operatingHours && (
                 <div className="detail-item">
-                  <strong>Operating Hours:</strong>
-                  <span>{facility.operatingHours}</span>
+                  <FiClock className="detail-icon" />
+                  <div>
+                    <strong>Operating Hours</strong>
+                    <span>{facility.operatingHours}</span>
+                  </div>
                 </div>
               )}
               {facility.contactInfo && (
                 <div className="detail-item">
-                  <strong>Contact Information:</strong>
-                  <span>{facility.contactInfo}</span>
+                  <FiPhone className="detail-icon" />
+                  <div>
+                    <strong>Contact Information</strong>
+                    <span>{facility.contactInfo}</span>
+                  </div>
                 </div>
               )}
               {facility.equipment && (
                 <div className="detail-item">
-                  <strong>Equipment:</strong>
-                  <span>{facility.equipment}</span>
+                  <FiTool className="detail-icon" />
+                  <div>
+                    <strong>Equipment</strong>
+                    <span>{facility.equipment}</span>
+                  </div>
                 </div>
               )}
               {facility.rules && (
                 <div className="detail-item">
-                  <strong>Rules & Regulations:</strong>
-                  <span>{facility.rules}</span>
+                  <FiFileText className="detail-icon" />
+                  <div>
+                    <strong>Rules & Regulations</strong>
+                    <span>{facility.rules}</span>
+                  </div>
                 </div>
               )}
             </div>
@@ -150,11 +184,13 @@ const ResourceDetailPage = () => {
                 {Array.isArray(facility.amenities) 
                   ? facility.amenities.map((amenity, index) => (
                       <span key={index} className="amenity-tag">
+                        <FiCheck className="amenity-icon" />
                         {amenity}
                       </span>
                     ))
                   : facility.amenities.split(',').map((amenity, index) => (
                       <span key={index} className="amenity-tag">
+                        <FiCheck className="amenity-icon" />
                         {amenity.trim()}
                       </span>
                     ))
@@ -166,10 +202,12 @@ const ResourceDetailPage = () => {
           <div className="action-buttons">
             {facility.available && (
               <button className="book-button" onClick={() => navigate('/booking/create')}>
+                <FiCalendar className="button-icon" />
                 Book This Facility
               </button>
             )}
             <button className="inquire-button" onClick={() => navigate('/contact')}>
+              <FiMail className="button-icon" />
               Make Inquiry
             </button>
           </div>

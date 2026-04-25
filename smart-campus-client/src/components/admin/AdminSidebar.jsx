@@ -1,25 +1,23 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { FiDashboard, FiCalendar, FiTool, FiBuilding, FiUser, FiLogOut } from 'react-icons/fi';
 import './AdminSidebar.css';
 
 export default function AdminSidebar() {
   const location = useLocation();
 
   const menuItems = [
-    { path: '/admin/dashboard', label: 'Dashboard', icon: '📊' },
-    { path: '/admin/booking/all', label: 'Bookings', icon: '📅' },
-    { path: '/admin/maintenance', label: 'Maintenance', icon: '🔧' },
-    { path: '/admin/users', label: 'Users', icon: '👥' },
-    { path: '/admin/resources', label: 'Resources', icon: '🏢' },
-    { path: '/admin/reports', label: 'Reports', icon: '📈' },
-    { path: '/admin/settings', label: 'Settings', icon: '⚙️' },
+    { path: '/admin/dashboard', label: 'Dashboard', icon: FiDashboard },
+    { path: '/admin/booking/all', label: 'Bookings', icon: FiCalendar },
+    { path: '/admin/maintenance', label: 'Maintenance', icon: FiTool },
+    { path: '/admin/resources', label: 'Resources', icon: FiBuilding },
   ];
 
   return (
     <aside className="admin-sidebar">
       <div className="admin-sidebar-header">
         <div className="admin-logo">
-          <span className="admin-logo-icon">🎓</span>
+          <FiBuilding className="admin-logo-icon" />
           <span className="admin-logo-text">SmartUni Admin</span>
         </div>
       </div>
@@ -34,7 +32,7 @@ export default function AdminSidebar() {
                   location.pathname.includes(item.path) ? 'active' : ''
                 }`}
               >
-                <span className="admin-nav-icon">{item.icon}</span>
+                <item.icon className="admin-nav-icon" />
                 <span className="admin-nav-label">{item.label}</span>
               </Link>
             </li>
@@ -44,12 +42,16 @@ export default function AdminSidebar() {
 
       <div className="admin-sidebar-footer">
         <div className="admin-user-info">
-          <div className="admin-user-avatar">👤</div>
+          <FiUser className="admin-user-avatar" />
           <div className="admin-user-details">
             <div className="admin-user-name">Administrator</div>
             <div className="admin-user-role">Admin</div>
           </div>
         </div>
+        <button className="admin-logout-btn">
+          <FiLogOut className="admin-logout-icon" />
+          <span>Logout</span>
+        </button>
       </div>
     </aside>
   );

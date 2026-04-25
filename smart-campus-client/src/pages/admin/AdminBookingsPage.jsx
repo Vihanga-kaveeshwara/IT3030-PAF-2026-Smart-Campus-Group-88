@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { BookingContext } from '../booking/BookingContext';
 import { Link } from 'react-router-dom';
+import { FiFilter, FiX, FiCalendar, FiClock, FiTarget, FiUser, FiCheckCircle, FiClock as FiPending, FiXCircle, FiSettings, FiLoader, FiAlertCircle, FiSearch } from 'react-icons/fi';
 
 const AdminBookingsPage = () => {
   const { state, fetchAllBookings } = useContext(BookingContext);
@@ -64,22 +65,85 @@ const AdminBookingsPage = () => {
   };
 
   return (
-    <div className="p-8">
-      <div className="max-w-7xl mx-auto">
+    <div style={{
+      minHeight: '100vh',
+      backgroundColor: '#f8fafc',
+      padding: '32px 16px'
+    }}>
+      <div style={{
+        maxWidth: '1400px',
+        margin: '0 auto'
+      }}>
+        <div style={{
+          marginBottom: '32px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px'
+        }}>
+          <FiSettings size={36} style={{ color: '#1f2937' }} />
+          <h1 style={{
+            fontSize: '32px',
+            fontWeight: '700',
+            color: '#1f2937',
+            margin: 0
+          }}>All Bookings Management</h1>
+        </div>
 
-        <h1 className="text-3xl font-bold text-gray-800 mb-8">All Bookings Management</h1>
-
-        <div className="bg-white rounded-2xl shadow-sm p-6 mb-8">
-          <h2 className="text-lg font-bold text-gray-800 mb-4">Filters</h2>
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
-
+        <div style={{
+          backgroundColor: '#ffffff',
+          borderRadius: '16px',
+          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+          padding: '24px',
+          marginBottom: '32px',
+          border: '1px solid #e2e8f0'
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            marginBottom: '20px'
+          }}>
+            <FiFilter size={20} style={{ color: '#1f2937' }} />
+            <h2 style={{
+              fontSize: '20px',
+              fontWeight: '600',
+              color: '#1f2937',
+              margin: 0
+            }}>Filters</h2>
+          </div>
+          
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            gap: '16px',
+            marginBottom: '20px'
+          }}>
             <div>
-              <label className="block text-xs font-semibold text-gray-600 uppercase mb-1">Status</label>
+              <label style={{
+                display: 'block',
+                fontSize: '12px',
+                fontWeight: '600',
+                color: '#6b7280',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px',
+                marginBottom: '6px'
+              }}>Status</label>
               <select
                 name="status"
                 value={filters.status}
                 onChange={handleFilterChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-sm"
+                style={{
+                  width: '100%',
+                  padding: '10px 12px',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  outline: 'none',
+                  transition: 'border-color 0.2s ease',
+                  backgroundColor: '#ffffff'
+                }}
+                onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
               >
                 <option value="">All Status</option>
                 <option value="PENDING">Pending</option>
@@ -90,107 +154,444 @@ const AdminBookingsPage = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-gray-600 uppercase mb-1">Facility ID</label>
+              <label style={{
+                display: 'block',
+                fontSize: '12px',
+                fontWeight: '600',
+                color: '#6b7280',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px',
+                marginBottom: '6px'
+              }}>Facility ID</label>
               <input
                 type="text"
                 name="resourceId"
                 value={filters.resourceId}
                 onChange={handleFilterChange}
                 placeholder="Facility ID"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-sm"
+                style={{
+                  width: '100%',
+                  padding: '10px 12px',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  outline: 'none',
+                  transition: 'border-color 0.2s ease',
+                  backgroundColor: '#ffffff'
+                }}
+                onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-gray-600 uppercase mb-1">Requester</label>
+              <label style={{
+                display: 'block',
+                fontSize: '12px',
+                fontWeight: '600',
+                color: '#6b7280',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px',
+                marginBottom: '6px'
+              }}>Requester</label>
               <input
                 type="text"
                 name="requesterId"
                 value={filters.requesterId}
                 onChange={handleFilterChange}
                 placeholder="User ID"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-sm"
+                style={{
+                  width: '100%',
+                  padding: '10px 12px',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  outline: 'none',
+                  transition: 'border-color 0.2s ease',
+                  backgroundColor: '#ffffff'
+                }}
+                onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-gray-600 uppercase mb-1">From Date</label>
+              <label style={{
+                display: 'block',
+                fontSize: '12px',
+                fontWeight: '600',
+                color: '#6b7280',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px',
+                marginBottom: '6px'
+              }}>From Date</label>
               <input
                 type="date"
                 name="fromDate"
                 value={filters.fromDate}
                 onChange={handleFilterChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-sm"
+                style={{
+                  width: '100%',
+                  padding: '10px 12px',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  outline: 'none',
+                  transition: 'border-color 0.2s ease',
+                  backgroundColor: '#ffffff'
+                }}
+                onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-gray-600 uppercase mb-1">To Date</label>
+              <label style={{
+                display: 'block',
+                fontSize: '12px',
+                fontWeight: '600',
+                color: '#6b7280',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px',
+                marginBottom: '6px'
+              }}>To Date</label>
               <input
                 type="date"
                 name="toDate"
                 value={filters.toDate}
                 onChange={handleFilterChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-sm"
+                style={{
+                  width: '100%',
+                  padding: '10px 12px',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  outline: 'none',
+                  transition: 'border-color 0.2s ease',
+                  backgroundColor: '#ffffff'
+                }}
+                onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
               />
             </div>
           </div>
 
           <button
             onClick={handleClearFilters}
-            className="px-4 py-2 bg-gray-300 text-gray-800 font-medium rounded-lg hover:bg-gray-400 transition text-sm"
+            style={{
+              padding: '10px 20px',
+              backgroundColor: '#d1d5db',
+              color: '#374151',
+              fontWeight: '500',
+              borderRadius: '8px',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: '14px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              transition: 'all 0.2s ease'
+            }}
+            onMouseEnter={(e) => e.target.style.backgroundColor = '#9ca3af'}
+            onMouseLeave={(e) => e.target.style.backgroundColor = '#d1d5db'}
           >
+            <FiX size={16} />
             Clear Filters
           </button>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-          <table className="w-full">
-            <thead className="bg-gray-50 border-b">
-              <tr>
-                <th className="px-6 py-5 text-left text-xs font-semibold text-gray-500">BOOKING ID</th>
-                <th className="px-6 py-5 text-left text-xs font-semibold text-gray-500">FACILITY</th>
-                <th className="px-6 py-5 text-left text-xs font-semibold text-gray-500">REQUESTER</th>
-                <th className="px-6 py-5 text-left text-xs font-semibold text-gray-500">DATE</th>
-                <th className="px-6 py-5 text-left text-xs font-semibold text-gray-500">TIME</th>
-                <th className="px-6 py-5 text-left text-xs font-semibold text-gray-500">PURPOSE</th>
-                <th className="px-6 py-5 text-left text-xs font-semibold text-gray-500">STATUS</th>
-                <th className="px-6 py-5 text-center text-xs font-semibold text-gray-500">ACTION</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y">
-              {loading && <tr><td colSpan="8" className="text-center py-5">Loading...</td></tr>}
-              {error && <tr><td colSpan="8" className="text-center py-5 text-red-500">Error: {error}</td></tr>}
-              {!loading && !error && allBookings.length === 0 && (
-                <tr><td colSpan="8" className="text-center py-5 text-gray-500">No bookings found</td></tr>
-              )}
-              {!loading && !error && allBookings.map((booking) => (
-                <tr key={booking.id} className="hover:bg-gray-50 transition">
-                  <td className="px-6 py-5 font-medium text-gray-900 text-sm font-mono">{booking.id || 'N/A'}</td>
-                  <td className="px-6 py-5 text-gray-700 text-sm">{getFacilityName(booking.resourceId)}</td>
-                  <td className="px-6 py-5 text-gray-700 text-sm">{booking.requesterId}</td>
-                  <td className="px-6 py-5 text-gray-700 text-sm">{formatDate(booking.date)}</td>
-                  <td className="px-6 py-5 text-gray-700 text-sm">
-                    {formatTime(booking.startTime)} - {formatTime(booking.endTime)}
-                  </td>
-                  <td className="px-6 py-5 text-gray-700 text-sm truncate">{booking.purpose}</td>
-                  <td className="px-6 py-5">
-                    <span className={`inline-flex px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(booking.status)}`}>
-                      {booking.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-5 text-center">
-                    <Link
-                      to={`/admin/booking/manage/${booking.id}`}
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-[#053769] text-white text-xs font-medium rounded-lg hover:bg-[#042d55] transition"
-                    >
-                      ⚙️ Manage
-                    </Link>
-                  </td>
+        <div style={{
+          backgroundColor: '#ffffff',
+          borderRadius: '16px',
+          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+          overflow: 'hidden',
+          border: '1px solid #e2e8f0'
+        }}>
+          <div style={{
+            overflowX: 'auto'
+          }}>
+            <table style={{
+              width: '100%',
+              borderCollapse: 'collapse'
+            }}>
+              <thead>
+                <tr style={{
+                  backgroundColor: '#f9fafb',
+                  borderBottom: '1px solid #e5e7eb'
+                }}>
+                  <th style={{
+                    padding: '16px 20px',
+                    textAlign: 'left',
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    color: '#6b7280',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <FiSearch size={14} />
+                      BOOKING ID
+                    </div>
+                  </th>
+                  <th style={{
+                    padding: '16px 20px',
+                    textAlign: 'left',
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    color: '#6b7280',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <FiTarget size={14} />
+                      FACILITY
+                    </div>
+                  </th>
+                  <th style={{
+                    padding: '16px 20px',
+                    textAlign: 'left',
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    color: '#6b7280',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <FiUser size={14} />
+                      REQUESTER
+                    </div>
+                  </th>
+                  <th style={{
+                    padding: '16px 20px',
+                    textAlign: 'left',
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    color: '#6b7280',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <FiCalendar size={14} />
+                      DATE
+                    </div>
+                  </th>
+                  <th style={{
+                    padding: '16px 20px',
+                    textAlign: 'left',
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    color: '#6b7280',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <FiClock size={14} />
+                      TIME
+                    </div>
+                  </th>
+                  <th style={{
+                    padding: '16px 20px',
+                    textAlign: 'left',
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    color: '#6b7280',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <FiTarget size={14} />
+                      PURPOSE
+                    </div>
+                  </th>
+                  <th style={{
+                    padding: '16px 20px',
+                    textAlign: 'left',
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    color: '#6b7280',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px'
+                  }}>STATUS</th>
+                  <th style={{
+                    padding: '16px 20px',
+                    textAlign: 'center',
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    color: '#6b7280',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px'
+                  }}>ACTION</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {loading && (
+                  <tr>
+                    <td colSpan="8" style={{
+                      textAlign: 'center',
+                      padding: '32px',
+                      color: '#6b7280',
+                      fontSize: '16px'
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
+                        <FiLoader size={20} style={{ animation: 'spin 1s linear infinite' }} />
+                        Loading...
+                      </div>
+                    </td>
+                  </tr>
+                )}
+                {error && (
+                  <tr>
+                    <td colSpan="8" style={{
+                      textAlign: 'center',
+                      padding: '32px',
+                      color: '#ef4444',
+                      fontSize: '16px'
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
+                        <FiAlertCircle size={20} />
+                        Error: {error}
+                      </div>
+                    </td>
+                  </tr>
+                )}
+                {!loading && !error && allBookings.length === 0 && (
+                  <tr>
+                    <td colSpan="8" style={{
+                      textAlign: 'center',
+                      padding: '32px',
+                      color: '#6b7280',
+                      fontSize: '16px'
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
+                        <FiSearch size={20} />
+                        No bookings found
+                      </div>
+                    </td>
+                  </tr>
+                )}
+                {!loading && !error && allBookings.map((booking) => (
+                  <tr key={booking.id} style={{
+                    borderBottom: '1px solid #f3f4f6',
+                    transition: 'background-color 0.2s ease'
+                  }}>
+                    <td style={{
+                      padding: '16px 20px',
+                      fontWeight: '500',
+                      color: '#1f2937',
+                      fontSize: '14px',
+                      fontFamily: 'monospace',
+                      backgroundColor: '#f8fafc',
+                      borderRadius: '4px',
+                      margin: '4px 0'
+                    }}>{booking.id || 'N/A'}</td>
+                    <td style={{
+                      padding: '16px 20px',
+                      color: '#374151',
+                      fontSize: '14px'
+                    }}>{getFacilityName(booking.resourceId)}</td>
+                    <td style={{
+                      padding: '16px 20px',
+                      color: '#374151',
+                      fontSize: '14px'
+                    }}>{booking.requesterId}</td>
+                    <td style={{
+                      padding: '16px 20px',
+                      color: '#374151',
+                      fontSize: '14px'
+                    }}>{formatDate(booking.date)}</td>
+                    <td style={{
+                      padding: '16px 20px',
+                      color: '#374151',
+                      fontSize: '14px'
+                    }}>
+                      {formatTime(booking.startTime)} - {formatTime(booking.endTime)}
+                    </td>
+                    <td style={{
+                      padding: '16px 20px',
+                      color: '#374151',
+                      fontSize: '14px',
+                      maxWidth: '200px',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap'
+                    }}>{booking.purpose}</td>
+                    <td style={{
+                      padding: '16px 20px'
+                    }}>
+                      <span style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        padding: '6px 12px',
+                        borderRadius: '16px',
+                        fontSize: '12px',
+                        fontWeight: '500',
+                        ...(booking.status === 'APPROVED' && {
+                          backgroundColor: '#10b981',
+                          color: '#ffffff'
+                        }),
+                        ...(booking.status === 'PENDING' && {
+                          backgroundColor: '#3b82f6',
+                          color: '#ffffff'
+                        }),
+                        ...(booking.status === 'REJECTED' && {
+                          backgroundColor: '#ef4444',
+                          color: '#ffffff'
+                        }),
+                        ...(booking.status === 'CANCELLED' && {
+                          backgroundColor: '#6b7280',
+                          color: '#ffffff'
+                        }),
+                        ...(booking.status !== 'APPROVED' && booking.status !== 'PENDING' && booking.status !== 'REJECTED' && booking.status !== 'CANCELLED' && {
+                          backgroundColor: '#8b5cf6',
+                          color: '#ffffff'
+                        })
+                      }}>
+                        {booking.status === 'APPROVED' && <FiCheckCircle size={12} />}
+                        {booking.status === 'PENDING' && <FiPending size={12} />}
+                        {booking.status === 'REJECTED' && <FiXCircle size={12} />}
+                        {booking.status === 'CANCELLED' && <FiXCircle size={12} />}
+                        {booking.status !== 'APPROVED' && booking.status !== 'PENDING' && booking.status !== 'REJECTED' && booking.status !== 'CANCELLED' && <FiAlertCircle size={12} />}
+                        {booking.status}
+                      </span>
+                    </td>
+                    <td style={{
+                      padding: '16px 20px',
+                      textAlign: 'center'
+                    }}>
+                      <Link
+                        to={`/admin/booking/manage/${booking.id}`}
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          padding: '8px 16px',
+                          backgroundColor: '#053769',
+                          color: '#ffffff',
+                          fontSize: '12px',
+                          fontWeight: '500',
+                          borderRadius: '8px',
+                          textDecoration: 'none',
+                          transition: 'all 0.2s ease'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.target.style.backgroundColor = '#042d55';
+                          e.target.style.transform = 'translateY(-1px)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.target.style.backgroundColor = '#053769';
+                          e.target.style.transform = 'translateY(0)';
+                        }}
+                      >
+                        <FiSettings size={14} />
+                        Manage
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

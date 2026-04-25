@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { TicketContext } from './TicketContext';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api/axiosInstance';
+import { FiMapPin, FiTool, FiFileText, FiAlertCircle, FiMail, FiUpload, FiImage, FiX, FiSend, FiLoader, FiArrowLeft } from 'react-icons/fi';
 
 const CATEGORY_OPTIONS = ['Electrical', 'Furniture', 'IT Equipment', 'HVAC', 'Plumbing', 'Others'];
 const PRIORITY_OPTIONS = ['Low', 'Medium', 'High'];
@@ -301,33 +302,161 @@ const ReportNewIncidentPage = () => {
   };
 
   return (
-    <div className="p-8 max-w-3xl mx-auto relative">
-      {successToast && (
-        <div className="fixed top-6 left-1/2 z-50 w-[min(92vw,32rem)] -translate-x-1/2 rounded-2xl border border-green-200 bg-green-50 px-5 py-4 shadow-lg">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <p className="text-sm font-semibold text-green-800">{successToast}</p>
-              <p className="mt-1 text-xs text-green-700">Your maintenance request has been recorded and sent for review.</p>
+    <div style={{
+      padding: '2rem',
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
+      position: 'relative'
+    }}>
+      <div style={{
+        maxWidth: '900px',
+        margin: '0 auto'
+      }}>
+        {successToast && (
+          <div style={{
+            position: 'fixed',
+            top: '1.5rem',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 50,
+            width: 'min(92vw, 32rem)',
+            borderRadius: '1rem',
+            border: '2px solid #22c55e',
+            background: 'linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)',
+            padding: '1rem 1.25rem',
+            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem'
+          }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              justifyContent: 'space-between',
+              gap: '1rem',
+              width: '100%'
+            }}>
+              <div>
+                <p style={{
+                  fontSize: '0.875rem',
+                  fontWeight: '600',
+                  color: '#166534'
+                }}>{successToast}</p>
+                <p style={{
+                  marginTop: '0.25rem',
+                  fontSize: '0.75rem',
+                  color: '#15803d'
+                }}>Your maintenance request has been recorded and sent for review.</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSuccessToast('')}
+                style={{
+                  fontSize: '0.875rem',
+                  fontWeight: '600',
+                  color: '#15803d',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: '0.25rem',
+                  borderRadius: '0.25rem',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.color = '#166534';
+                  e.target.style.background = 'rgba(34, 197, 94, 0.1)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.color = '#15803d';
+                  e.target.style.background = 'none';
+                }}
+              >
+                <FiX style={{ fontSize: '1rem' }} />
+              </button>
             </div>
-            <button
-              type="button"
-              onClick={() => setSuccessToast('')}
-              className="text-sm font-semibold text-green-700 hover:text-green-900"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
-
-      <h1 className="text-3xl font-bold text-gray-800 mb-8">Report New Incident</h1>
-
-      <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm p-8 space-y-6">
-        {submitError && (
-          <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-            {submitError}
           </div>
         )}
+
+      <div style={{
+          marginBottom: '2rem'
+        }}>
+          <button
+            onClick={() => navigate('/maintenance/my-tickets')}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              marginBottom: '1.5rem',
+              padding: '0.75rem 1.5rem',
+              background: 'rgba(255, 255, 255, 0.9)',
+              color: '#053769',
+              fontWeight: '600',
+              borderRadius: '0.5rem',
+              border: '1px solid rgba(5, 55, 105, 0.1)',
+              textDecoration: 'none',
+              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)',
+              transition: 'all 0.3s ease',
+              cursor: 'pointer'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.background = 'rgba(5, 55, 105, 0.05)';
+              e.target.style.transform = 'translateX(-2px)';
+              e.target.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.background = 'rgba(255, 255, 255, 0.9)';
+              e.target.style.transform = 'translateX(0)';
+              e.target.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.05)';
+            }}
+          >
+            <FiArrowLeft style={{ fontSize: '1rem' }} />
+            Back to My Tickets
+          </button>
+          
+          <h1 style={{
+            fontSize: '2.5rem',
+            fontWeight: '800',
+            color: '#1e293b',
+            marginBottom: '0.5rem',
+            letterSpacing: '-0.02em',
+            background: 'linear-gradient(135deg, #1e293b 0%, #475569 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text'
+          }}>Report New Incident</h1>
+          <p style={{
+            color: '#64748b',
+            fontSize: '1rem',
+            fontWeight: '500'
+          }}>Submit a maintenance request for campus facilities</p>
+        </div>
+
+        <form onSubmit={handleSubmit} style={{
+          background: 'rgba(255, 255, 255, 0.95)',
+          borderRadius: '1.5rem',
+          boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+          backdropFilter: 'blur(10px)',
+          padding: '2.5rem',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1.5rem'
+        }}>
+          {submitError && (
+            <div style={{
+              borderRadius: '0.75rem',
+              border: '2px solid #fecaca',
+              background: 'linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%)',
+              padding: '0.75rem 1rem',
+              fontSize: '0.875rem',
+              color: '#dc2626',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem'
+            }}>
+              <FiAlertCircle style={{ fontSize: '1rem' }} />
+              {submitError}
+            </div>
+          )}
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -501,11 +630,52 @@ const ReportNewIncidentPage = () => {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-[#053769] text-white py-4 rounded-xl font-semibold hover:bg-[#042d55] transition disabled:opacity-70"
+          style={{
+            width: '100%',
+            padding: '1rem 2rem',
+            background: isSubmitting ? 'linear-gradient(135deg, #9ca3af 0%, #6b7280 100%)' : 'linear-gradient(135deg, #053769 0%, #0f172a 100%)',
+            color: '#ffffff',
+            fontWeight: '700',
+            borderRadius: '0.75rem',
+            border: 'none',
+            cursor: isSubmitting ? 'not-allowed' : 'pointer',
+            transition: 'all 0.3s ease',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '0.75rem',
+            fontSize: '1rem',
+            boxShadow: '0 4px 6px rgba(5, 55, 105, 0.2)',
+            opacity: isSubmitting ? 0.6 : 1,
+            marginTop: '1rem'
+          }}
+          onMouseEnter={(e) => {
+            if (!isSubmitting) {
+              e.target.style.transform = 'translateY(-2px)';
+              e.target.style.boxShadow = '0 8px 12px rgba(5, 55, 105, 0.3)';
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (!isSubmitting) {
+              e.target.style.transform = 'translateY(0)';
+              e.target.style.boxShadow = '0 4px 6px rgba(5, 55, 105, 0.2)';
+            }
+          }}
         >
-          {isSubmitting ? 'Submitting Ticket...' : 'Submit Ticket'}
+          {isSubmitting ? (
+            <>
+              <FiLoader style={{ fontSize: '1.25rem', animation: 'spin 1s linear infinite' }} />
+              Submitting Ticket...
+            </>
+          ) : (
+            <>
+              <FiSend style={{ fontSize: '1.25rem' }} />
+              Submit Ticket
+            </>
+          )}
         </button>
-      </form>
+        </form>
+      </div>
     </div>
   );
 };

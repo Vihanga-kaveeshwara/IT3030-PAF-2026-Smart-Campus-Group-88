@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../api/axiosInstance';
+import { FiMapPin, FiUsers, FiCheckCircle, FiXCircle, FiRefreshCw, FiImage, FiCalendar, FiGrid, FiHome } from 'react-icons/fi';
 import './ResourcesPage.css';
 
 const ResourcesPage = () => {
@@ -30,7 +31,7 @@ const ResourcesPage = () => {
     return (
       <div className="resources-page">
         <div className="loading-spinner">
-          <div className="spinner"></div>
+          <FiGrid className="loading-icon" />
           <p>Loading facilities...</p>
         </div>
       </div>
@@ -41,8 +42,10 @@ const ResourcesPage = () => {
     return (
       <div className="resources-page">
         <div className="error-message">
+          <FiXCircle className="error-icon" />
           <p>{error}</p>
           <button onClick={fetchFacilities} className="retry-button">
+            <FiRefreshCw className="retry-icon" />
             Retry
           </button>
         </div>
@@ -53,12 +56,18 @@ const ResourcesPage = () => {
   return (
     <div className="resources-page">
       <div className="page-header">
-        <h1>Campus Resources</h1>
-        <p>Browse available facilities and resources on campus</p>
+        <div className="header-content">
+          <FiHome className="header-icon" />
+          <div>
+            <h1>Campus Resources</h1>
+            <p>Browse available facilities and resources on campus</p>
+          </div>
+        </div>
       </div>
 
       {facilities.length === 0 ? (
         <div className="no-facilities">
+          <FiGrid className="no-facilities-icon" />
           <p>No facilities available at the moment.</p>
         </div>
       ) : (
@@ -70,6 +79,7 @@ const ResourcesPage = () => {
                   <img src={facility.imageUrl} alt={facility.name} />
                 ) : (
                   <div className="placeholder-image">
+                    <FiImage className="placeholder-icon" />
                     <span>No Image</span>
                   </div>
                 )}
@@ -83,17 +93,29 @@ const ResourcesPage = () => {
                 <div className="facility-details">
                   {facility.location && (
                     <span className="detail-item">
-                      <strong>Location:</strong> {facility.location}
+                      <FiMapPin className="detail-icon" />
+                      <span>{facility.location}</span>
                     </span>
                   )}
                   {facility.capacity && (
                     <span className="detail-item">
-                      <strong>Capacity:</strong> {facility.capacity}
+                      <FiUsers className="detail-icon" />
+                      <span>{facility.capacity} capacity</span>
                     </span>
                   )}
                   {facility.available !== undefined && (
                     <span className={`availability-status ${facility.available ? 'available' : 'unavailable'}`}>
-                      {facility.available ? 'Available' : 'Unavailable'}
+                      {facility.available ? (
+                        <>
+                          <FiCheckCircle className="status-icon" />
+                          Available
+                        </>
+                      ) : (
+                        <>
+                          <FiXCircle className="status-icon" />
+                          Unavailable
+                        </>
+                      )}
                     </span>
                   )}
                 </div>

@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { TicketContext } from '../../features/maintenance/TicketContext';
 import { Link } from 'react-router-dom';
+import { FiFilter, FiX, FiEye, FiUser, FiClock, FiAlertCircle, FiCheckCircle, FiPlay, FiLoader, FiSearch, FiTool, FiCalendar, FiTag, FiTrendingUp } from 'react-icons/fi';
 
 const AllTicketsPage = () => {
   const { state, fetchAllTickets, assignTicket, updateStatus, rejectTicket } = useContext(TicketContext);
@@ -105,20 +106,85 @@ const AllTicketsPage = () => {
   });
 
   return (
-    <div className="p-8">
-      <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-800 mb-8">All Tickets Management</h1>
+    <div style={{
+      minHeight: '100vh',
+      backgroundColor: '#f8fafc',
+      padding: '32px 16px'
+    }}>
+      <div style={{
+        maxWidth: '1400px',
+        margin: '0 auto'
+      }}>
+        <div style={{
+          marginBottom: '32px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px'
+        }}>
+          <FiTool size={36} style={{ color: '#1f2937' }} />
+          <h1 style={{
+            fontSize: '32px',
+            fontWeight: '700',
+            color: '#1f2937',
+            margin: 0
+          }}>All Tickets Management</h1>
+        </div>
 
-        <div className="bg-white rounded-2xl shadow-sm p-6 mb-8">
-          <h2 className="text-lg font-bold text-gray-800 mb-4">Filters</h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+        <div style={{
+          backgroundColor: '#ffffff',
+          borderRadius: '16px',
+          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+          padding: '24px',
+          marginBottom: '32px',
+          border: '1px solid #e2e8f0'
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            marginBottom: '20px'
+          }}>
+            <FiFilter size={20} style={{ color: '#1f2937' }} />
+            <h2 style={{
+              fontSize: '20px',
+              fontWeight: '600',
+              color: '#1f2937',
+              margin: 0
+            }}>Filters</h2>
+          </div>
+          
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            gap: '16px',
+            marginBottom: '20px'
+          }}>
             <div>
-              <label className="block text-xs font-semibold text-gray-600 uppercase mb-1">Status</label>
+              <label style={{
+                display: 'block',
+                fontSize: '12px',
+                fontWeight: '600',
+                color: '#6b7280',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px',
+                marginBottom: '6px'
+              }}>Status</label>
               <select
                 name="status"
                 value={filters.status}
                 onChange={handleFilterChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-sm"
+                style={{
+                  width: '100%',
+                  padding: '10px 12px',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  outline: 'none',
+                  transition: 'border-color 0.2s ease',
+                  backgroundColor: '#ffffff'
+                }}
+                onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
               >
                 <option value="">All Status</option>
                 <option value="OPEN">Open</option>
@@ -130,12 +196,31 @@ const AllTicketsPage = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-gray-600 uppercase mb-1">Priority</label>
+              <label style={{
+                display: 'block',
+                fontSize: '12px',
+                fontWeight: '600',
+                color: '#6b7280',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px',
+                marginBottom: '6px'
+              }}>Priority</label>
               <select
                 name="priority"
                 value={filters.priority}
                 onChange={handleFilterChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-sm"
+                style={{
+                  width: '100%',
+                  padding: '10px 12px',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  outline: 'none',
+                  transition: 'border-color 0.2s ease',
+                  backgroundColor: '#ffffff'
+                }}
+                onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
               >
                 <option value="">All Priority</option>
                 <option value="HIGH">High</option>
@@ -145,12 +230,31 @@ const AllTicketsPage = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-gray-600 uppercase mb-1">Category</label>
+              <label style={{
+                display: 'block',
+                fontSize: '12px',
+                fontWeight: '600',
+                color: '#6b7280',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px',
+                marginBottom: '6px'
+              }}>Category</label>
               <select
                 name="category"
                 value={filters.category}
                 onChange={handleFilterChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-sm"
+                style={{
+                  width: '100%',
+                  padding: '10px 12px',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  outline: 'none',
+                  transition: 'border-color 0.2s ease',
+                  backgroundColor: '#ffffff'
+                }}
+                onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
               >
                 <option value="">All Categories</option>
                 <option value="ELECTRICAL">Electrical</option>
@@ -163,110 +267,508 @@ const AllTicketsPage = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-gray-600 uppercase mb-1">Assignee</label>
+              <label style={{
+                display: 'block',
+                fontSize: '12px',
+                fontWeight: '600',
+                color: '#6b7280',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px',
+                marginBottom: '6px'
+              }}>Assignee</label>
               <input
                 type="text"
                 name="assignee"
                 value={filters.assignee}
                 onChange={handleFilterChange}
                 placeholder="Technician name"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-sm"
+                style={{
+                  width: '100%',
+                  padding: '10px 12px',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  outline: 'none',
+                  transition: 'border-color 0.2s ease',
+                  backgroundColor: '#ffffff'
+                }}
+                onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
               />
             </div>
           </div>
 
           <button
             onClick={handleClearFilters}
-            className="px-4 py-2 bg-gray-300 text-gray-800 font-medium rounded-lg hover:bg-gray-400 transition text-sm"
+            style={{
+              padding: '10px 20px',
+              backgroundColor: '#d1d5db',
+              color: '#374151',
+              fontWeight: '500',
+              borderRadius: '8px',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: '14px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              transition: 'all 0.2s ease'
+            }}
+            onMouseEnter={(e) => e.target.style.backgroundColor = '#9ca3af'}
+            onMouseLeave={(e) => e.target.style.backgroundColor = '#d1d5db'}
           >
+            <FiX size={16} />
             Clear Filters
           </button>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-          <table className="w-full">
-            <thead className="bg-gray-50 border-b">
-              <tr>
-                <th className="px-6 py-5 text-left text-xs font-semibold text-gray-500">TICKET ID</th>
-                <th className="px-6 py-5 text-left text-xs font-semibold text-gray-500">TITLE</th>
-                <th className="px-6 py-5 text-left text-xs font-semibold text-gray-500">CATEGORY</th>
-                <th className="px-6 py-5 text-left text-xs font-semibold text-gray-500">PRIORITY</th>
-                <th className="px-6 py-5 text-left text-xs font-semibold text-gray-500">REPORTER</th>
-                <th className="px-6 py-5 text-left text-xs font-semibold text-gray-500">ASSIGNEE</th>
-                <th className="px-6 py-5 text-left text-xs font-semibold text-gray-500">STATUS</th>
-                <th className="px-6 py-5 text-left text-xs font-semibold text-gray-500">CREATED</th>
-                <th className="px-6 py-5 text-center text-xs font-semibold text-gray-500">ACTIONS</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y">
-              {loading && <tr><td colSpan="9" className="text-center py-5">Loading...</td></tr>}
-              {error && <tr><td colSpan="9" className="text-center py-5 text-red-500">Error: {error}</td></tr>}
-              {!loading && !error && filteredTickets.length === 0 && (
-                <tr><td colSpan="9" className="text-center py-5 text-gray-500">No tickets found</td></tr>
-              )}
-              {!loading && !error && filteredTickets.map((ticket) => (
-                <tr key={ticket.id} className="hover:bg-gray-50 transition">
-                  <td className="px-6 py-5 font-medium text-gray-900 text-sm font-mono">{ticket.id || 'N/A'}</td>
-                  <td className="px-6 py-5 text-gray-700 text-sm">
-                    <div className="max-w-xs truncate" title={ticket.title}>
-                      {ticket.title}
+        <div style={{
+          backgroundColor: '#ffffff',
+          borderRadius: '16px',
+          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+          overflow: 'hidden',
+          border: '1px solid #e2e8f0'
+        }}>
+          <div style={{
+            overflowX: 'auto'
+          }}>
+            <table style={{
+              width: '100%',
+              borderCollapse: 'collapse'
+            }}>
+              <thead>
+                <tr style={{
+                  backgroundColor: '#f9fafb',
+                  borderBottom: '1px solid #e5e7eb'
+                }}>
+                  <th style={{
+                    padding: '16px 20px',
+                    textAlign: 'left',
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    color: '#6b7280',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <FiSearch size={14} />
+                      TICKET ID
                     </div>
-                  </td>
-                  <td className="px-6 py-5 text-gray-700 text-sm">{ticket.category || 'N/A'}</td>
-                  <td className="px-6 py-5">
-                    <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium border ${getPriorityColor(ticket.priority)}`}>
-                      {ticket.priority}
-                    </span>
-                  </td>
-                  <td className="px-6 py-5 text-gray-700 text-sm">{ticket.reporterId || 'N/A'}</td>
-                  <td className="px-6 py-5 text-gray-700 text-sm">{ticket.assignee || 'Unassigned'}</td>
-                  <td className="px-6 py-5">
-                    <span className={`inline-flex px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(ticket.status)}`}>
-                      {ticket.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-5 text-gray-700 text-sm">{formatDate(ticket.createdAt)}</td>
-                  <td className="px-6 py-5">
-                    <div className="flex items-center gap-2 justify-center">
-                      <Link
-                        to={`/admin/maintenance/ticket/${ticket.id}`}
-                        className="inline-flex items-center gap-1 px-3 py-1 bg-blue-600 text-white text-xs font-medium rounded hover:bg-blue-700 transition"
-                      >
-                        👁️ View
-                      </Link>
-                      
-                      {ticket.status === 'OPEN' && !ticket.assignee && (
-                        <button
-                          onClick={() => handleAssignTicket(ticket.id)}
-                          className="inline-flex items-center gap-1 px-3 py-1 bg-purple-600 text-white text-xs font-medium rounded hover:bg-purple-700 transition"
-                        >
-                          👤 Assign
-                        </button>
-                      )}
-                      
-                      {ticket.status === 'OPEN' && (
-                        <button
-                          onClick={() => handleRejectTicket(ticket.id)}
-                          className="inline-flex items-center gap-1 px-3 py-1 bg-red-600 text-white text-xs font-medium rounded hover:bg-red-700 transition"
-                        >
-                          ❌ Reject
-                        </button>
-                      )}
-                      
-                      {ticket.status === 'OPEN' && ticket.assignee && (
-                        <button
-                          onClick={() => handleUpdateStatus(ticket.id, 'IN_PROGRESS')}
-                          className="inline-flex items-center gap-1 px-3 py-1 bg-yellow-600 text-white text-xs font-medium rounded hover:bg-yellow-700 transition"
-                        >
-                          ▶️ Start
-                        </button>
-                      )}
+                  </th>
+                  <th style={{
+                    padding: '16px 20px',
+                    textAlign: 'left',
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    color: '#6b7280',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px'
+                  }}>TITLE</th>
+                  <th style={{
+                    padding: '16px 20px',
+                    textAlign: 'left',
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    color: '#6b7280',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <FiTag size={14} />
+                      CATEGORY
                     </div>
-                  </td>
+                  </th>
+                  <th style={{
+                    padding: '16px 20px',
+                    textAlign: 'left',
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    color: '#6b7280',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <FiTrendingUp size={14} />
+                      PRIORITY
+                    </div>
+                  </th>
+                  <th style={{
+                    padding: '16px 20px',
+                    textAlign: 'left',
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    color: '#6b7280',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <FiUser size={14} />
+                      REPORTER
+                    </div>
+                  </th>
+                  <th style={{
+                    padding: '16px 20px',
+                    textAlign: 'left',
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    color: '#6b7280',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <FiUser size={14} />
+                      ASSIGNEE
+                    </div>
+                  </th>
+                  <th style={{
+                    padding: '16px 20px',
+                    textAlign: 'left',
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    color: '#6b7280',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px'
+                  }}>STATUS</th>
+                  <th style={{
+                    padding: '16px 20px',
+                    textAlign: 'left',
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    color: '#6b7280',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <FiCalendar size={14} />
+                      CREATED
+                    </div>
+                  </th>
+                  <th style={{
+                    padding: '16px 20px',
+                    textAlign: 'center',
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    color: '#6b7280',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px'
+                  }}>ACTIONS</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {loading && (
+                  <tr>
+                    <td colSpan="9" style={{
+                      textAlign: 'center',
+                      padding: '32px',
+                      color: '#6b7280',
+                      fontSize: '16px'
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
+                        <FiLoader size={20} style={{ animation: 'spin 1s linear infinite' }} />
+                        Loading...
+                      </div>
+                    </td>
+                  </tr>
+                )}
+                {error && (
+                  <tr>
+                    <td colSpan="9" style={{
+                      textAlign: 'center',
+                      padding: '32px',
+                      color: '#ef4444',
+                      fontSize: '16px'
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
+                        <FiAlertCircle size={20} />
+                        Error: {error}
+                      </div>
+                    </td>
+                  </tr>
+                )}
+                {!loading && !error && filteredTickets.length === 0 && (
+                  <tr>
+                    <td colSpan="9" style={{
+                      textAlign: 'center',
+                      padding: '32px',
+                      color: '#6b7280',
+                      fontSize: '16px'
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
+                        <FiSearch size={20} />
+                        No tickets found
+                      </div>
+                    </td>
+                  </tr>
+                )}
+                {!loading && !error && filteredTickets.map((ticket) => (
+                  <tr key={ticket.id} style={{
+                    borderBottom: '1px solid #f3f4f6',
+                    transition: 'background-color 0.2s ease'
+                  }}>
+                    <td style={{
+                      padding: '16px 20px',
+                      fontWeight: '500',
+                      color: '#1f2937',
+                      fontSize: '14px',
+                      fontFamily: 'monospace',
+                      backgroundColor: '#f8fafc',
+                      borderRadius: '4px',
+                      margin: '4px 0'
+                    }}>{ticket.id || 'N/A'}</td>
+                    <td style={{
+                      padding: '16px 20px',
+                      color: '#374151',
+                      fontSize: '14px',
+                      maxWidth: '200px',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap'
+                    }} title={ticket.title}>
+                      {ticket.title}
+                    </td>
+                    <td style={{
+                      padding: '16px 20px',
+                      color: '#374151',
+                      fontSize: '14px'
+                    }}>{ticket.category || 'N/A'}</td>
+                    <td style={{
+                      padding: '16px 20px'
+                    }}>
+                      <span style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        padding: '6px 12px',
+                        borderRadius: '16px',
+                        fontSize: '12px',
+                        fontWeight: '500',
+                        border: '1px solid',
+                        ...(ticket.priority === 'HIGH' && {
+                          backgroundColor: '#fef2f2',
+                          color: '#dc2626',
+                          borderColor: '#fecaca'
+                        }),
+                        ...(ticket.priority === 'MEDIUM' && {
+                          backgroundColor: '#fff7ed',
+                          color: '#ea580c',
+                          borderColor: '#fed7aa'
+                        }),
+                        ...(ticket.priority === 'LOW' && {
+                          backgroundColor: '#f0fdf4',
+                          color: '#16a34a',
+                          borderColor: '#bbf7d0'
+                        }),
+                        ...(ticket.priority !== 'HIGH' && ticket.priority !== 'MEDIUM' && ticket.priority !== 'LOW' && {
+                          backgroundColor: '#f9fafb',
+                          color: '#6b7280',
+                          borderColor: '#d1d5db'
+                        })
+                      }}>
+                        {ticket.priority === 'HIGH' && <FiAlertCircle size={12} />}
+                        {ticket.priority === 'MEDIUM' && <FiAlertCircle size={12} />}
+                        {ticket.priority === 'LOW' && <FiCheckCircle size={12} />}
+                        {ticket.priority !== 'HIGH' && ticket.priority !== 'MEDIUM' && ticket.priority !== 'LOW' && <FiClock size={12} />}
+                        {ticket.priority}
+                      </span>
+                    </td>
+                    <td style={{
+                      padding: '16px 20px',
+                      color: '#374151',
+                      fontSize: '14px'
+                    }}>{ticket.reporterId || 'N/A'}</td>
+                    <td style={{
+                      padding: '16px 20px',
+                      color: '#374151',
+                      fontSize: '14px'
+                    }}>{ticket.assignee || 'Unassigned'}</td>
+                    <td style={{
+                      padding: '16px 20px'
+                    }}>
+                      <span style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        padding: '6px 12px',
+                        borderRadius: '16px',
+                        fontSize: '12px',
+                        fontWeight: '500',
+                        ...(ticket.status === 'OPEN' && {
+                          backgroundColor: '#3b82f6',
+                          color: '#ffffff'
+                        }),
+                        ...(ticket.status === 'IN_PROGRESS' && {
+                          backgroundColor: '#f59e0b',
+                          color: '#ffffff'
+                        }),
+                        ...(ticket.status === 'RESOLVED' && {
+                          backgroundColor: '#10b981',
+                          color: '#ffffff'
+                        }),
+                        ...(ticket.status === 'CLOSED' && {
+                          backgroundColor: '#6b7280',
+                          color: '#ffffff'
+                        }),
+                        ...(ticket.status === 'REJECTED' && {
+                          backgroundColor: '#ef4444',
+                          color: '#ffffff'
+                        }),
+                        ...(ticket.status !== 'OPEN' && ticket.status !== 'IN_PROGRESS' && ticket.status !== 'RESOLVED' && ticket.status !== 'CLOSED' && ticket.status !== 'REJECTED' && {
+                          backgroundColor: '#8b5cf6',
+                          color: '#ffffff'
+                        })
+                      }}>
+                        {ticket.status === 'OPEN' && <FiClock size={12} />}
+                        {ticket.status === 'IN_PROGRESS' && <FiPlay size={12} />}
+                        {ticket.status === 'RESOLVED' && <FiCheckCircle size={12} />}
+                        {ticket.status === 'CLOSED' && <FiCheckCircle size={12} />}
+                        {ticket.status === 'REJECTED' && <FiX size={12} />}
+                        {ticket.status !== 'OPEN' && ticket.status !== 'IN_PROGRESS' && ticket.status !== 'RESOLVED' && ticket.status !== 'CLOSED' && ticket.status !== 'REJECTED' && <FiAlertCircle size={12} />}
+                        {ticket.status}
+                      </span>
+                    </td>
+                    <td style={{
+                      padding: '16px 20px',
+                      color: '#374151',
+                      fontSize: '14px'
+                    }}>{formatDate(ticket.createdAt)}</td>
+                    <td style={{
+                      padding: '16px 20px',
+                      textAlign: 'center'
+                    }}>
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        justifyContent: 'center',
+                        flexWrap: 'wrap'
+                      }}>
+                        <Link
+                          to={`/admin/maintenance/ticket/${ticket.id}`}
+                          style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '6px',
+                            padding: '6px 12px',
+                            backgroundColor: '#3b82f6',
+                            color: '#ffffff',
+                            fontSize: '12px',
+                            fontWeight: '500',
+                            borderRadius: '6px',
+                            textDecoration: 'none',
+                            transition: 'all 0.2s ease'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.target.style.backgroundColor = '#2563eb';
+                            e.target.style.transform = 'translateY(-1px)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.target.style.backgroundColor = '#3b82f6';
+                            e.target.style.transform = 'translateY(0)';
+                          }}
+                        >
+                          <FiEye size={12} />
+                          View
+                        </Link>
+                        
+                        {ticket.status === 'OPEN' && !ticket.assignee && (
+                          <button
+                            onClick={() => handleAssignTicket(ticket.id)}
+                            style={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '6px',
+                              padding: '6px 12px',
+                              backgroundColor: '#8b5cf6',
+                              color: '#ffffff',
+                              fontSize: '12px',
+                              fontWeight: '500',
+                              borderRadius: '6px',
+                              border: 'none',
+                              cursor: 'pointer',
+                              transition: 'all 0.2s ease'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.target.style.backgroundColor = '#7c3aed';
+                              e.target.style.transform = 'translateY(-1px)';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.target.style.backgroundColor = '#8b5cf6';
+                              e.target.style.transform = 'translateY(0)';
+                            }}
+                          >
+                            <FiUser size={12} />
+                            Assign
+                          </button>
+                        )}
+                        
+                        {ticket.status === 'OPEN' && (
+                          <button
+                            onClick={() => handleRejectTicket(ticket.id)}
+                            style={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '6px',
+                              padding: '6px 12px',
+                              backgroundColor: '#ef4444',
+                              color: '#ffffff',
+                              fontSize: '12px',
+                              fontWeight: '500',
+                              borderRadius: '6px',
+                              border: 'none',
+                              cursor: 'pointer',
+                              transition: 'all 0.2s ease'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.target.style.backgroundColor = '#dc2626';
+                              e.target.style.transform = 'translateY(-1px)';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.target.style.backgroundColor = '#ef4444';
+                              e.target.style.transform = 'translateY(0)';
+                            }}
+                          >
+                            <FiX size={12} />
+                            Reject
+                          </button>
+                        )}
+                        
+                        {ticket.status === 'OPEN' && ticket.assignee && (
+                          <button
+                            onClick={() => handleUpdateStatus(ticket.id, 'IN_PROGRESS')}
+                            style={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '6px',
+                              padding: '6px 12px',
+                              backgroundColor: '#f59e0b',
+                              color: '#ffffff',
+                              fontSize: '12px',
+                              fontWeight: '500',
+                              borderRadius: '6px',
+                              border: 'none',
+                              cursor: 'pointer',
+                              transition: 'all 0.2s ease'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.target.style.backgroundColor = '#d97706';
+                              e.target.style.transform = 'translateY(-1px)';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.target.style.backgroundColor = '#f59e0b';
+                              e.target.style.transform = 'translateY(0)';
+                            }}
+                          >
+                            <FiPlay size={12} />
+                            Start
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

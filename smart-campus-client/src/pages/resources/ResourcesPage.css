@@ -9,14 +9,33 @@
   margin-bottom: 3rem;
 }
 
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.header-icon {
+  font-size: 2.5rem;
+  color: #3b82f6;
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  padding: 1rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
 .page-header h1 {
   font-size: 2.5rem;
   color: #1f2937;
   margin-bottom: 0.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 .page-header p {
-  color: #6b7280;
+  color: #ffffff;
   font-size: 1.1rem;
 }
 
@@ -26,6 +45,18 @@
   align-items: center;
   justify-content: center;
   min-height: 400px;
+}
+
+.loading-icon {
+  font-size: 2.5rem;
+  color: #3b82f6;
+  animation: pulse 2s infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.95); }
 }
 
 .spinner {
@@ -47,6 +78,15 @@
   text-align: center;
   padding: 3rem;
   color: #ef4444;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.error-icon {
+  font-size: 3rem;
+  color: #ef4444;
 }
 
 .retry-button {
@@ -59,6 +99,13 @@
   font-size: 1rem;
   margin-top: 1rem;
   transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.retry-icon {
+  font-size: 1rem;
 }
 
 .retry-button:hover {
@@ -70,6 +117,15 @@
   padding: 3rem;
   color: #6b7280;
   font-size: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.no-facilities-icon {
+  font-size: 3rem;
+  color: #9ca3af;
 }
 
 .facilities-grid {
@@ -108,11 +164,18 @@
   width: 100%;
   height: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #e5e7eb;
+  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
   color: #9ca3af;
   font-size: 1.1rem;
+  gap: 0.5rem;
+}
+
+.placeholder-icon {
+  font-size: 2.5rem;
+  color: #9ca3af;
 }
 
 .facility-content {
@@ -153,16 +216,31 @@
 .detail-item {
   font-size: 0.9rem;
   color: #6b7280;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.detail-icon {
+  font-size: 1rem;
+  color: #9ca3af;
+  flex-shrink: 0;
 }
 
 .availability-status {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   padding: 0.25rem 0.75rem;
   border-radius: 9999px;
   font-size: 0.8rem;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+}
+
+.status-icon {
+  font-size: 0.9rem;
 }
 
 .availability-status.available {

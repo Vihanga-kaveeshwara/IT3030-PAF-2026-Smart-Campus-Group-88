@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { BookingContext } from '../booking/BookingContext';
 import { useParams, useNavigate } from 'react-router-dom';
+import { FiArrowLeft, FiCalendar, FiClock, FiUsers, FiTarget, FiUser, FiCheckCircle, FiXCircle, FiSettings, FiAlertCircle, FiLoader } from 'react-icons/fi';
 
 const AdminBookingManagementPage = () => {
   const { id } = useParams();
@@ -89,148 +90,613 @@ const AdminBookingManagementPage = () => {
   };
 
   if (pageLoading || state.loading) {
-    return <div className="p-8 text-center">Loading booking details...</div>;
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh',
+        flexDirection: 'column',
+        gap: '16px',
+        fontSize: '16px',
+        color: '#6b7280'
+      }}>
+        <FiLoader size={32} style={{ animation: 'spin 1s linear infinite' }} />
+        Loading booking details...
+      </div>
+    );
   }
 
   if (!booking || booking.id !== id) {
-    return <div className="p-8 text-center text-red-500">Booking not found</div>;
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh',
+        flexDirection: 'column',
+        gap: '16px',
+        fontSize: '16px',
+        color: '#ef4444'
+      }}>
+        <FiAlertCircle size={48} />
+        Booking not found
+      </div>
+    );
   }
 
   const canApprove = booking.status === 'PENDING';
   const canReject = booking.status === 'PENDING';
 
   return (
-    <div className="p-8 max-w-4xl mx-auto">
-      <button
-        onClick={() => navigate('/admin/booking/all')}
-        className="mb-6 text-[#053769] hover:underline font-medium"
-      >
-        ← Back to Admin Bookings
-      </button>
+    <div style={{
+      minHeight: '100vh',
+      backgroundColor: '#f8fafc',
+      padding: '32px 16px'
+    }}>
+      <div style={{
+        maxWidth: '1200px',
+        margin: '0 auto'
+      }}>
+        <button
+          onClick={() => navigate('/admin/booking/all')}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            marginBottom: '24px',
+            padding: '12px 20px',
+            backgroundColor: 'transparent',
+            border: 'none',
+            color: '#053769',
+            fontSize: '16px',
+            fontWeight: '500',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease',
+            borderRadius: '8px'
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.backgroundColor = '#f1f5f9';
+            e.target.style.transform = 'translateX(-2px)';
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.backgroundColor = 'transparent';
+            e.target.style.transform = 'translateX(0)';
+          }}
+        >
+          <FiArrowLeft size={20} />
+          Back to Admin Bookings
+        </button>
 
-      <div className="bg-white rounded-xl shadow-sm p-8">
-
-        <div className="flex justify-between items-start mb-8 pb-6 border-b">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-800 mb-2">Booking Management</h1>
-            <p className="text-gray-600">Booking ID: <span className="font-mono font-medium">{booking.id}</span></p>
-          </div>
-          <div className={`px-6 py-2 rounded-full border-2 font-bold text-lg ${getStatusBadge(booking.status)}`}>
-            {booking.status}
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-
-          <div className="space-y-6">
+        <div style={{
+          backgroundColor: '#ffffff',
+          borderRadius: '16px',
+          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+          padding: '32px',
+          border: '1px solid #e2e8f0'
+        }}>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+            marginBottom: '32px',
+            paddingBottom: '24px',
+            borderBottom: '1px solid #e2e8f0'
+          }}>
             <div>
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Facility</p>
-              <p className="text-lg font-medium text-gray-900 mt-1">{getFacilityName(booking.resourceId)}</p>
-            </div>
-
-            <div>
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Date</p>
-              <p className="text-lg font-medium text-gray-900 mt-1">{formatDate(booking.date)}</p>
-            </div>
-
-            <div>
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Time Slot</p>
-              <p className="text-lg font-medium text-gray-900 mt-1">
-                {formatTime(booking.startTime)} - {formatTime(booking.endTime)}
+              <h1 style={{
+                fontSize: '32px',
+                fontWeight: '700',
+                color: '#1f2937',
+                marginBottom: '8px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px'
+              }}>
+                <FiSettings size={32} />
+                Booking Management
+              </h1>
+              <p style={{ color: '#6b7280', fontSize: '16px' }}>
+                Booking ID: <span style={{
+                  fontFamily: 'monospace',
+                  fontWeight: '500',
+                  backgroundColor: '#f3f4f6',
+                  padding: '4px 8px',
+                  borderRadius: '4px'
+                }}>{booking.id}</span>
               </p>
             </div>
-
-            <div>
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Expected Attendees</p>
-              <p className="text-lg font-medium text-gray-900 mt-1">{booking.expectedAttendees} people</p>
+            <div style={{
+              padding: '12px 24px',
+              borderRadius: '24px',
+              border: '2px solid',
+              fontWeight: '700',
+              fontSize: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              ...(booking.status === 'APPROVED' && {
+                backgroundColor: '#10b981',
+                borderColor: '#059669',
+                color: '#ffffff'
+              }),
+              ...(booking.status === 'PENDING' && {
+                backgroundColor: '#3b82f6',
+                borderColor: '#2563eb',
+                color: '#ffffff'
+              }),
+              ...(booking.status === 'REJECTED' && {
+                backgroundColor: '#ef4444',
+                borderColor: '#dc2626',
+                color: '#ffffff'
+              }),
+              ...(booking.status === 'CANCELLED' && {
+                backgroundColor: '#6b7280',
+                borderColor: '#4b5563',
+                color: '#ffffff'
+              }),
+              ...(booking.status !== 'APPROVED' && booking.status !== 'PENDING' && booking.status !== 'REJECTED' && booking.status !== 'CANCELLED' && {
+                backgroundColor: '#8b5cf6',
+                borderColor: '#7c3aed',
+                color: '#ffffff'
+              })
+            }}>
+              {booking.status === 'APPROVED' && <FiCheckCircle size={20} />}
+              {booking.status === 'PENDING' && <FiClock size={20} />}
+              {booking.status === 'REJECTED' && <FiXCircle size={20} />}
+              {booking.status === 'CANCELLED' && <FiXCircle size={20} />}
+              {booking.status !== 'APPROVED' && booking.status !== 'PENDING' && booking.status !== 'REJECTED' && booking.status !== 'CANCELLED' && <FiAlertCircle size={20} />}
+              {booking.status}
             </div>
           </div>
 
-          <div className="space-y-6">
-            <div>
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Purpose</p>
-              <p className="text-lg font-medium text-gray-900 mt-1">{booking.purpose}</p>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: '32px',
+            marginBottom: '32px'
+          }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+              <div style={{
+                backgroundColor: '#f8fafc',
+                padding: '20px',
+                borderRadius: '12px',
+                border: '1px solid #e2e8f0'
+              }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  marginBottom: '8px',
+                  fontSize: '12px',
+                  fontWeight: '600',
+                  color: '#6b7280',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px'
+                }}>
+                  <FiTarget size={14} />
+                  Facility
+                </div>
+                <p style={{
+                  fontSize: '18px',
+                  fontWeight: '500',
+                  color: '#1f2937',
+                  marginTop: '4px'
+                }}>{getFacilityName(booking.resourceId)}</p>
+              </div>
+
+              <div style={{
+                backgroundColor: '#f8fafc',
+                padding: '20px',
+                borderRadius: '12px',
+                border: '1px solid #e2e8f0'
+              }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  marginBottom: '8px',
+                  fontSize: '12px',
+                  fontWeight: '600',
+                  color: '#6b7280',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px'
+                }}>
+                  <FiCalendar size={14} />
+                  Date
+                </div>
+                <p style={{
+                  fontSize: '18px',
+                  fontWeight: '500',
+                  color: '#1f2937',
+                  marginTop: '4px'
+                }}>{formatDate(booking.date)}</p>
+              </div>
+
+              <div style={{
+                backgroundColor: '#f8fafc',
+                padding: '20px',
+                borderRadius: '12px',
+                border: '1px solid #e2e8f0'
+              }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  marginBottom: '8px',
+                  fontSize: '12px',
+                  fontWeight: '600',
+                  color: '#6b7280',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px'
+                }}>
+                  <FiClock size={14} />
+                  Time Slot
+                </div>
+                <p style={{
+                  fontSize: '18px',
+                  fontWeight: '500',
+                  color: '#1f2937',
+                  marginTop: '4px'
+                }}>
+                  {formatTime(booking.startTime)} - {formatTime(booking.endTime)}
+                </p>
+              </div>
+
+              <div style={{
+                backgroundColor: '#f8fafc',
+                padding: '20px',
+                borderRadius: '12px',
+                border: '1px solid #e2e8f0'
+              }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  marginBottom: '8px',
+                  fontSize: '12px',
+                  fontWeight: '600',
+                  color: '#6b7280',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px'
+                }}>
+                  <FiUsers size={14} />
+                  Expected Attendees
+                </div>
+                <p style={{
+                  fontSize: '18px',
+                  fontWeight: '500',
+                  color: '#1f2937',
+                  marginTop: '4px'
+                }}>{booking.expectedAttendees} people</p>
+              </div>
             </div>
 
-            <div>
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Requester ID</p>
-              <p className="text-lg font-medium text-gray-900 mt-1">{booking.requesterId}</p>
-            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+              <div style={{
+                backgroundColor: '#f8fafc',
+                padding: '20px',
+                borderRadius: '12px',
+                border: '1px solid #e2e8f0'
+              }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  marginBottom: '8px',
+                  fontSize: '12px',
+                  fontWeight: '600',
+                  color: '#6b7280',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px'
+                }}>
+                  <FiTarget size={14} />
+                  Purpose
+                </div>
+                <p style={{
+                  fontSize: '18px',
+                  fontWeight: '500',
+                  color: '#1f2937',
+                  marginTop: '4px'
+                }}>{booking.purpose}</p>
+              </div>
 
-            <div>
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Created On</p>
-              <p className="text-lg font-medium text-gray-900 mt-1">{formatDateTime(booking.createdAt)}</p>
-            </div>
+              <div style={{
+                backgroundColor: '#f8fafc',
+                padding: '20px',
+                borderRadius: '12px',
+                border: '1px solid #e2e8f0'
+              }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  marginBottom: '8px',
+                  fontSize: '12px',
+                  fontWeight: '600',
+                  color: '#6b7280',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px'
+                }}>
+                  <FiUser size={14} />
+                  Requester ID
+                </div>
+                <p style={{
+                  fontSize: '18px',
+                  fontWeight: '500',
+                  color: '#1f2937',
+                  marginTop: '4px'
+                }}>{booking.requesterId}</p>
+              </div>
 
-            {booking.status === 'REJECTED' && booking.rejectionReason && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                <p className="text-xs font-semibold text-red-600 uppercase tracking-wide">Rejection Reason</p>
-                <p className="text-gray-700 mt-2">{booking.rejectionReason}</p>
+              <div style={{
+                backgroundColor: '#f8fafc',
+                padding: '20px',
+                borderRadius: '12px',
+                border: '1px solid #e2e8f0'
+              }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  marginBottom: '8px',
+                  fontSize: '12px',
+                  fontWeight: '600',
+                  color: '#6b7280',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px'
+                }}>
+                  <FiCalendar size={14} />
+                  Created On
+                </div>
+                <p style={{
+                  fontSize: '18px',
+                  fontWeight: '500',
+                  color: '#1f2937',
+                  marginTop: '4px'
+                }}>{formatDateTime(booking.createdAt)}</p>
+              </div>
+
+              {booking.status === 'REJECTED' && booking.rejectionReason && (
+                <div style={{
+                  backgroundColor: '#fef2f2',
+                  border: '1px solid #fecaca',
+                  borderRadius: '12px',
+                  padding: '20px'
+                }}>
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    marginBottom: '8px',
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    color: '#dc2626',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px'
+                  }}>
+                    <FiXCircle size={14} />
+                    Rejection Reason
+                  </div>
+                  <p style={{
+                    color: '#374151',
+                    marginTop: '8px',
+                    fontSize: '16px',
+                    lineHeight: '1.5'
+                  }}>{booking.rejectionReason}</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {showRejectForm && canReject && (
+            <div style={{
+              backgroundColor: '#fef2f2',
+              border: '1px solid #fecaca',
+              borderRadius: '12px',
+              padding: '24px',
+              marginBottom: '32px'
+            }}>
+              <h3 style={{
+                fontSize: '20px',
+                fontWeight: '700',
+                color: '#991b1b',
+                marginBottom: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}>
+                <FiXCircle size={24} />
+                Reject Booking
+              </h3>
+              <div>
+                <label style={{
+                  display: 'block',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  color: '#374151',
+                  marginBottom: '8px'
+                }}>
+                  Rejection Reason *
+                </label>
+                <textarea
+                  value={rejectionReason}
+                  onChange={(e) => setRejectionReason(e.target.value)}
+                  rows="4"
+                  placeholder="Explain why this booking is being rejected..."
+                  style={{
+                    width: '100%',
+                    padding: '12px 16px',
+                    border: '1px solid #fca5a5',
+                    borderRadius: '8px',
+                    fontSize: '16px',
+                    fontFamily: 'inherit',
+                    resize: 'vertical',
+                    outline: 'none',
+                    transition: 'border-color 0.2s ease'
+                  }}
+                  onFocus={(e) => e.target.style.borderColor = '#dc2626'}
+                  onBlur={(e) => e.target.style.borderColor = '#fca5a5'}
+                />
+              </div>
+              <div style={{ display: 'flex', gap: '16px', marginTop: '16px' }}>
+                <button
+                  onClick={handleReject}
+                  disabled={actionLoading || !rejectionReason.trim()}
+                  style={{
+                    flex: 1,
+                    padding: '12px 24px',
+                    backgroundColor: actionLoading || !rejectionReason.trim() ? '#fca5a5' : '#dc2626',
+                    color: '#ffffff',
+                    fontWeight: '500',
+                    borderRadius: '8px',
+                    border: 'none',
+                    cursor: actionLoading || !rejectionReason.trim() ? 'not-allowed' : 'pointer',
+                    fontSize: '16px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  {actionLoading ? (
+                    <>
+                      <FiLoader size={16} style={{ animation: 'spin 1s linear infinite' }} />
+                      Rejecting...
+                    </>
+                  ) : (
+                    <>
+                      <FiXCircle size={16} />
+                      Confirm Rejection
+                    </>
+                  )}
+                </button>
+                <button
+                  onClick={() => {
+                    setShowRejectForm(false);
+                    setRejectionReason('');
+                  }}
+                  style={{
+                    flex: 1,
+                    padding: '12px 24px',
+                    backgroundColor: '#d1d5db',
+                    color: '#374151',
+                    fontWeight: '500',
+                    borderRadius: '8px',
+                    border: 'none',
+                    cursor: 'pointer',
+                    fontSize: '16px',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = '#9ca3af'}
+                  onMouseLeave={(e) => e.target.style.backgroundColor = '#d1d5db'}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
+
+          <div style={{
+            display: 'flex',
+            gap: '16px',
+            paddingTop: '24px',
+            borderTop: '1px solid #e2e8f0'
+          }}>
+            {canApprove && (
+              <button
+                onClick={handleApprove}
+                disabled={actionLoading}
+                style={{
+                  flex: 1,
+                  padding: '16px 24px',
+                  backgroundColor: actionLoading ? '#86efac' : '#10b981',
+                  color: '#ffffff',
+                  fontWeight: '500',
+                  borderRadius: '8px',
+                  border: 'none',
+                  cursor: actionLoading ? 'not-allowed' : 'pointer',
+                  fontSize: '16px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  if (!actionLoading) e.target.style.backgroundColor = '#059669';
+                }}
+                onMouseLeave={(e) => {
+                  if (!actionLoading) e.target.style.backgroundColor = '#10b981';
+                }}
+              >
+                {actionLoading ? (
+                  <>
+                    <FiLoader size={16} style={{ animation: 'spin 1s linear infinite' }} />
+                    Approving...
+                  </>
+                ) : (
+                  <>
+                    <FiCheckCircle size={16} />
+                    Approve Booking
+                  </>
+                )}
+              </button>
+            )}
+
+            {canReject && !showRejectForm && (
+              <button
+                onClick={() => setShowRejectForm(true)}
+                disabled={actionLoading}
+                style={{
+                  flex: 1,
+                  padding: '16px 24px',
+                  backgroundColor: actionLoading ? '#fca5a5' : '#dc2626',
+                  color: '#ffffff',
+                  fontWeight: '500',
+                  borderRadius: '8px',
+                  border: 'none',
+                  cursor: actionLoading ? 'not-allowed' : 'pointer',
+                  fontSize: '16px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  if (!actionLoading) e.target.style.backgroundColor = '#b91c1c';
+                }}
+                onMouseLeave={(e) => {
+                  if (!actionLoading) e.target.style.backgroundColor = '#dc2626';
+                }}
+              >
+                <FiXCircle size={16} />
+                Reject Booking
+              </button>
+            )}
+
+            {!canApprove && !canReject && (
+              <div style={{
+                flex: 1,
+                padding: '16px 24px',
+                backgroundColor: '#f3f4f6',
+                color: '#6b7280',
+                fontWeight: '500',
+                borderRadius: '8px',
+                fontSize: '16px',
+                textAlign: 'center',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px'
+              }}>
+                <FiAlertCircle size={16} />
+                No actions available for {booking.status} bookings
               </div>
             )}
           </div>
-        </div>
-
-        {showRejectForm && canReject && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-6 mb-8">
-            <h3 className="text-lg font-bold text-red-800 mb-4">Reject Booking</h3>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Rejection Reason *</label>
-              <textarea
-                value={rejectionReason}
-                onChange={(e) => setRejectionReason(e.target.value)}
-                rows="4"
-                placeholder="Explain why this booking is being rejected..."
-                className="w-full px-4 py-3 border border-red-300 rounded-lg focus:outline-none focus:border-red-500"
-              />
-            </div>
-            <div className="flex gap-4 mt-4">
-              <button
-                onClick={handleReject}
-                disabled={actionLoading || !rejectionReason.trim()}
-                className="flex-1 px-6 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition disabled:opacity-50"
-              >
-                {actionLoading ? 'Rejecting...' : '❌ Confirm Rejection'}
-              </button>
-              <button
-                onClick={() => {
-                  setShowRejectForm(false);
-                  setRejectionReason('');
-                }}
-                className="flex-1 px-6 py-2 bg-gray-300 text-gray-800 font-medium rounded-lg hover:bg-gray-400 transition"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        )}
-
-        <div className="flex gap-4 pt-6 border-t">
-          {canApprove && (
-            <button
-              onClick={handleApprove}
-              disabled={actionLoading}
-              className="flex-1 px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition disabled:opacity-50"
-            >
-              {actionLoading ? 'Approving...' : '✅ Approve Booking'}
-            </button>
-          )}
-
-          {canReject && !showRejectForm && (
-            <button
-              onClick={() => setShowRejectForm(true)}
-              disabled={actionLoading}
-              className="flex-1 px-6 py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition disabled:opacity-50"
-            >
-              ❌ Reject Booking
-            </button>
-          )}
-
-          {!canApprove && !canReject && (
-            <div className="flex-1 px-6 py-3 bg-gray-100 text-gray-700 font-medium rounded-lg text-center">
-              No actions available for {booking.status} bookings
-            </div>
-          )}
         </div>
       </div>
     </div>
