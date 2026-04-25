@@ -52,7 +52,7 @@ export const TicketProvider = ({ children }) => {
     try {
       // Note: If this results in a 500 error, verify that the backend 
       // doesn't require an Auth token or a hardcoded User ID in the headers.
-      const response = await axios.get(`${API_BASE_URL}/my`, AXIOS_CONFIG);
+      const response = await axios.get(`${API_BASE_URL}/my?reporterId=user-123`, AXIOS_CONFIG);
       dispatch({ type: 'FETCH_SUCCESS', payload: response.data });
     } catch (err) {
       console.error("Error fetching tickets", err);

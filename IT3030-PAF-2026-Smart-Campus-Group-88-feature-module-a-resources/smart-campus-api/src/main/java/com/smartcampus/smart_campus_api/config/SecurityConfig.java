@@ -15,36 +15,35 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
-                    "/api/facilities/**",
-                    "/api/bookings/**",
-                    "/api/health/**",
-                    "/api/tickets/**",
-                    "/error"           // Spring Boot forwards 404s here; must be permitted
-                ).permitAll()
-                .anyRequest().authenticated()
-            )
-            .exceptionHandling(ex -> ex
-                .authenticationEntryPoint((request, response, e) -> {
-                    response.setContentType("application/json");
-                    response.setStatus(401);
-                    response.getWriter().write("{\"error\":\"Authentication required\"}");
-                })
-                .accessDeniedHandler((request, response, e) -> {
-                    response.setContentType("application/json");
-                    response.setStatus(403);
-                    response.getWriter().write("{\"error\":\"Access denied\"}");
-                })
-            );
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/api/facilities/**",
+                                "/api/bookings/**",
+                                "/api/health/**",
+                                "/api/tickets/**",
+                                "/error" // Spring Boot forwards 404s here; must be permitted
+                        ).permitAll()
+                        .anyRequest().authenticated())
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((request, response, e) -> {
+                            response.setContentType("application/json");
+                            response.setStatus(401);
+                            response.getWriter().write("{\"error\":\"Authentication required\"}");
+                        })
+                        .accessDeniedHandler((request, response, e) -> {
+                            response.setContentType("application/json");
+                            response.setStatus(403);
+                            response.getWriter().write("{\"error\":\"Access denied\"}");
+                        }));
         return http.build();
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://localhost:3000"));
+        configuration.setAllowedOrigins(
+                Arrays.asList("http://localhost:5173", "http://localhost:5174", "http://localhost:3000"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
