@@ -17,4 +17,8 @@ public class Facility {
     private String location;
     private String availabilityWindows;
     private String status;
+
+    // === Aluthen ekathu karapu fields deka ===
+    private String description;
+    private String imageUrl;
 }
