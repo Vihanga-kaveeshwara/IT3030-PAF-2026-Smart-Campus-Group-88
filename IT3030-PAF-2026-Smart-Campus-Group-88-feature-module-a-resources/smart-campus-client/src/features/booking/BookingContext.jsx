@@ -3,7 +3,6 @@ import axios from 'axios';
 
 export const BookingContext = createContext();
 
-// Static mock user ID used until OAuth2 authentication is wired up (Module E)
 export const STATIC_USER_ID = 'user-123';
 
 const API_BASE_URL = 'http://localhost:8081/api/bookings';
