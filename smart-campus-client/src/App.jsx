@@ -45,7 +45,6 @@ function App() {
       reader.onload = (event) => {
         const img = new Image();
         img.onload = () => {
-          // Photo eke width eka 600px walata adu karanawa
           const canvas = document.createElement('canvas');
           const MAX_WIDTH = 600;
           const scaleSize = MAX_WIDTH / img.width;
@@ -55,7 +54,6 @@ function App() {
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
           
-          // Quality eka 0.7 (70%) karala Base64 gannawa
           const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
           setFormData({ ...formData, imageUrl: compressedBase64 });
         };
@@ -127,13 +125,6 @@ function App() {
   if (currentView === 'user') {
     return (
       <div className="min-h-screen flex flex-col bg-gray-50 font-sans text-gray-800 relative">
-        <button 
-          onClick={() => setCurrentView('admin')} 
-          className="fixed bottom-6 right-6 z-[9999] bg-purple-600 text-white font-bold px-4 py-2 rounded-lg shadow-2xl hover:bg-purple-700 transition-all border-2 border-white"
-        >
-          ⚙️ Dev: Back to Admin
-        </button>
-
         <header className="bg-blue-950 text-white shadow-xl sticky top-0 z-50">
           <div className="container mx-auto px-6 py-4 flex justify-between items-center">
             <div className="flex items-center gap-3">
@@ -235,7 +226,6 @@ function App() {
           )}
         </main>
 
-        {/* ================= MISSING FOOTER EKA METHANATA DAMMA ================= */}
         <footer className="bg-black text-white pt-12 pb-6 mt-12 border-t-4 border-blue-900">
           <div className="container mx-auto px-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
@@ -271,7 +261,6 @@ function App() {
             </div>
           </div>
         </footer>
-        {/* =================================================================== */}
       </div>
     );
   }
