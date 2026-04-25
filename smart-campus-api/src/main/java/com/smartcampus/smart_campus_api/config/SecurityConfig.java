@@ -1,6 +1,5 @@
 package com.smartcampus.smart_campus_api.config;
 
-<<<<<<< HEAD
 import com.smartcampus.smart_campus_api.service.auth.OAuth2UserServiceImpl;
 import com.smartcampus.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -20,17 +19,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-=======
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.web.SecurityFilterChain;
->>>>>>> 5131f4fa443806cea22cfc37774d85081fd5eef0
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-<<<<<<< HEAD
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.List;
@@ -60,8 +52,6 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/signup").permitAll()
                 .requestMatchers("/api/auth/login").permitAll()
@@ -71,6 +61,8 @@ public class SecurityConfig {
                 .requestMatchers("/actuator/health").permitAll()
                 .requestMatchers("/login/oauth2/**").permitAll()
                 .requestMatchers("/oauth2/**").permitAll()
+                .requestMatchers("/api/health").permitAll()
+                .requestMatchers("/api/tickets/**").permitAll()
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
@@ -101,28 +93,10 @@ public class SecurityConfig {
             )
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
-=======
-import java.util.Arrays;
-
-@Configuration
-public class SecurityConfig {
-
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/health").permitAll()
-                .requestMatchers("/api/tickets/**").permitAll()
-                .anyRequest().permitAll()
-            );
->>>>>>> 5131f4fa443806cea22cfc37774d85081fd5eef0
         return http.build();
     }
 
     @Bean
-<<<<<<< HEAD
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         // Parse comma-separated origins from environment variable
@@ -147,16 +121,4 @@ public class SecurityConfig {
             throws Exception {
         return config.getAuthenticationManager();
     }
-=======
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://localhost:3000", "http://localhost:8080"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setAllowCredentials(true);
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
->>>>>>> 5131f4fa443806cea22cfc37774d85081fd5eef0
 }

@@ -36,13 +36,10 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-<<<<<<< HEAD
 			<artifactId>spring-boot-starter-oauth2-client</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-=======
->>>>>>> 5131f4fa443806cea22cfc37774d85081fd5eef0
 			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
 		</dependency>
 		<dependency>
@@ -57,7 +54,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-<<<<<<< HEAD
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
@@ -80,8 +76,6 @@
 			<version>0.12.3</version>
 			<scope>runtime</scope>
 		</dependency>
-=======
->>>>>>> 5131f4fa443806cea22cfc37774d85081fd5eef0
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
