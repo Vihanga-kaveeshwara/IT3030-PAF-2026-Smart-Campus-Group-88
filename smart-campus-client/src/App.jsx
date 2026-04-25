@@ -17,6 +17,9 @@ import ResetPasswordPage  from './pages/auth/ResetPasswordPage';
 // App pages
 import DashboardPage      from './pages/DashboardPage';
 import NotificationsPage  from './pages/notifications/NotificationsPage';
+import AdminDashboardPage from './pages/admin/AdminDashboardPage';
+import AdminAppLayout from './components/admin/AdminAppLayout';
+import AdminResourcesManagementPage from './pages/admin/AdminResourcesManagementPage';
 
 //Resource pages
 import ResourcesPage from './pages/resources/ResourcesPage'
@@ -26,15 +29,15 @@ import ResourceDetailPage from './pages/resources/ResourceDetailPage';
 import BookingDetailPage from './pages/booking/BookingDetailPage';
 import CreateBookingPage from './pages/booking/CreateBookingPage';
 import MyBookingsPage from './pages/booking/MyBookingsPage';
-import AdminBookingsPage from './pages/booking/AdminBookingsPage';
-import AdminBookingManagementPage from './pages/booking/AdminBookingManagementPage';
+import AdminBookingsPage from './pages/admin/AdminBookingsPage';
+import AdminBookingManagementPage from './pages/admin/AdminBookingManagementPage';
 
 // Maintenance context
 import { TicketProvider } from './features/maintenance/TicketContext';
 
 // Maintenance feature pages
-import AdminAllTicketsPage from './features/maintenance/AdminAllTicketsPage';
-import AdminTicketManagementPage from './features/maintenance/AdminTicketManagementPage';
+import AdminAllTicketsPage from './pages/admin/AdminAllTicketsPage';
+import AdminTicketManagementPage from './pages/admin/AdminTicketManagementPage';
 import MyTicketsPage from './features/maintenance/MyTicketsPage';
 import ReportNewIncidentPage from './features/maintenance/ReportNewIncidentPage';
 import TechnicianMyAssignedTicketsPage from './features/maintenance/TechnicianMyAssignedTicketsPage';
@@ -85,6 +88,25 @@ export default function App() {
         <Route path="/reset-password"  element={<ResetPasswordPage />} />
         <Route path="/oauth2/callback" element={<OAuth2CallbackPage />} />
 
+        {/* Admin dashboard and routes */}
+        <Route element={<AdminRoute />}>
+          <Route element={<AdminAppLayout />}>
+            <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
+            <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
+            <Route path="/admin/booking/*" element={
+              <BookingProvider>
+                <Routes>
+                  <Route path="all" element={<AdminBookingsPage />} />
+                  <Route path="manage/:id" element={<AdminBookingManagementPage />} />
+                </Routes>
+              </BookingProvider>
+            } />
+            <Route path="/admin/maintenance" element={<AdminAllTicketsPage />} />
+            <Route path="/admin/maintenance/ticket/:id" element={<AdminTicketManagementPage />} />
+            <Route path="/admin/resources" element={<AdminResourcesManagementPage />} />
+          </Route>
+        </Route>
+
         {/* Authenticated routes – wrapped in layout with Navbar */}
         <Route element={<PrivateRoute />}>
           <Route element={<ProtectedAppLayout />}>
@@ -106,29 +128,11 @@ export default function App() {
                 </Routes>
               </BookingProvider>
             } />
-            
-            {/* Admin booking routes */}
-            <Route element={<AdminRoute />}>
-              <Route path="/booking/admin/*" element={
-                <BookingProvider>
-                  <Routes>
-                    <Route path="all" element={<AdminBookingsPage />} />
-                    <Route path="manage/:id" element={<AdminBookingManagementPage />} />
-                  </Routes>
-                </BookingProvider>
-              } />
-            </Route>
 
             {/* Maintenance module routes */}
             <Route path="/maintenance/my-tickets" element={<MyTicketsPage />} />
             <Route path="/maintenance/report" element={<ReportNewIncidentPage />} />
             <Route path="/maintenance/ticket/:id" element={<TicketDetailPage />} />
-            
-            {/* Admin maintenance routes */}
-            <Route element={<AdminRoute />}>
-              <Route path="/maintenance/admin" element={<AdminAllTicketsPage />} />
-              <Route path="/maintenance/admin/ticket/:id" element={<AdminTicketManagementPage />} />
-            </Route>
             
             {/* Technician maintenance routes */}
             <Route element={<TechnicianRoute />}>

@@ -73,20 +73,20 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/tickets").hasAnyRole("USER", "ADMIN", "TECHNICIAN")
                 .requestMatchers(HttpMethod.PUT, "/api/tickets/**").hasAnyRole("USER", "ADMIN", "TECHNICIAN")
                 .requestMatchers(HttpMethod.DELETE, "/api/tickets/**").hasAnyRole("USER", "ADMIN", "TECHNICIAN")
-                .requestMatchers(HttpMethod.POST, "/api/tickets/**/comments").hasAnyRole("USER", "ADMIN", "TECHNICIAN")
+                .requestMatchers(HttpMethod.POST, "/api/tickets/*/comments").hasAnyRole("USER", "ADMIN", "TECHNICIAN")
                 
                 // Technician endpoints
                 .requestMatchers("/api/tickets/assigned").hasAnyRole("TECHNICIAN", "ADMIN")
-                .requestMatchers(HttpMethod.PATCH, "/api/tickets/**/start-work").hasAnyRole("TECHNICIAN", "ADMIN")
-                .requestMatchers(HttpMethod.PATCH, "/api/tickets/**/resolve").hasAnyRole("TECHNICIAN", "ADMIN")
-                .requestMatchers(HttpMethod.PATCH, "/api/tickets/**/progress").hasAnyRole("TECHNICIAN", "ADMIN")
+                .requestMatchers(HttpMethod.PATCH, "/api/tickets/*/start-work").hasAnyRole("TECHNICIAN", "ADMIN")
+                .requestMatchers(HttpMethod.PATCH, "/api/tickets/*/resolve").hasAnyRole("TECHNICIAN", "ADMIN")
+                .requestMatchers(HttpMethod.PATCH, "/api/tickets/*/progress").hasAnyRole("TECHNICIAN", "ADMIN")
                 
                 // Admin endpoints
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/api/tickets").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PATCH, "/api/tickets/**/assign").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PATCH, "/api/tickets/**/status").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PATCH, "/api/tickets/**/reject").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PATCH, "/api/tickets/*/assign").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PATCH, "/api/tickets/*/status").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PATCH, "/api/tickets/*/reject").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/api/facilities").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/api/facilities/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/facilities/**").hasRole("ADMIN")

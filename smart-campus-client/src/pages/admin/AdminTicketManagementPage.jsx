@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { TicketContext } from './TicketContext';
-import { formatTicketId } from './ticketIdFormatter';
+import { TicketContext } from '../../features/maintenance/TicketContext';
+import { formatTicketId } from '../../features/maintenance/ticketIdFormatter';
 
 const AdminTicketManagementPage = () => {
   const { id } = useParams();

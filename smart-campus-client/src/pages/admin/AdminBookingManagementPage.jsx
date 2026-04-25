@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { BookingContext } from './BookingContext';
+import { BookingContext } from '../booking/BookingContext';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const AdminBookingManagementPage = () => {

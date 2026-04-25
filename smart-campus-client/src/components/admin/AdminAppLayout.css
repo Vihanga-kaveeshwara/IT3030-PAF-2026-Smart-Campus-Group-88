@@ -1,0 +1,18 @@
+.admin-app-shell {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.admin-app-shell__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: 260px;
+}
+
+.admin-app-main {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}

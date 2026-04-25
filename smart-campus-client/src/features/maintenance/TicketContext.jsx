@@ -4,7 +4,7 @@ import axios from 'axios';
 
 export const TicketContext = createContext();
 
-const API_BASE_URL = 'http://localhost:8081/api/tickets';
+const API_BASE_URL = 'http://localhost:8080/api/tickets';
 const DEFAULT_USER_ID = 'user-123';
 const DEFAULT_TECHNICIAN_ID = 'Mike Johnson';
 

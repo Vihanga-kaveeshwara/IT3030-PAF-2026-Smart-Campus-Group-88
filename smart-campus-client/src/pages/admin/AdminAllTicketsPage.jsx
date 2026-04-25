@@ -1,8 +1,8 @@
 // Frontend: src/features/maintenance/AdminAllTicketsPage.jsx
 import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { TicketContext } from './TicketContext';
-import { formatTicketId } from './ticketIdFormatter';
+import { TicketContext } from '../../features/maintenance/TicketContext';
+import { formatTicketId } from '../../features/maintenance/ticketIdFormatter';
 
 const AdminAllTicketsPage = () => {
   const { state, fetchAllTickets } = useContext(TicketContext);
