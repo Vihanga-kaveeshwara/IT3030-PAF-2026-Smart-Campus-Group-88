@@ -96,6 +96,7 @@ public class NotificationService {
     private void create(String recipientId, NotificationType type,
                         String title, String message,
                         String referenceId, String referenceType) {
+        System.out.println("Creating notification: recipientId=" + recipientId + ", type=" + type + ", title=" + title);
         Notification notification = Notification.builder()
                 .recipientId(recipientId)
                 .type(type)
@@ -104,7 +105,13 @@ public class NotificationService {
                 .referenceId(referenceId)
                 .referenceType(referenceType)
                 .build();
-        notificationRepository.save(notification);
+        try {
+            Notification saved = notificationRepository.save(notification);
+            System.out.println("Notification saved successfully with ID: " + saved.getId());
+        } catch (Exception e) {
+            System.err.println("Failed to save notification: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private Notification findAndVerifyOwner(String notificationId, String userId) {

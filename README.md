@@ -1,5 +1,4 @@
 
-
 # Smart Campus Operations Hub — IT3030 PAF 2026
 
 Group project for IT3030 Programming Applications and Frameworks.

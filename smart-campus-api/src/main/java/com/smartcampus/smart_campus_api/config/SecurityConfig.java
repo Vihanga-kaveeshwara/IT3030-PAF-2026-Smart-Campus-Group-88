@@ -24,6 +24,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -52,18 +53,44 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
+                // Public endpoints
                 .requestMatchers("/api/auth/signup").permitAll()
                 .requestMatchers("/api/auth/login").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/resources/**").permitAll()
                 .requestMatchers("/api/auth/forgot-password").permitAll()
                 .requestMatchers("/api/auth/reset-password/verify-otp").permitAll()
                 .requestMatchers("/actuator/health").permitAll()
                 .requestMatchers("/login/oauth2/**").permitAll()
                 .requestMatchers("/oauth2/**").permitAll()
+                .requestMatchers("/api/health").permitAll()
+                
+                // Public read-only endpoints
+                .requestMatchers(HttpMethod.GET, "/api/resources/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/facilities/**").permitAll()
+                
+                // User endpoints - require authentication
+                .requestMatchers("/api/tickets/my").hasAnyRole("USER", "ADMIN", "TECHNICIAN")
+                .requestMatchers(HttpMethod.POST, "/api/tickets").hasAnyRole("USER", "ADMIN", "TECHNICIAN")
+                .requestMatchers(HttpMethod.PUT, "/api/tickets/**").hasAnyRole("USER", "ADMIN", "TECHNICIAN")
+                .requestMatchers(HttpMethod.DELETE, "/api/tickets/**").hasAnyRole("USER", "ADMIN", "TECHNICIAN")
+                .requestMatchers(HttpMethod.POST, "/api/tickets/*/comments").hasAnyRole("USER", "ADMIN", "TECHNICIAN")
+                
+                // Technician endpoints
+                .requestMatchers("/api/tickets/assigned").hasAnyRole("TECHNICIAN", "ADMIN")
+                .requestMatchers(HttpMethod.PATCH, "/api/tickets/*/start-work").hasAnyRole("TECHNICIAN", "ADMIN")
+                .requestMatchers(HttpMethod.PATCH, "/api/tickets/*/resolve").hasAnyRole("TECHNICIAN", "ADMIN")
+                .requestMatchers(HttpMethod.PATCH, "/api/tickets/*/progress").hasAnyRole("TECHNICIAN", "ADMIN")
+                
+                // Admin endpoints
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/tickets").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PATCH, "/api/tickets/*/assign").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PATCH, "/api/tickets/*/status").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PATCH, "/api/tickets/*/reject").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/facilities").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/facilities/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/facilities/**").hasRole("ADMIN")
+                
                 .anyRequest().authenticated()
             )
             .oauth2Login(oauth -> oauth
@@ -98,16 +125,24 @@ public class SecurityConfig {
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration config = new CorsConfiguration();
-        // Parse comma-separated origins from environment variable
+        CorsConfiguration configuration = new CorsConfiguration();
+        // Combine both sets of allowed origins
         List<String> allowedOrigins = Arrays.asList(corsAllowedOrigins.split(","));
-        config.setAllowedOrigins(allowedOrigins);
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("*"));
-        config.setAllowCredentials(true);
+        List<String> additionalOrigins = Arrays.asList("http://localhost:5173", "http://localhost:5174", "http://localhost:3000");
+        
+        // Merge the lists and remove duplicates
+        List<String> allOrigins = new ArrayList<>();
+        allOrigins.addAll(allowedOrigins);
+        allOrigins.addAll(additionalOrigins);
+        configuration.setAllowedOrigins(allOrigins.stream().distinct().toList());
+        
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
+        source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 

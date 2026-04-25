@@ -1,0 +1,210 @@
+// Backend: src/main/java/com/smartcampus/smart_campus_api/service/TicketService.java
+package com.smartcampus.smart_campus_api.service;
+
+import com.smartcampus.smart_campus_api.dto.request.TicketCreateDto;
+import com.smartcampus.smart_campus_api.dto.request.TicketCommentCreateDto;
+import com.smartcampus.smart_campus_api.model.Ticket;
+import com.smartcampus.smart_campus_api.model.TicketComment;
+import com.smartcampus.smart_campus_api.repository.TicketRepository;
+import com.smartcampus.smart_campus_api.service.notification.NotificationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+@Service
+public class TicketService {
+
+    @Autowired
+    private TicketRepository ticketRepository;
+
+    @Autowired
+    private NotificationService notificationService;
+
+    public Ticket createTicket(TicketCreateDto dto, String userId) {
+        Ticket ticket = new Ticket();
+        ticket.setResourceLocation(dto.getResourceLocation());
+        ticket.setCategory(dto.getCategory());
+        ticket.setDescription(dto.getDescription());
+        ticket.setPriority(dto.getPriority());
+        ticket.setContactDetails(dto.getContactDetails());
+        ticket.setStatus("Open");
+        ticket.setCreatedDate(LocalDateTime.now());
+        ticket.setUserId(userId);
+        ticket.setImages(dto.getImages() != null ? new ArrayList<>(dto.getImages()) : new ArrayList<>());
+        ticket.setComments(new ArrayList<>());
+        ticket.setWorkProgress(0);
+        return ticketRepository.save(ticket);
+    }
+
+    public List<Ticket> getUserTickets(String userId) {
+        return ticketRepository.findByUserIdOrderByCreatedDateDesc(userId);
+    }
+
+    public Ticket getTicketById(String id) {
+        return ticketRepository.findById(id).orElseThrow(() -> new RuntimeException("Ticket not found"));
+    }
+
+    public List<Ticket> getAllTickets() {
+        return ticketRepository.findAll();
+    }
+
+    public Ticket assignTicket(String id, String assignee) {
+        Ticket ticket = getTicketById(id);
+        String normalizedAssignee = assignee != null ? assignee.trim() : "";
+
+        if (normalizedAssignee.isBlank()) {
+            ticket.setAssignee(null);
+            ticket.setStatus("Open");
+            ticket.setWorkProgress(0);
+        } else {
+            ticket.setAssignee(normalizedAssignee);
+            if (!"Resolved".equalsIgnoreCase(ticket.getStatus())) {
+                ticket.setStatus("Assigned");
+            }
+            if (ticket.getWorkProgress() == null) {
+                ticket.setWorkProgress(0);
+            }
+        }
+
+        return ticketRepository.save(ticket);
+    }
+
+    public Ticket updateStatus(String id, String status) {
+        Ticket ticket = getTicketById(id);
+        String oldStatus = ticket.getStatus();
+        ticket.setStatus(status);
+
+        if ("Resolved".equalsIgnoreCase(status)) {
+            ticket.setWorkProgress(100);
+        } else if ("Open".equalsIgnoreCase(status)) {
+            ticket.setWorkProgress(0);
+            ticket.setAssignee(null);
+        } else if (("Assigned".equalsIgnoreCase(status) || "In Progress".equalsIgnoreCase(status))
+                && ticket.getWorkProgress() == null) {
+            ticket.setWorkProgress(0);
+        }
+
+        Ticket savedTicket = ticketRepository.save(ticket);
+        
+        // Send notification to ticket owner about status change
+        if (!Objects.equals(oldStatus, status) && ticket.getUserId() != null) {
+            System.out.println("Status changed from " + oldStatus + " to " + status + " for ticket " + ticket.getId() + ", notifying user: " + ticket.getUserId());
+            notificationService.notifyTicketStatusChanged(ticket.getUserId(), ticket.getId(), status);
+        } else {
+            System.out.println("No notification sent: oldStatus=" + oldStatus + ", newStatus=" + status + ", userId=" + ticket.getUserId());
+        }
+        
+        return savedTicket;
+    }
+
+    public Ticket rejectTicket(String id, String reason) {
+        Ticket ticket = getTicketById(id);
+        ticket.setStatus("Rejected");
+        ticket.setRejectionReason(reason);
+        Ticket savedTicket = ticketRepository.save(ticket);
+        
+        // Send notification to ticket owner about rejection
+        if (ticket.getUserId() != null) {
+            notificationService.notifyTicketStatusChanged(ticket.getUserId(), ticket.getId(), "Rejected");
+        }
+        
+        return savedTicket;
+    }
+
+    public List<Ticket> getAssignedTickets(String assignee) {
+        return ticketRepository.findByAssigneeIgnoreCaseOrderByCreatedDateDesc(assignee.trim());
+    }
+
+    public Ticket startWork(String id) {
+        Ticket ticket = getTicketById(id);
+        ticket.setStatus("In Progress");
+        if (ticket.getWorkProgress() == null) {
+            ticket.setWorkProgress(0);
+        }
+        return ticketRepository.save(ticket);
+    }
+
+    public Ticket resolveTicket(String id, String resolutionNotes) {
+        Ticket ticket = getTicketById(id);
+        ticket.setStatus("Resolved");
+        ticket.setResolutionNotes(resolutionNotes);
+        ticket.setWorkProgress(100);
+        return ticketRepository.save(ticket);
+    }
+
+    public Ticket updateWorkProgress(String id, int progress) {
+        Ticket ticket = getTicketById(id);
+        int safeProgress = Math.max(0, Math.min(100, progress));
+        ticket.setWorkProgress(safeProgress);
+
+        if (safeProgress >= 100) {
+            ticket.setWorkProgress(100);
+        } else if ("Resolved".equalsIgnoreCase(ticket.getStatus())) {
+            ticket.setStatus("In Progress");
+        } else if (safeProgress > 0 && !"In Progress".equalsIgnoreCase(ticket.getStatus())) {
+            ticket.setStatus("In Progress");
+        } else if (safeProgress == 0 && "In Progress".equalsIgnoreCase(ticket.getStatus())) {
+            ticket.setStatus("Assigned");
+        }
+
+        return ticketRepository.save(ticket);
+    }
+
+    public Ticket addComment(String id, TicketCommentCreateDto dto) {
+        if (dto.getContent() == null || dto.getContent().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Comment content is required");
+        }
+
+        Ticket ticket = getTicketById(id);
+        List<TicketComment> comments = ticket.getComments() != null ? ticket.getComments() : new ArrayList<>();
+        String authorName = dto.getAuthorName() != null && !dto.getAuthorName().isBlank() ? dto.getAuthorName() : "System";
+        comments.add(new TicketComment(
+                authorName,
+                dto.getAuthorRole() != null && !dto.getAuthorRole().isBlank() ? dto.getAuthorRole() : "Support Team",
+                dto.getContent().trim(),
+                LocalDateTime.now()
+        ));
+        ticket.setComments(comments);
+        Ticket savedTicket = ticketRepository.save(ticket);
+        
+        // Send notification to ticket owner about new comment (only if commenter is not the ticket owner)
+        if (ticket.getUserId() != null && !Objects.equals(ticket.getUserId(), dto.getAuthorId())) {
+            notificationService.notifyNewTicketComment(ticket.getUserId(), ticket.getId(), authorName);
+        }
+        
+        return savedTicket;
+    }
+
+    public Ticket updateUserTicket(String id, TicketCreateDto dto, String userId) {
+        Ticket ticket = getOwnedTicket(id, userId);
+        ticket.setResourceLocation(dto.getResourceLocation());
+        ticket.setCategory(dto.getCategory());
+        ticket.setDescription(dto.getDescription());
+        ticket.setPriority(dto.getPriority());
+        ticket.setContactDetails(dto.getContactDetails());
+        ticket.setImages(dto.getImages() != null ? new ArrayList<>(dto.getImages()) : new ArrayList<>());
+        return ticketRepository.save(ticket);
+    }
+
+    public void deleteUserTicket(String id, String userId) {
+        Ticket ticket = getOwnedTicket(id, userId);
+        ticketRepository.delete(ticket);
+    }
+
+    private Ticket getOwnedTicket(String id, String userId) {
+        Ticket ticket = getTicketById(id);
+        if (!Objects.equals(ticket.getUserId(), userId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only modify your own tickets");
+        }
+        if (!"Open".equalsIgnoreCase(ticket.getStatus())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Only open tickets can be edited or deleted");
+        }
+        return ticket;
+    }
+}

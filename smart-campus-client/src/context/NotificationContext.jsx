@@ -11,18 +11,24 @@ export function NotificationProvider({ children }) {
   const [totalPages, setTotalPages] = useState(0);
 
   const fetchNotifications = useCallback(async (pageNum = 0) => {
+    console.log('🔔 Fetching notifications for page:', pageNum);
     setLoading(true);
     try {
       const res = await notificationApi.getAll(pageNum, 20);
+      console.log('📬 API Response:', res.data);
 
       if (pageNum === 0) {
         setNotifications(res.data.content);
+        console.log('📝 Set notifications:', res.data.content);
       } else {
         setNotifications((prev) => [...prev, ...res.data.content]);
+        console.log('📝 Appended notifications:', res.data.content);
       }
 
       setTotalPages(res.data.totalPages);
       setPage(pageNum);
+    } catch (error) {
+      console.error('❌ Error fetching notifications:', error);
     } finally {
       setLoading(false);
     }
@@ -31,9 +37,10 @@ export function NotificationProvider({ children }) {
   const fetchUnreadCount = useCallback(async () => {
     try {
       const res = await notificationApi.getUnreadCount();
+      console.log('🔢 Unread count response:', res.data);
       setUnreadCount(res.data.count);
-    } catch {
-      // ignore silently
+    } catch (error) {
+      console.error('❌ Error fetching unread count:', error);
     }
   }, []);
 

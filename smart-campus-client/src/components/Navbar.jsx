@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import NotificationPanel from './NotificationPanel';
+import { FiHome, FiGrid, FiCalendar, FiHelpCircle, FiBell, FiUser, FiLogOut, FiChevronDown } from 'react-icons/fi';
 
 const PAGE_TITLES = {
   '/dashboard': 'Dashboard',
@@ -68,6 +69,7 @@ export default function Navbar() {
                 {initials}
               </div>
             )}
+            <FiChevronDown className={`user-menu__chevron ${menuOpen ? 'user-menu__chevron--open' : ''}`} />
           </button>
 
           {menuOpen && (
@@ -82,6 +84,7 @@ export default function Navbar() {
                 className="user-menu__item"
                 onClick={() => setMenuOpen(false)}
               >
+                <FiUser className="user-menu__icon" />
                 My profile
               </Link>
               <Link
@@ -89,6 +92,7 @@ export default function Navbar() {
                 className="user-menu__item"
                 onClick={() => setMenuOpen(false)}
               >
+                <FiBell className="user-menu__icon" />
                 Notifications
               </Link>
               <hr className="user-menu__divider" />
@@ -96,6 +100,7 @@ export default function Navbar() {
                 className="user-menu__item user-menu__item--danger"
                 onClick={handleLogout}
               >
+                <FiLogOut className="user-menu__icon" />
                 Sign out
               </button>
             </div>
