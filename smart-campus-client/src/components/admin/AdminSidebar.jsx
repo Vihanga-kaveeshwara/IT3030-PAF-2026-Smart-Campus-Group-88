@@ -1,23 +1,23 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FiDashboard, FiCalendar, FiTool, FiBuilding, FiUser, FiLogOut } from 'react-icons/fi';
+import { FiGrid, FiCalendar, FiTool, FiHome, FiUser, FiLogOut } from 'react-icons/fi';
 import './AdminSidebar.css';
 
 export default function AdminSidebar() {
   const location = useLocation();
 
   const menuItems = [
-    { path: '/admin/dashboard', label: 'Dashboard', icon: FiDashboard },
+    { path: '/admin/dashboard', label: 'Dashboard', icon: FiGrid },
     { path: '/admin/booking/all', label: 'Bookings', icon: FiCalendar },
     { path: '/admin/maintenance', label: 'Maintenance', icon: FiTool },
-    { path: '/admin/resources', label: 'Resources', icon: FiBuilding },
+    { path: '/admin/resources', label: 'Resources', icon: FiHome },
   ];
 
   return (
     <aside className="admin-sidebar">
       <div className="admin-sidebar-header">
         <div className="admin-logo">
-          <FiBuilding className="admin-logo-icon" />
+          <FiHome className="admin-logo-icon" />
           <span className="admin-logo-text">SmartUni Admin</span>
         </div>
       </div>
