@@ -22,22 +22,3 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-
-# Java / Maven
-smart-campus-api/target/
-*.class
-*.jar
-
-# React / Node
-smart-campus-client/node_modules/
-smart-campus-client/dist/
-
-# IDE
-.vscode/
-.idea/
-*.iml
-
-# Environment
-.env
-.env.local
-application-local.propertiess
