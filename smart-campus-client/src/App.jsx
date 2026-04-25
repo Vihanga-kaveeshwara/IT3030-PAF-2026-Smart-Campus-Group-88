@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { PrivateRoute, AdminRoute, TechnicianRoute } from './components/PrivateRoute';
 import AppLayout from './components/AppLayout'
 import { NotificationProvider } from './context/NotificationContext';
@@ -18,6 +18,10 @@ import ResetPasswordPage  from './pages/auth/ResetPasswordPage';
 import DashboardPage      from './pages/DashboardPage';
 import NotificationsPage  from './pages/notifications/NotificationsPage';
 
+//Resource pages
+import ResourcesPage from './pages/resources/ResourcesPage'
+import ResourceDetailPage from './pages/resources/ResourceDetailPage';
+
 //Booking pages
 import BookingDetailPage from './pages/booking/BookingDetailPage';
 import CreateBookingPage from './pages/booking/CreateBookingPage';
@@ -25,6 +29,8 @@ import MyBookingsPage from './pages/booking/MyBookingsPage';
 import AdminBookingsPage from './pages/booking/AdminBookingsPage';
 import AdminBookingManagementPage from './pages/booking/AdminBookingManagementPage';
 
+// Maintenance context
+import { TicketProvider } from './features/maintenance/TicketContext';
 
 // Maintenance feature pages
 import AdminAllTicketsPage from './features/maintenance/AdminAllTicketsPage';
@@ -52,6 +58,22 @@ function PlaceholderPage({ name }) {
   );
 }
 
+function TicketsPage() {
+  const { isAdmin, isTechnician } = useAuth();
+  
+  if (isAdmin) {
+    return <Navigate to="/maintenance/admin" replace />;
+  } else if (isTechnician) {
+    return <Navigate to="/maintenance/technician/tickets" replace />;
+  } else {
+    return (
+      <TicketProvider>
+        <MyTicketsPage />
+      </TicketProvider>
+    );
+  }
+}
+
 export default function App() {
   return (
     <AuthProvider>
@@ -69,6 +91,9 @@ export default function App() {
             <Route path="/dashboard"     element={<DashboardPage />} />
             <Route path="/notifications" element={<NotificationsPage />} />
             <Route path="/profile"       element={<ProfilePage />} />
+            <Route path="/tickets" element={<TicketsPage />} />
+            <Route path="/resources" element={<ResourcesPage />} />
+            <Route path="/resources/:id" element={<ResourceDetailPage />} />
 
             
             {/* Other modules (replace placeholders with real pages) */}

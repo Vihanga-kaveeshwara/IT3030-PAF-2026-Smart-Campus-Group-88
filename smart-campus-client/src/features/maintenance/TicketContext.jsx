@@ -1,9 +1,10 @@
 import React, { createContext, useReducer, useEffect, useCallback } from 'react';
+import api from '../../api/axiosInstance';
 import axios from 'axios';
 
 export const TicketContext = createContext();
 
-const API_BASE_URL = 'http://localhost:8080/api/tickets';
+const API_BASE_URL = 'http://localhost:8081/api/tickets';
 const DEFAULT_USER_ID = 'user-123';
 const DEFAULT_TECHNICIAN_ID = 'Mike Johnson';
 
@@ -60,7 +61,7 @@ export const TicketProvider = ({ children }) => {
   const fetchTickets = useCallback(async () => {
     dispatch({ type: 'FETCH_START' });
     try {
-      const response = await axios.get(`${API_BASE_URL}/my`, getAxiosConfig());
+      const response = await api.get(`api/tickets/my`);
       dispatch({ type: 'FETCH_SUCCESS', payload: response.data });
     } catch (err) {
       console.error('Error fetching tickets', err);
@@ -71,7 +72,7 @@ export const TicketProvider = ({ children }) => {
   const fetchAllTickets = useCallback(async () => {
     dispatch({ type: 'FETCH_START' });
     try {
-      const response = await axios.get(API_BASE_URL, getAxiosConfig());
+      const response = await api.get(`api/tickets`);
       dispatch({ type: 'FETCH_ALL_SUCCESS', payload: response.data });
     } catch (err) {
       console.error('Error fetching all tickets', err);
@@ -82,7 +83,7 @@ export const TicketProvider = ({ children }) => {
   const fetchAssignedTickets = useCallback(async () => {
     dispatch({ type: 'FETCH_START' });
     try {
-      const response = await axios.get(`${API_BASE_URL}/assigned`, getAxiosConfig(DEFAULT_TECHNICIAN_ID));
+      const response = await api.get(`api/tickets/assigned`);
       dispatch({ type: 'FETCH_ASSIGNED_SUCCESS', payload: response.data });
     } catch (err) {
       console.error('Error fetching assigned tickets', err);
@@ -92,7 +93,7 @@ export const TicketProvider = ({ children }) => {
 
   const getTicket = useCallback(async (id) => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/${id}`, getAxiosConfig());
+      const response = await api.get(`api/tickets/${id}`);
       return response.data;
     } catch (err) {
       console.error('Error fetching single ticket', err);
@@ -102,7 +103,7 @@ export const TicketProvider = ({ children }) => {
 
   const addTicket = async (formData) => {
     try {
-      const response = await axios.post(API_BASE_URL, formData, getAxiosConfig());
+      const response = await api.post(`api/tickets`, formData);
       dispatch({ type: 'ADD_TICKET', payload: response.data });
       return response.data;
     } catch (err) {
@@ -113,7 +114,7 @@ export const TicketProvider = ({ children }) => {
 
   const assignTicket = async (id, assignee) => {
     try {
-      const response = await axios.patch(`${API_BASE_URL}/${id}/assign`, { assignee }, getAxiosConfig());
+      const response = await api.patch(`api/tickets/${id}/assign`, { assignee });
       dispatch({ type: 'UPDATE_TICKET', payload: response.data });
       return response.data;
     } catch (err) {
@@ -124,7 +125,7 @@ export const TicketProvider = ({ children }) => {
 
   const updateStatus = async (id, status) => {
     try {
-      const response = await axios.patch(`${API_BASE_URL}/${id}/status`, { status }, getAxiosConfig());
+      const response = await api.patch(`api/tickets/${id}/status`, { status });
       dispatch({ type: 'UPDATE_TICKET', payload: response.data });
       return response.data;
     } catch (err) {
@@ -135,7 +136,7 @@ export const TicketProvider = ({ children }) => {
 
   const rejectTicket = async (id, reason) => {
     try {
-      const response = await axios.patch(`${API_BASE_URL}/${id}/reject`, { reason }, getAxiosConfig());
+      const response = await api.patch(`api/tickets/${id}/reject`, { reason });
       dispatch({ type: 'UPDATE_TICKET', payload: response.data });
       return response.data;
     } catch (err) {
@@ -146,7 +147,7 @@ export const TicketProvider = ({ children }) => {
 
   const addTicketComment = async (id, commentData) => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/${id}/comments`, commentData, getAxiosConfig(DEFAULT_TECHNICIAN_ID));
+      const response = await api.post(`api/tickets/${id}/comments`, commentData);
       dispatch({ type: 'UPDATE_TICKET', payload: response.data });
       return response.data;
     } catch (err) {
@@ -157,7 +158,7 @@ export const TicketProvider = ({ children }) => {
 
   const startWork = async (id) => {
     try {
-      const response = await axios.patch(`${API_BASE_URL}/${id}/start-work`, {}, getAxiosConfig(DEFAULT_TECHNICIAN_ID));
+      const response = await api.patch(`api/tickets/${id}/start-work`, {});
       dispatch({ type: 'UPDATE_TICKET', payload: response.data });
       return response.data;
     } catch (err) {
@@ -168,7 +169,7 @@ export const TicketProvider = ({ children }) => {
 
   const resolveTicket = async (id, resolutionNotes) => {
     try {
-      const response = await axios.patch(`${API_BASE_URL}/${id}/resolve`, { resolutionNotes }, getAxiosConfig(DEFAULT_TECHNICIAN_ID));
+      const response = await api.patch(`api/tickets/${id}/resolve`, { resolutionNotes });
       dispatch({ type: 'UPDATE_TICKET', payload: response.data });
       return response.data;
     } catch (err) {
@@ -179,7 +180,7 @@ export const TicketProvider = ({ children }) => {
 
   const updateWorkProgress = async (id, progress) => {
     try {
-      const response = await axios.patch(`${API_BASE_URL}/${id}/progress`, { progress }, getAxiosConfig(DEFAULT_TECHNICIAN_ID));
+      const response = await api.patch(`api/tickets/${id}/progress`, { progress });
       dispatch({ type: 'UPDATE_TICKET', payload: response.data });
       return response.data;
     } catch (err) {
@@ -190,7 +191,7 @@ export const TicketProvider = ({ children }) => {
 
   const updateUserTicket = async (id, ticketData) => {
     try {
-      const response = await axios.put(`${API_BASE_URL}/${id}`, ticketData, getAxiosConfig());
+      const response = await api.put(`api/tickets/${id}`, ticketData);
       dispatch({ type: 'UPDATE_TICKET', payload: response.data });
       return response.data;
     } catch (err) {
@@ -201,7 +202,7 @@ export const TicketProvider = ({ children }) => {
 
   const deleteUserTicket = async (id) => {
     try {
-      await axios.delete(`${API_BASE_URL}/${id}`, getAxiosConfig());
+      await api.delete(`api/tickets/${id}`);
       dispatch({ type: 'DELETE_TICKET', payload: id });
     } catch (err) {
       console.error('Error deleting ticket', err);

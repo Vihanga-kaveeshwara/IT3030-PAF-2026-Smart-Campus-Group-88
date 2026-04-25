@@ -1,10 +1,12 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { BookingContext, STATIC_USER_ID } from './BookingContext';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 const CreateBookingPage = () => {
   const navigate = useNavigate();
   const { state, createBooking, fetchMyBookings } = useContext(BookingContext);
+  const { user, isAuthenticated } = useAuth();
   const [formData, setFormData] = useState({
     resourceId: '',
     requesterId: STATIC_USER_ID,
@@ -16,6 +18,16 @@ const CreateBookingPage = () => {
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+
+  // Auto-set requesterId when user is authenticated
+  useEffect(() => {
+    if (isAuthenticated && user?.id) {
+      setFormData(prev => ({
+        ...prev,
+        requesterId: user.id
+      }));
+    }
+  }, [isAuthenticated, user]);
 
   const handleChange = (e) => {
     setFormData({
@@ -32,7 +44,6 @@ const CreateBookingPage = () => {
     const newErrors = {};
     
     if (!formData.resourceId.trim()) newErrors.resourceId = 'Facility is required';
-    if (!formData.requesterId.trim()) newErrors.requesterId = 'Your ID is required';
     if (!formData.date) newErrors.date = 'Date is required';
     if (!formData.startTime) newErrors.startTime = 'Start time is required';
     if (!formData.endTime) newErrors.endTime = 'End time is required';
@@ -70,7 +81,7 @@ const CreateBookingPage = () => {
       
       setFormData({
         resourceId: '',
-        requesterId: '',
+        requesterId: user?.id || STATIC_USER_ID,
         date: '',
         startTime: '',
         endTime: '',
@@ -97,21 +108,7 @@ const CreateBookingPage = () => {
 
       <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm p-8 space-y-6">
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Your ID <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            name="requesterId"
-            value={formData.requesterId}
-            onChange={handleChange}
-            placeholder="e.g., user-123"
-            className={`w-full px-4 py-3 border rounded-lg focus:outline-none ${errors.requesterId ? 'border-red-500' : 'border-gray-300 focus:border-blue-500'}`}
-          />
-          {errors.requesterId && <p className="text-red-500 text-xs mt-1">{errors.requesterId}</p>}
-        </div>
-
+        
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Facility <span className="text-red-500">*</span>
