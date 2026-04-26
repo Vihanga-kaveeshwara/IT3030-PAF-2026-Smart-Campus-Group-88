@@ -141,6 +141,19 @@
   box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
 }
 
+.admin-form-group input.admin-input-error,
+.admin-form-group select.admin-input-error,
+.admin-form-group textarea.admin-input-error {
+  border-color: #e74c3c;
+  box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.15);
+}
+
+.admin-field-error {
+  margin: 0.375rem 0 0;
+  color: #e74c3c;
+  font-size: 0.85rem;
+}
+
 .admin-form-actions {
   display: flex;
   gap: 1rem;

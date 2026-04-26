@@ -1,5 +1,5 @@
 // Backend: src/main/java/com/smartcampus/smart_campus_api/model/Ticket.java
-package com.smartcampus.smart_campus_api.model;
+package com.smartcampus.smart_campus_api.model.ticket;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

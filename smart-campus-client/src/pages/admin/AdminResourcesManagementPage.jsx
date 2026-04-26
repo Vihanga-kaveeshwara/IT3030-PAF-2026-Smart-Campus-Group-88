@@ -1,6 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { facilityApi } from '../../api/facilityApi';
+import { useForm } from 'react-hook-form';
 import './AdminResourcesManagementPage.css';
+
+const defaultFormValues = {
+  name: '',
+  type: '',
+  capacity: '',
+  location: '',
+  availabilityWindows: '',
+  status: 'available',
+  description: '',
+  imageUrl: ''
+};
 
 export default function AdminResourcesManagementPage() {
   const [facilities, setFacilities] = useState([]);
@@ -8,15 +20,15 @@ export default function AdminResourcesManagementPage() {
   const [error, setError] = useState('');
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingFacility, setEditingFacility] = useState(null);
-  const [formData, setFormData] = useState({
-    name: '',
-    type: '',
-    capacity: '',
-    location: '',
-    availabilityWindows: '',
-    status: 'available',
-    description: '',
-    imageUrl: ''
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors }
+  } = useForm({
+    mode: 'onChange',
+    reValidateMode: 'onChange',
+    defaultValues: defaultFormValues
   });
 
   useEffect(() => {
@@ -36,24 +48,8 @@ export default function AdminResourcesManagementPage() {
     }
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const onSubmit = async (formData) => {
     try {
-      // Validate required fields
-      if (!formData.name || !formData.type || !formData.capacity || !formData.location) {
-        setError('Please fill in all required fields');
-        console.error('Validation Error - Empty fields:', formData);
-        return;
-      }
-
       // Convert capacity to number
       const submittedData = {
         ...formData,
@@ -95,7 +91,7 @@ export default function AdminResourcesManagementPage() {
 
   const handleEdit = (facility) => {
     setEditingFacility(facility);
-    setFormData({
+    reset({
       name: facility.name,
       type: facility.type,
       capacity: facility.capacity,
@@ -105,6 +101,7 @@ export default function AdminResourcesManagementPage() {
       description: facility.description,
       imageUrl: facility.imageUrl
     });
+    setError('');
     setShowAddForm(true);
   };
 
@@ -121,16 +118,7 @@ export default function AdminResourcesManagementPage() {
   };
 
   const resetForm = () => {
-    setFormData({
-      name: '',
-      type: '',
-      capacity: '',
-      location: '',
-      availabilityWindows: '',
-      status: 'available',
-      description: '',
-      imageUrl: ''
-    });
+    reset(defaultFormValues);
     setEditingFacility(null);
     setShowAddForm(false);
     setError('');
@@ -145,7 +133,7 @@ export default function AdminResourcesManagementPage() {
       <div className="admin-header">
         <h1>Resources Management</h1>
         <p className="admin-subtitle">Manage campus facilities and resources</p>
-        <button 
+        <button
           className="admin-btn admin-btn--primary"
           onClick={() => setShowAddForm(true)}
         >
@@ -162,29 +150,34 @@ export default function AdminResourcesManagementPage() {
               <h2>{editingFacility ? 'Edit Facility' : 'Add New Facility'}</h2>
               <button className="admin-modal-close" onClick={resetForm}>×</button>
             </div>
-            
-            <form onSubmit={handleSubmit} className="admin-form">
+
+            <form onSubmit={handleSubmit(onSubmit)} className="admin-form" noValidate>
               <div className="admin-form-grid">
                 <div className="admin-form-group">
                   <label htmlFor="name">Facility Name *</label>
                   <input
                     type="text"
                     id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    required
+                    className={errors.name ? 'admin-input-error' : ''}
+                    {...register('name', {
+                      required: 'Facility name is required',
+                      minLength: {
+                        value: 3,
+                        message: 'Facility name must be at least 3 characters long'
+                      }
+                    })}
                   />
+                  {errors.name && <p className="admin-field-error">{errors.name.message}</p>}
                 </div>
 
                 <div className="admin-form-group">
                   <label htmlFor="type">Type *</label>
                   <select
                     id="type"
-                    name="type"
-                    value={formData.type}
-                    onChange={handleInputChange}
-                    required
+                    className={errors.type ? 'admin-input-error' : ''}
+                    {...register('type', {
+                      required: 'Type is required'
+                    })}
                   >
                     <option value="">Select Type</option>
                     <option value="classroom">Classroom</option>
@@ -194,6 +187,7 @@ export default function AdminResourcesManagementPage() {
                     <option value="auditorium">Auditorium</option>
                     <option value="other">Other</option>
                   </select>
+                  {errors.type && <p className="admin-field-error">{errors.type.message}</p>}
                 </div>
 
                 <div className="admin-form-group">
@@ -201,12 +195,17 @@ export default function AdminResourcesManagementPage() {
                   <input
                     type="number"
                     id="capacity"
-                    name="capacity"
-                    value={formData.capacity}
-                    onChange={handleInputChange}
                     min="1"
-                    required
+                    className={errors.capacity ? 'admin-input-error' : ''}
+                    {...register('capacity', {
+                      required: 'Capacity is required',
+                      min: {
+                        value: 1,
+                        message: 'Capacity must be at least 1'
+                      }
+                    })}
                   />
+                  {errors.capacity && <p className="admin-field-error">{errors.capacity.message}</p>}
                 </div>
 
                 <div className="admin-form-group">
@@ -214,26 +213,32 @@ export default function AdminResourcesManagementPage() {
                   <input
                     type="text"
                     id="location"
-                    name="location"
-                    value={formData.location}
-                    onChange={handleInputChange}
-                    required
+                    className={errors.location ? 'admin-input-error' : ''}
+                    {...register('location', {
+                      required: 'Location is required',
+                       minLength: {
+                        value: 3,
+                        message: 'Location must be at least 3 characters long'
+                      }
+                    })}
                   />
+                  {errors.location && <p className="admin-field-error">{errors.location.message}</p>}
                 </div>
 
                 <div className="admin-form-group">
                   <label htmlFor="status">Status *</label>
                   <select
                     id="status"
-                    name="status"
-                    value={formData.status}
-                    onChange={handleInputChange}
-                    required
+                    className={errors.status ? 'admin-input-error' : ''}
+                    {...register('status', {
+                      required: 'Status is required'
+                    })}
                   >
                     <option value="available">Available</option>
                     <option value="maintenance">Under Maintenance</option>
                     <option value="unavailable">Unavailable</option>
                   </select>
+                  {errors.status && <p className="admin-field-error">{errors.status.message}</p>}
                 </div>
 
                 <div className="admin-form-group">
@@ -241,10 +246,8 @@ export default function AdminResourcesManagementPage() {
                   <input
                     type="text"
                     id="availabilityWindows"
-                    name="availabilityWindows"
-                    value={formData.availabilityWindows}
-                    onChange={handleInputChange}
                     placeholder="e.g., Mon-Fri 9AM-5PM"
+                    {...register('availabilityWindows')}
                   />
                 </div>
 
@@ -252,10 +255,8 @@ export default function AdminResourcesManagementPage() {
                   <label htmlFor="description">Description</label>
                   <textarea
                     id="description"
-                    name="description"
-                    value={formData.description}
-                    onChange={handleInputChange}
                     rows="3"
+                    {...register('description')}
                   />
                 </div>
 
@@ -264,11 +265,16 @@ export default function AdminResourcesManagementPage() {
                   <input
                     type="url"
                     id="imageUrl"
-                    name="imageUrl"
-                    value={formData.imageUrl}
-                    onChange={handleInputChange}
                     placeholder="https://example.com/image.jpg"
+                    className={errors.imageUrl ? 'admin-input-error' : ''}
+                    {...register('imageUrl', {
+                      pattern: {
+                        value: /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[^\s]*)?$/i,
+                        message: 'Please enter a valid URL'
+                      }
+                    })}
                   />
+                  {errors.imageUrl && <p className="admin-field-error">{errors.imageUrl.message}</p>}
                 </div>
               </div>
 
@@ -300,7 +306,7 @@ export default function AdminResourcesManagementPage() {
                   {facility.status}
                 </span>
               </div>
-              
+
               <div className="admin-facility-details">
                 <div className="admin-detail-item">
                   <span className="admin-detail-label">Type:</span>
@@ -335,13 +341,13 @@ export default function AdminResourcesManagementPage() {
               )}
 
               <div className="admin-facility-actions">
-                <button 
+                <button
                   className="admin-btn admin-btn--edit"
                   onClick={() => handleEdit(facility)}
                 >
                   Edit
                 </button>
-                <button 
+                <button
                   className="admin-btn admin-btn--delete"
                   onClick={() => handleDelete(facility.id)}
                 >

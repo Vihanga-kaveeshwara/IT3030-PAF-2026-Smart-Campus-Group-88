@@ -1,7 +1,7 @@
 // Backend: src/main/java/com/smartcampus/smart_campus_api/dto/TicketResponseDto.java
-package com.smartcampus.smart_campus_api.dto;
+package com.smartcampus.smart_campus_api.dto.responce;
 
-import com.smartcampus.smart_campus_api.model.Ticket;
+import com.smartcampus.smart_campus_api.model.ticket.Ticket;
 
 public class TicketResponseDto {
     // Basic representation class, though we can return Ticket directly. Made as requested.

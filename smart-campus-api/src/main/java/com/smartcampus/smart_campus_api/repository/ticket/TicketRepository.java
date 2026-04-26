@@ -1,7 +1,7 @@
 // Backend: src/main/java/com/smartcampus/smart_campus_api/repository/TicketRepository.java
-package com.smartcampus.smart_campus_api.repository;
+package com.smartcampus.smart_campus_api.repository.ticket;
 
-import com.smartcampus.smart_campus_api.model.Ticket;
+import com.smartcampus.smart_campus_api.model.ticket.Ticket;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

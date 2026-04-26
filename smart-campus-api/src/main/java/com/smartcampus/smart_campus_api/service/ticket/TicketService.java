@@ -1,11 +1,12 @@
 // Backend: src/main/java/com/smartcampus/smart_campus_api/service/TicketService.java
-package com.smartcampus.smart_campus_api.service;
+package com.smartcampus.smart_campus_api.service.ticket;
 
 import com.smartcampus.smart_campus_api.dto.request.TicketCreateDto;
 import com.smartcampus.smart_campus_api.dto.request.TicketCommentCreateDto;
-import com.smartcampus.smart_campus_api.model.Ticket;
-import com.smartcampus.smart_campus_api.model.TicketComment;
-import com.smartcampus.smart_campus_api.repository.TicketRepository;
+
+import com.smartcampus.smart_campus_api.model.ticket.TicketComment;
+import com.smartcampus.smart_campus_api.model.ticket.Ticket;
+import com.smartcampus.smart_campus_api.repository.ticket.TicketRepository;
 import com.smartcampus.smart_campus_api.service.notification.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

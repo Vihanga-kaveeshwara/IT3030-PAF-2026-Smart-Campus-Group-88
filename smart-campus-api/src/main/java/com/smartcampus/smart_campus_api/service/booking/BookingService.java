@@ -1,6 +1,6 @@
 package com.smartcampus.smart_campus_api.service.booking;
 
-import com.smartcampus.smart_campus_api.dto.request.booking.CreateBookingRequest;
+import com.smartcampus.smart_campus_api.dto.request.CreateBookingRequest;
 import com.smartcampus.smart_campus_api.exception.BookingConflictException;
 import com.smartcampus.smart_campus_api.exception.BookingNotFoundException;
 import com.smartcampus.smart_campus_api.exception.InvalidBookingTransitionException;

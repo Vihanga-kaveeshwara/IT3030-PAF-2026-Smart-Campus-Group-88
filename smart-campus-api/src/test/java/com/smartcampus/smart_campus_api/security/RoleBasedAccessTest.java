@@ -1,6 +1,6 @@
 package com.smartcampus.smart_campus_api.security;
 
-import com.smartcampus.smart_campus_api.controller.TicketController;
+import com.smartcampus.smart_campus_api.controller.ticket.TicketController;
 import com.smartcampus.smart_campus_api.controller.resource.FacilityController;
 import com.smartcampus.smart_campus_api.controller.notification.NotificationController;
 import com.smartcampus.smart_campus_api.model.auth.Role;

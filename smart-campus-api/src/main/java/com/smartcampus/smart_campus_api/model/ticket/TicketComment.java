@@ -1,4 +1,4 @@
-package com.smartcampus.smart_campus_api.model;
+package com.smartcampus.smart_campus_api.model.ticket;
 
 import java.time.LocalDateTime;
 
